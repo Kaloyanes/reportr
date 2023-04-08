@@ -47,5 +47,9 @@
         <true />
         <key>UIApplicationSupportsIndirectInputEvents</key>
         <true />
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string>Upload photos of the accident</string>
+        <key>NSCameraUsageDescription</key>
+        <string>Capture a photo of the accident</string>
     </dict>
 </plist>
