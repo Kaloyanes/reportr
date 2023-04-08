@@ -3,7 +3,7 @@ def flutterPluginVersion = 'managed'
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 31
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -12,8 +12,8 @@ android {
 
     defaultConfig {
         applicationId "com.denoic.reportr.host"
-        minSdkVersion 20
-        targetSdkVersion 33
+        minSdkVersion 16
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
     }
