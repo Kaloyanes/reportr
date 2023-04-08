@@ -63,7 +63,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '396627068209',
     projectId: 'reportr-f1cc8',
     storageBucket: 'reportr-f1cc8.appspot.com',
-    iosClientId: '396627068209-jdlfr7saae2lpm8egci4u1172b9rvr5e.apps.googleusercontent.com',
+    iosClientId:
+        '396627068209-jdlfr7saae2lpm8egci4u1172b9rvr5e.apps.googleusercontent.com',
     iosBundleId: 'com.denoic.reportr',
   );
 }
