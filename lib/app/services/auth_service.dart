@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class AuthService {
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -7,12 +10,35 @@ class AuthService {
     await auth.signInWithEmailAndPassword(email: email, password: password);
   }
 
-  Future signUp(String email, String password) async {
+  Future signUp(
+    String email,
+    String password,
+    String role, {
+    bool IsOrganization = false,
+    LatLng? location,
+  }) async {
     var user = await auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
 
+    // employee
+    // organization
+    // user
+
     var docId = user.user!.uid;
+
+    var store = FirebaseFirestore.instance;
+
+    var data = <String, dynamic>{
+      "email": email,
+      "name": "PGEE",
+    };
+
+    data.addAllIf(IsOrganization, {
+      "location": location,
+    });
+
+    store.collection("users").doc(docId).set(data);
   }
 }

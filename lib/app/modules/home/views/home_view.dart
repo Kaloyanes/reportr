@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reportr/app/components/map_switcher.dart';
-import 'package:reportr/app/modules/home/report_sheet/views/report_sheet_view.dart';
+import 'package:reportr/app/modules/home/components/report_sheet/views/report_sheet_view.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -52,19 +52,6 @@ class HomeView extends GetView<HomeController> {
                     controller.mapController = mapControl;
                   },
                   markers: controller.markers.toSet(),
-                  // circles: {
-                  //   Circle(
-                  //     circleId: const CircleId("PGEE"),
-                  //     center: const LatLng(42.49777, 27.468258),
-                  //     fillColor: Colors.red.withAlpha(50),
-                  //     zIndex: 1,
-                  //     radius: 70,
-                  //     strokeWidth: 3,
-                  //     onTap: () =>
-                  //         Get.find<ReportSheetController>().showReportForm("PGEE"),
-                  //     consumeTapEvents: true,
-                  //   ),
-                  // },
                 )),
           );
         },

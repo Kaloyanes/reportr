@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:reportr/app/modules/home/report_sheet/components/photo_picker_dialog.dart';
-import 'package:reportr/app/modules/home/report_sheet/components/photo_settings_sheet.dart';
+import 'package:reportr/app/modules/home/components/report_sheet/components/photo_picker_dialog.dart';
+import 'package:reportr/app/modules/home/components/report_sheet/components/photo_settings_sheet.dart';
 
 class ReportSheetController extends GetxController {
   final sheetController = DraggableScrollableController();
@@ -66,5 +66,14 @@ class ReportSheetController extends GetxController {
       case -1:
         return;
     }
+  }
+
+  void report() {
+    String organizationName = selectedObject.value;
+
+    String name = nameController.text.trim();
+    String description = descriptionController.text.trim();
+
+    // TODO: CONNECT TO REPORT SERVICE
   }
 }

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:reportr/app/modules/home/report_sheet/controllers/report_sheet_controller.dart';
+import 'package:reportr/app/modules/home/components/report_sheet/controllers/report_sheet_controller.dart';
 
 class ReportSheetView extends GetView<ReportSheetController> {
   const ReportSheetView({super.key});
@@ -66,16 +66,18 @@ class ReportSheetView extends GetView<ReportSheetController> {
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Column(
                 children: [
-                  const TextField(
-                    decoration: InputDecoration(
+                  TextField(
+                    controller: controller.nameController,
+                    decoration: const InputDecoration(
                       label: Text("Името на доклада"),
                     ),
                   ),
                   const SizedBox(
                     height: 10,
                   ),
-                  const TextField(
-                    decoration: InputDecoration(
+                  TextField(
+                    controller: controller.descriptionController,
+                    decoration: const InputDecoration(
                       label: Text("Описание на доклада"),
                     ),
                     maxLines: null,
@@ -160,7 +162,7 @@ class ReportSheetView extends GetView<ReportSheetController> {
               height: 20,
             ),
             FilledButton.tonalIcon(
-              onPressed: () {},
+              onPressed: () => controller.report(),
               label: const Text("Докладвай"),
               icon: const Icon(Icons.report),
             ),

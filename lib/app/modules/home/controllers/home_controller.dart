@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:reportr/app/modules/home/report_sheet/controllers/report_sheet_controller.dart';
+import 'package:reportr/app/modules/home/components/report_sheet/controllers/report_sheet_controller.dart';
 
 class HomeController extends GetxController {
   final sheetController = DraggableScrollableController();
@@ -19,10 +19,7 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
-    Timer(
-      5.seconds,
-      () => getLocations(),
-    );
+    getLocations();
     super.onInit();
   }
 
