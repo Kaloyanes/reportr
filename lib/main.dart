@@ -19,6 +19,7 @@ Future<void> main() async {
   if (imagePickerImplementation is ImagePickerAndroid) {
     imagePickerImplementation.useAndroidPhotoPicker = true;
   }
+
   runApp(
     const App(),
   );

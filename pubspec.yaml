@@ -28,8 +28,4 @@ dev_dependencies:
     sdk: flutter
 
 flutter:
-  module:
-    androidPackage: com.denoic.reportr
-    iosBundleIdentifier: com.denoic.reportr
-    androidX: true
   uses-material-design: true

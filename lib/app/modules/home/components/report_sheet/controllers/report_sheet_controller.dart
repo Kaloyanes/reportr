@@ -78,5 +78,9 @@ class ReportSheetController extends GetxController {
 
     ScaffoldMessenger.of(Get.context!).showSnackBar(
         const SnackBar(content: Text("Докладът е изпратен успешно.")));
+
+    selectedPhotos.value = [];
+    nameController.clear();
+    descriptionController.clear();
   }
 }

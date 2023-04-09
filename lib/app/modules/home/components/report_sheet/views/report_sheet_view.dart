@@ -29,8 +29,8 @@ class ReportSheetView extends GetView<ReportSheetController> {
         controller: scrollController,
         child: Column(
           children: [
-            const SizedBox(
-              height: 25,
+            SizedBox(
+              height: Get.mediaQuery.viewPadding.top + 10,
             ),
             Container(
               width: 150,
@@ -40,8 +40,8 @@ class ReportSheetView extends GetView<ReportSheetController> {
                 color: Colors.white30,
               ),
             ),
-            const SizedBox(
-              height: 30,
+            SizedBox(
+              height: Get.mediaQuery.viewPadding.top - 10,
             ),
             Obx(() {
               String val = controller.selectedObject.value;
@@ -119,14 +119,14 @@ class ReportSheetView extends GetView<ReportSheetController> {
                             borderRadius: BorderRadius.circular(20)),
                         child: InkWell(
                           onTap: () => controller.addPhoto(),
-                          child: SizedBox(
+                          child: const SizedBox(
                             width: 200,
                             height: 100,
                             child: Center(
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
-                                children: const [
+                                children: [
                                   Icon(Icons.add_a_photo),
                                   Text("Добави снимка"),
                                 ],

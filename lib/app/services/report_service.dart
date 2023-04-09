@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -25,7 +27,7 @@ class ReportService {
       "name": name,
       "description": description,
       "date": today,
-      "location": location,
+      "location": GeoPoint(location.latitude, location.longitude),
     };
 
     if (!isAnonymous) {
@@ -36,11 +38,13 @@ class ReportService {
 
     var storage = FirebaseStorage.instance;
 
+    // var photosLinks = <String>[];
     var reference = storage.ref("reports/$uuid");
     for (var i = 0; i < photos.length; i++) {
-      var photo = await photos[i].readAsBytes();
+      print(reference.fullPath);
+      var ref = reference.child(i.toString());
 
-      reference.child("$i.png").putData(photo);
+      ref.putFile(File(photos[i].path));
     }
 
     await store.collection("reports").doc(uuid).set(ReportData);
