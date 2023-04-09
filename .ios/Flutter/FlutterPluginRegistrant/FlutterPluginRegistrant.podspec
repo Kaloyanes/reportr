@@ -26,4 +26,6 @@ Depends on all your plugins, and provides a function to register them.
   s.dependency 'geolocator_apple'
   s.dependency 'google_maps_flutter_ios'
   s.dependency 'image_picker_ios'
+  s.dependency 'path_provider_foundation'
+  s.dependency 'sqflite'
 end

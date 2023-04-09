@@ -119,14 +119,14 @@ class ReportSheetView extends GetView<ReportSheetController> {
                             borderRadius: BorderRadius.circular(20)),
                         child: InkWell(
                           onTap: () => controller.addPhoto(),
-                          child: const SizedBox(
+                          child: SizedBox(
                             width: 200,
                             height: 100,
                             child: Center(
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
-                                children: [
+                                children: const [
                                   Icon(Icons.add_a_photo),
                                   Text("Добави снимка"),
                                 ],
