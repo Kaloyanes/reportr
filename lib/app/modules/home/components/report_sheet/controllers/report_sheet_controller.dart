@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reportr/app/modules/home/components/report_sheet/components/photo_picker_dialog.dart';
 import 'package:reportr/app/modules/home/components/report_sheet/components/photo_settings_sheet.dart';
+import 'package:reportr/app/services/report_service.dart';
 
 class ReportSheetController extends GetxController {
   final sheetController = DraggableScrollableController();
@@ -31,26 +32,24 @@ class ReportSheetController extends GetxController {
 
     switch (chosen) {
       case 1:
-        imageSource = ImageSource.gallery;
+        var images = await ImagePicker().pickMultiImage(imageQuality: 70);
+
+        selectedPhotos.addAll(images);
         break;
 
       // Camera
       case 2:
-        break;
+        var image = await ImagePicker()
+            .pickImage(source: ImageSource.camera, imageQuality: 70);
+
+        if (image == null) return;
+        selectedPhotos.add(image);
+        return;
 
       // Cancel the action
       case -1:
         return;
     }
-
-    var image = await ImagePicker().pickImage(
-      source: imageSource,
-      imageQuality: 80,
-    );
-
-    if (image == null) return;
-
-    selectedPhotos.add(image);
   }
 
   Future<void> photoSettings(int index) async {
@@ -68,12 +67,16 @@ class ReportSheetController extends GetxController {
     }
   }
 
-  void report() {
+  Future<void> report() async {
     String organizationName = selectedObject.value;
 
     String name = nameController.text.trim();
     String description = descriptionController.text.trim();
 
-    // TODO: CONNECT TO REPORT SERVICE
+    await ReportService()
+        .report(name, description, selectedPhotos, isAnonymous: true);
+
+    ScaffoldMessenger.of(Get.context!).showSnackBar(
+        const SnackBar(content: Text("Докладът е изпратен успешно.")));
   }
 }

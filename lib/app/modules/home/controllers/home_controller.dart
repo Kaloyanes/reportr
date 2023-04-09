@@ -9,6 +9,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reportr/app/modules/home/components/report_sheet/controllers/report_sheet_controller.dart';
 
 class HomeController extends GetxController {
+  final scaffKey = GlobalKey<ScaffoldState>();
+
   final sheetController = DraggableScrollableController();
   final markers = <Marker>{}.obs;
 
@@ -62,8 +64,6 @@ class HomeController extends GetxController {
   Future getLocations() async {
     // TODO: Get locations from firebase
 
-// example data
-    print("hello world");
     markers.add(
       Marker(
         markerId: const MarkerId("PGEE"),
@@ -155,4 +155,6 @@ class HomeController extends GetxController {
     //convert PNG bytes as BitmapDescriptor
     return BitmapDescriptor.fromBytes(data!.buffer.asUint8List());
   }
+
+  void openDrawer() => scaffKey.currentState!.openDrawer();
 }

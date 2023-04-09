@@ -13,6 +13,24 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      key: controller.scaffKey,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        toolbarHeight: 80,
+        leadingWidth: 80,
+        leading: Container(
+          margin: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50),
+            color: Theme.of(context).colorScheme.primaryContainer,
+          ),
+          child: IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () => controller.openDrawer(),
+          ),
+        ),
+      ),
       body: FutureBuilder(
         future: controller.getLocation(),
         builder: (context, snapshot) {
