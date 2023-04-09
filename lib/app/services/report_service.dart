@@ -35,17 +35,22 @@ class ReportService {
     }
 
     var store = FirebaseFirestore.instance;
-
     var storage = FirebaseStorage.instance;
 
-    // var photosLinks = <String>[];
+    var photosLinks = <String>[];
     var reference = storage.ref("reports/$uuid");
     for (var i = 0; i < photos.length; i++) {
       print(reference.fullPath);
       var ref = reference.child(i.toString());
 
       ref.putFile(File(photos[i].path));
+
+      photosLinks.add(await ref.getDownloadURL());
     }
+
+    ReportData.addAll({
+      "images": photosLinks,
+    });
 
     await store.collection("reports").doc(uuid).set(ReportData);
   }
