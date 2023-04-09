@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:ui' as ui;
+import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -11,6 +13,7 @@ import 'package:reportr/app/modules/home/components/report_sheet/controllers/rep
 
 class HomeController extends GetxController {
   final scaffKey = GlobalKey<ScaffoldState>();
+  GlobalKey sta = GlobalKey();
 
   final sheetController = DraggableScrollableController();
   final markers = <Marker>{}.obs;
@@ -23,6 +26,7 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     getLocations();
+    print("COLOR: ${Colors.indigo[700]!.value}");
     super.onInit();
   }
 
@@ -63,43 +67,91 @@ class HomeController extends GetxController {
   }
 
   Future getLocations() async {
-    var collection =
-        await FirebaseFirestore.instance.collection("users").get();
+    var collection = await FirebaseFirestore.instance.collection("users").get();
 
-     var docs = collection.docs;
+    var docs = collection.docs;
 
     for (var i = 0; i < docs.length; i++) {
-       var doc = docs[i].data();
-       var name = doc["name"] as String;
-       var location = doc["location"]  as GeoPoint;
+      var doc = docs[i].data();
+      var name = doc["name"] as String;
+      var location = doc["location"] as GeoPoint;
+      var color = Theme.of(Get.context!).colorScheme.primaryContainer;
 
-       markers.add(
-      Marker(
-        markerId: MarkerId(name),
-        position: LatLng(location.latitude, location.longitude),
-        onTap: () => Get.find<ReportSheetController>().showReportForm(name),
-      ),
-    );
+      if (doc.containsKey("color")) color = Color(doc["color"]);
+
+      var photo =
+          await FirebaseStorage.instance.refFromURL(doc["photoUrl"]).getData();
+
+      if (photo == null) continue;
+
+      markers.add(
+        Marker(
+          icon: await convertImageFileToCustomBitmapDescriptor(
+            photo,
+            title: name,
+            size: 150,
+            titleBackgroundColor: color,
+            addBorder: true,
+            borderColor: color,
+            borderSize: 20,
+          ),
+          markerId: MarkerId(name),
+          position: LatLng(location.latitude, location.longitude),
+          onTap: () => Get.find<ReportSheetController>().showReportForm(name),
+        ),
+      );
     }
   }
 
+  Future<BitmapDescriptor> getCustomPin(
+      Uint8List markerIcon, String name) async {
+    ui.Image? picture;
+
+    ui.decodeImageFromList(markerIcon, (result) {
+      picture = result;
+    });
+
+    final TextSpan span = TextSpan(
+      style: const TextStyle(color: Colors.black),
+      text: name,
+    );
+    final TextPainter tp = TextPainter(
+      text: span,
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    );
+    tp.layout();
+    final PictureRecorder pictureRecorder = PictureRecorder();
+    final Canvas canvas = Canvas(pictureRecorder);
+    canvas.drawImage(
+      picture!,
+      const Offset(0, 0),
+      Paint()
+        ..isAntiAlias = true
+        ..filterQuality = FilterQuality.high,
+    );
+    tp.paint(canvas, const Offset(0, 100));
+    final img = await pictureRecorder.endRecording().toImage(100, 150);
+    final data = await img.toByteData(format: ImageByteFormat.png);
+    return BitmapDescriptor.fromBytes(data!.buffer.asUint8List());
+  }
+
   Future<BitmapDescriptor> convertImageFileToCustomBitmapDescriptor(
-    Uint8List imageUint8List, {
-    int size = 150,
-    bool addBorder = false,
-    Color borderColor = Colors.white,
-    double borderSize = 10,
-    required String title,
-    Color titleColor = Colors.white,
-    Color titleBackgroundColor = Colors.black,
-  }) async {
+      Uint8List imageUint8List,
+      {int size = 150,
+      bool addBorder = false,
+      Color borderColor = Colors.white,
+      double borderSize = 10,
+      required String title,
+      Color titleColor = Colors.white,
+      Color titleBackgroundColor = Colors.black}) async {
     final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
     final Canvas canvas = Canvas(pictureRecorder);
     final Paint paint = Paint()..color;
     final TextPainter textPainter = TextPainter(
       textDirection: TextDirection.ltr,
     );
-    final double radius = size.toDouble();
+    final double radius = size / 2;
 
     //make canvas clip path to prevent image drawing over the circle
     final Path clipPath = Path();
@@ -129,9 +181,9 @@ class HomeController extends GetxController {
       canvas.drawCircle(Offset(radius, radius), radius, paint);
     }
 
-    if (title.split(" ").length > 1) {
-      title = title.split(" ")[0];
-    }
+    // if (title.split(" ").length > 1) {
+    //   title = title.split(" ")[0];
+    // }
 
     paint
       ..color = titleBackgroundColor
