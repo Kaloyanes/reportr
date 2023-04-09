@@ -75,28 +75,8 @@ class ReportSheetView extends GetView<ReportSheetController> {
                   const SizedBox(
                     height: 10,
                   ),
-                  TextField(
-                    controller: controller.descriptionController,
-                    decoration: const InputDecoration(
-                      label: Text("Описание на доклада"),
-                    ),
-                    maxLines: null,
-                  ),
                   const SizedBox(
                     height: 10,
-                  ),
-                  Obx(
-                    () => SwitchListTile(
-                      title: const Text(
-                        "Анонимно докладаване?",
-                      ),
-                      value: controller.anonReport.value,
-                      onChanged: (value) => controller.anonReport.value =
-                          !controller.anonReport.value,
-                      selected: controller.anonReport.value,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                    ),
                   ),
                 ],
               ),
@@ -155,6 +135,38 @@ class ReportSheetView extends GetView<ReportSheetController> {
                       ),
                     );
                   },
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: TextField(
+                controller: controller.descriptionController,
+                decoration: const InputDecoration(
+                  label: Text("Описание на доклада"),
+                ),
+                maxLines: null,
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Obx(
+                () => SwitchListTile(
+                  title: const Text(
+                    "Анонимно докладаване?",
+                  ),
+                  value: controller.anonReport.value,
+                  onChanged: (value) => controller.anonReport.value =
+                      !controller.anonReport.value,
+                  selected: controller.anonReport.value,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
                 ),
               ),
             ),

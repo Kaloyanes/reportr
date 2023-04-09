@@ -18,7 +18,7 @@ class ReportSheetController extends GetxController {
   void showReportForm(String name) {
     selectedObject.value = name;
     sheetController.animateTo(1,
-        duration: 500.milliseconds, curve: Curves.fastLinearToSlowEaseIn);
+        duration: 500.milliseconds, curve: Curves.fastEaseInToSlowEaseOut);
   }
 
   Future<void> addPhoto() async {
@@ -27,8 +27,6 @@ class ReportSheetController extends GetxController {
           builder: (context) => const PhotoPickerDialog(),
         ) ??
         -1;
-
-    var imageSource = ImageSource.camera;
 
     switch (chosen) {
       case 1:
@@ -39,15 +37,14 @@ class ReportSheetController extends GetxController {
 
       // Camera
       case 2:
-        var image = await ImagePicker()
-            .pickImage(source: ImageSource.camera, imageQuality: 70);
+        var image = await ImagePicker().pickImage(
+          source: ImageSource.camera,
+          imageQuality: 70,
+          preferredCameraDevice: CameraDevice.rear,
+        );
 
         if (image == null) return;
         selectedPhotos.add(image);
-        return;
-
-      // Cancel the action
-      case -1:
         return;
     }
   }
@@ -68,13 +65,15 @@ class ReportSheetController extends GetxController {
   }
 
   Future<void> report() async {
-    String organizationName = selectedObject.value;
-
     String name = nameController.text.trim();
     String description = descriptionController.text.trim();
 
-    await ReportService()
-        .report(name, description, selectedPhotos, isAnonymous: true);
+    await ReportService().report(
+      name,
+      description,
+      selectedPhotos,
+      isAnonymous: anonReport.value,
+    );
 
     ScaffoldMessenger.of(Get.context!).showSnackBar(
         const SnackBar(content: Text("Докладът е изпратен успешно.")));
@@ -82,5 +81,7 @@ class ReportSheetController extends GetxController {
     selectedPhotos.value = [];
     nameController.clear();
     descriptionController.clear();
+    sheetController.animateTo(0.1,
+        duration: 500.milliseconds, curve: Curves.fastEaseInToSlowEaseOut);
   }
 }

@@ -8,8 +8,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uuid/uuid.dart';
 import 'geo_service.dart';
 
-external DateTime add(Duration duration);
-
 class ReportService {
   Future report(
     String name,
@@ -40,9 +38,7 @@ class ReportService {
     var photosLinks = <String>[];
     var reference = storage.ref("reports/$uuid");
     for (var i = 0; i < photos.length; i++) {
-      print(reference.fullPath);
       var ref = reference.child(i.toString());
-
       ref.putFile(File(photos[i].path));
 
       photosLinks.add(await ref.getDownloadURL());
