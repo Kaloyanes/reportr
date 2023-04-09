@@ -10,37 +10,27 @@ class AuthService {
     await auth.signInWithEmailAndPassword(email: email, password: password);
   }
 
-  Future signUp(String email, String password, {bool? isOrganisation, LatLng? locationCord, String? role, String? name}) async {
-
+  Future signUp(String email, String password,
+      {bool? isOrganisation,
+      LatLng? locationCord,
+      String? role,
+      String? name}) async {
     var user = await auth.createUserWithEmailAndPassword(
-      email: email,
-      password: password
-    );
+        email: email, password: password);
 
     var docId = user.user!.uid;
 
     var store = FirebaseFirestore.instance;
 
-    var data = <String, dynamic>{
-      "email": email,
-      "name": name
-    };
+    var data = <String, dynamic>{"email": email, "name": name};
 
-    data.addAllIf(isOrganisation, {
-      "location": locationCord,
-      "role": role
-    });
+    data.addAllIf(isOrganisation, {"location": locationCord, "role": role});
 
     store.collection("users").doc(docId).set(data);
-    
   }
 
-  Future logOut() async => await FirebaseAuth.instance.signOut();
+  Future logOut() async => await auth.signOut();
 
-  Future forgotPassword(String email) async {
-    var auth = FirebaseAuth.instance;
-    await auth.sendPasswordResetEmail(
-      email: email
-    );
-  }
+  Future forgotPassword(String email) async =>
+      await auth.sendPasswordResetEmail(email: email);
 }

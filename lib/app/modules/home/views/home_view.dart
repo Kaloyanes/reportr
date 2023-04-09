@@ -57,20 +57,22 @@ class HomeView extends GetView<HomeController> {
           }
 
           return MapSwitcher(
-            child: Obx(() => GoogleMap(
-                  myLocationEnabled: true,
-                  initialCameraPosition: CameraPosition(
-                    target: snapshot.data ?? const LatLng(50, 50),
-                    zoom: 15,
-                  ),
-                  zoomControlsEnabled: false,
-                  myLocationButtonEnabled: false,
-                  mapType: MapType.hybrid,
-                  onMapCreated: (GoogleMapController mapControl) {
-                    controller.mapController = mapControl;
-                  },
-                  markers: controller.markers.toSet(),
-                )),
+            child: Obx(
+              () => GoogleMap(
+                myLocationEnabled: true,
+                initialCameraPosition: CameraPosition(
+                  target: snapshot.data ?? const LatLng(50, 50),
+                  zoom: 15,
+                ),
+                zoomControlsEnabled: false,
+                myLocationButtonEnabled: false,
+                mapType: MapType.hybrid,
+                onMapCreated: (GoogleMapController mapControl) {
+                  controller.mapController = mapControl;
+                },
+                markers: controller.markers.toSet(),
+              ),
+            ),
           );
         },
       ),

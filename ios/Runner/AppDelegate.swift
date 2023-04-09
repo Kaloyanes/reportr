@@ -13,4 +13,3 @@ import GoogleMaps
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }
-// AIzaSyBiCvSp65nf2XjjOHfBo5kffPRj3i04d94
