@@ -27,26 +27,6 @@ class HomeController extends GetxController {
   }
 
   Future<LatLng> getLocation() async {
-
-    var collection =
-        await FirebaseFirestore.instance.collection("users").get();
-
-     var docs = collection.docs;
-
-    for (var i = 0; i < docs.length; i++) {
-       var doc = docs[i].data();
-       var name = doc["name"] as String;
-       var location = doc["location"]  as GeoPoint;
-
-       markers.add(
-      Marker(
-        markerId: MarkerId(name),
-        position: LatLng(location.latitude, location.longitude),
-        onTap: () => Get.find<ReportSheetController>().showReportForm(name),
-      ),
-    );
-    }
-
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -83,15 +63,24 @@ class HomeController extends GetxController {
   }
 
   Future getLocations() async {
-    // TODO: Get locations from firebase
+    var collection =
+        await FirebaseFirestore.instance.collection("users").get();
 
-    markers.add(
+     var docs = collection.docs;
+
+    for (var i = 0; i < docs.length; i++) {
+       var doc = docs[i].data();
+       var name = doc["name"] as String;
+       var location = doc["location"]  as GeoPoint;
+
+       markers.add(
       Marker(
-        markerId: const MarkerId("PGEE"),
-        position: const LatLng(42.49777, 27.468258),
-        onTap: () => Get.find<ReportSheetController>().showReportForm("PGEE"),
+        markerId: MarkerId(name),
+        position: LatLng(location.latitude, location.longitude),
+        onTap: () => Get.find<ReportSheetController>().showReportForm(name),
       ),
     );
+    }
   }
 
   Future<BitmapDescriptor> convertImageFileToCustomBitmapDescriptor(
