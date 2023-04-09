@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui' as ui;
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -26,6 +27,26 @@ class HomeController extends GetxController {
   }
 
   Future<LatLng> getLocation() async {
+
+    var collection =
+        await FirebaseFirestore.instance.collection("users").get();
+
+     var docs = collection.docs;
+
+    for (var i = 0; i < docs.length; i++) {
+       var doc = docs[i].data();
+       var name = doc["name"] as String;
+       var location = doc["location"]  as GeoPoint;
+
+       markers.add(
+      Marker(
+        markerId: MarkerId(name),
+        position: LatLng(location.latitude, location.longitude),
+        onTap: () => Get.find<ReportSheetController>().showReportForm(name),
+      ),
+    );
+    }
+
     bool serviceEnabled;
     LocationPermission permission;
 
