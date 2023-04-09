@@ -1,46 +1,26 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'geo_service.dart';
+import 'login_service.dart';
 
-class AuthService {
-  final FirebaseAuth auth = FirebaseAuth.instance;
+class ReportService {
+  Future report(String name, XFile photo, {bool? isAnonymous}) async {
 
-  Future login(String email, String password) async {
-    await auth.signInWithEmailAndPassword(email: email, password: password);
-  }
+    GeoService geoService = GeoService();
+    LatLng location = await geoService.getLocation();
 
-  Future signUp(String email, String password, {bool? isOrganisation, LatLng? locationCord, String? role, String? name}) async {
+    AuthService authService = AuthService();
+    User? user = authService.auth.currentUser;
 
-    var user = await auth.createUserWithEmailAndPassword(
-      email: email,
-      password: password
-    );
-
-    var docId = user.user!.uid;
-
-    var store = FirebaseFirestore.instance;
-
-    var data = <String, dynamic>{
-      "email": email,
-      "name": name
-    };
-
-    data.addAllIf(isOrganisation, {
-      "location": locationCord,
-      "role": role
-    });
-
-    store.collection("users").doc(docId).set(data);
-    
-  }
-
-  static Future logOut() async => await FirebaseAuth.instance.signOut();
-
-  static Future forgotPassword(String email) async {
-    var auth = FirebaseAuth.instance;
-    await auth.sendPasswordResetEmail(
-      email: email
-    );
+    if (isAnonymous == true || user == null || user.isAnonymous) {
+      // report as anonymous user
+    } else {
+      // report as an existing user
+      var userId = user.uid;
+    }
   }
 }
+
+
+
