@@ -10,7 +10,7 @@ class AuthService {
     await auth.signInWithEmailAndPassword(email: email, password: password);
   }
 
-  Future signUp(String email, String password, {bool? isAnonymous, bool? isOrganisation, LatLng? locationCord, String? role, String? name}) async {
+  Future signUp(String email, String password, {bool? isOrganisation, LatLng? locationCord, String? role, String? name}) async {
 
     var user = await auth.createUserWithEmailAndPassword(
       email: email,
