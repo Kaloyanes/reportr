@@ -8,6 +8,7 @@ import 'package:reportr/app/services/report_service.dart';
 class ReportSheetController extends GetxController {
   final sheetController = DraggableScrollableController();
   final selectedObject = "".obs;
+  final selectedId = "".obs;
 
   final selectedPhotos = <XFile>[].obs;
 
@@ -15,8 +16,9 @@ class ReportSheetController extends GetxController {
   final TextEditingController descriptionController = TextEditingController();
   final anonReport = false.obs;
 
-  void showReportForm(String name) {
+  void showReportForm(String name, String id) {
     selectedObject.value = name;
+    selectedId.value = id;
     sheetController.animateTo(1,
         duration: 500.milliseconds, curve: Curves.fastEaseInToSlowEaseOut);
   }
@@ -69,6 +71,7 @@ class ReportSheetController extends GetxController {
     String description = descriptionController.text.trim();
 
     await ReportService().report(
+      selectedId.value,
       name,
       description,
       selectedPhotos,

@@ -95,9 +95,10 @@ class HomeController extends GetxController {
             borderColor: color,
             borderSize: 20,
           ),
-          markerId: MarkerId(name),
+          markerId: MarkerId(docs[i].id),
           position: LatLng(location.latitude, location.longitude),
-          onTap: () => Get.find<ReportSheetController>().showReportForm(name),
+          onTap: () => Get.find<ReportSheetController>()
+              .showReportForm(name, docs[i].id),
         ),
       );
     }

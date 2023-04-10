@@ -10,6 +10,7 @@ import 'geo_service.dart';
 
 class ReportService {
   Future report(
+    String orgId,
     String name,
     String description,
     List<XFile> photos, {
@@ -22,6 +23,7 @@ class ReportService {
     final today = DateTime.now();
 
     var ReportData = <String, dynamic>{
+      "organization": orgId,
       "name": name,
       "description": description,
       "date": today,
