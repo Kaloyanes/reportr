@@ -8,10 +8,71 @@ class SignInView extends GetView<SignInController> {
   const SignInView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    Get.lazyPut(() => SignInController());
     return Scaffold(
       appBar: AppBar(),
-      body: const Column(
-        children: [],
+      body: Form(
+        key: controller.formKey,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Влизане",
+                style: Theme.of(context).textTheme.displaySmall,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              TextFormField(
+                controller: controller.emailController,
+                decoration: const InputDecoration(
+                  label: Text("Емайл"),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Попълнете полето";
+                  }
+
+                  if (!value.isEmail) return "Неправилен имейл";
+                  return null;
+                },
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Obx(
+                () => TextFormField(
+                  controller: controller.passwordController,
+                  decoration: InputDecoration(
+                    label: const Text("Парола"),
+                    suffixIcon: IconButton(
+                      onPressed: () => controller.showPassword.value =
+                          !controller.showPassword.value,
+                      icon: const Icon(Icons.remove_red_eye),
+                    ),
+                  ),
+                  obscureText: controller.showPassword.value,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Попълнете полето";
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              FilledButton.tonalIcon(
+                onPressed: () => controller.login(),
+                icon: const Icon(Icons.login),
+                label: const Text("Влез"),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

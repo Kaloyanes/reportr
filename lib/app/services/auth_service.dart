@@ -6,9 +6,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class AuthService {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
-  Future login(String email, String password) async {
-    await auth.signInWithEmailAndPassword(email: email, password: password);
-  }
+  Future login(String email, String password) async =>
+      await auth.signInWithEmailAndPassword(email: email, password: password);
 
   Future signUp(String email, String password,
       {bool? isOrganisation,
@@ -23,7 +22,6 @@ class AuthService {
     var store = FirebaseFirestore.instance;
 
     var data = <String, dynamic>{"email": email, "name": name};
-
     data.addAllIf(isOrganisation, {"location": locationCord, "role": role});
 
     store.collection("users").doc(docId).set(data);

@@ -11,6 +11,11 @@ class Themes {
       splashFactory: InkSparkle.splashFactory,
       useMaterial3: true,
       colorScheme: colorScheme,
+      listTileTheme: ListTileThemeData(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+      ),
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
