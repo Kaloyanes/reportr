@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reportr/app/components/map_switcher.dart';
+import 'package:reportr/app/modules/home/components/home_drawer.dart';
 import 'package:reportr/app/modules/home/components/report_sheet/views/report_sheet_view.dart';
 
 import '../controllers/home_controller.dart';
@@ -13,6 +14,7 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const HomeDrawer(),
       extendBodyBehindAppBar: true,
       key: controller.scaffKey,
       appBar: AppBar(

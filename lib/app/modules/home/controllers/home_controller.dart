@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:ui' as ui;
-import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -102,39 +101,6 @@ class HomeController extends GetxController {
         ),
       );
     }
-  }
-
-  Future<BitmapDescriptor> getCustomPin(
-      Uint8List markerIcon, String name) async {
-    ui.Image? picture;
-
-    ui.decodeImageFromList(markerIcon, (result) {
-      picture = result;
-    });
-
-    final TextSpan span = TextSpan(
-      style: const TextStyle(color: Colors.black),
-      text: name,
-    );
-    final TextPainter tp = TextPainter(
-      text: span,
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-    );
-    tp.layout();
-    final PictureRecorder pictureRecorder = PictureRecorder();
-    final Canvas canvas = Canvas(pictureRecorder);
-    canvas.drawImage(
-      picture!,
-      const Offset(0, 0),
-      Paint()
-        ..isAntiAlias = true
-        ..filterQuality = FilterQuality.high,
-    );
-    tp.paint(canvas, const Offset(0, 100));
-    final img = await pictureRecorder.endRecording().toImage(100, 150);
-    final data = await img.toByteData(format: ImageByteFormat.png);
-    return BitmapDescriptor.fromBytes(data!.buffer.asUint8List());
   }
 
   Future<BitmapDescriptor> convertImageFileToCustomBitmapDescriptor(

@@ -9,15 +9,9 @@ class SignInView extends GetView<SignInController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('SignInView'),
-        centerTitle: true,
-      ),
-      body: const Center(
-        child: Text(
-          'SignInView is working',
-          style: TextStyle(fontSize: 20),
-        ),
+      appBar: AppBar(),
+      body: const Column(
+        children: [],
       ),
     );
   }

@@ -6,7 +6,9 @@ import 'package:reportr/app/modules/home/components/report_sheet/components/phot
 import 'package:reportr/app/services/report_service.dart';
 
 class ReportSheetController extends GetxController {
+  final formKey = GlobalKey<FormState>();
   final sheetController = DraggableScrollableController();
+
   final selectedObject = "".obs;
   final selectedId = "".obs;
 
@@ -67,6 +69,28 @@ class ReportSheetController extends GetxController {
   }
 
   Future<void> report() async {
+    if (!formKey.currentState!.validate()) {
+      await showDialog(
+        context: Get.context!,
+        builder: (context) => AlertDialog(
+          title: const Text("Оправете проблемите"),
+          icon: const Icon(
+            Icons.warning,
+            color: Colors.red,
+          ),
+          actionsAlignment: MainAxisAlignment.center,
+          actions: [
+            ElevatedButton(
+              onPressed: () => Get.back(),
+              child: const Text("Oк"),
+            ),
+          ],
+        ),
+      );
+
+      return;
+    }
+
     String name = nameController.text.trim();
     String description = descriptionController.text.trim();
 
