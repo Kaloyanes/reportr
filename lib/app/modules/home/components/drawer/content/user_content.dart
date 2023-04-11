@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:reportr/app/modules/home/components/drawer/drawer_destination.dart';
+import 'package:reportr/app/modules/reports/views/reports_view.dart';
 import 'package:reportr/app/services/auth_service.dart';
 
 class UserContent extends StatelessWidget {
@@ -15,7 +17,7 @@ class UserContent extends StatelessWidget {
           DrawerDestination(
             icon: CupertinoIcons.doc,
             label: "Докладвания",
-            onTap: () => print("REPORTS"),
+            onTap: () => Get.to(const ReportsView()),
           ),
           DrawerDestination(
             icon: CupertinoIcons.profile_circled,

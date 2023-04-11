@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reportr/app/modules/sign_up/views/location_picker_view.dart';
 import 'package:reportr/app/services/auth_service.dart';
 import 'package:reportr/app/services/geo_service.dart';
+import 'package:reportr/app/services/profile_service.dart';
 
 class SignUpController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -21,16 +21,13 @@ class SignUpController extends GetxController {
   final confirmPasswordController = TextEditingController();
   final locationPicked = const LatLng(40, 20).obs;
   final organizationColor = const Color.fromARGB(255, 255, 0, 0).obs;
+  final rolePicked = "reporter".obs;
+
+  final inviteCodeController = TextEditingController();
 
   final hidePassword = true.obs;
 
-  final Rx<Widget> optionalFields = Container(
-    child: const Column(
-      children: [
-        Text("Докладващ"),
-      ],
-    ),
-  ).obs;
+  final Rx<Widget> optionalFields = Container().obs;
 
   @override
   void onInit() {
@@ -47,15 +44,45 @@ class SignUpController extends GetxController {
       return;
     }
 
+    var data = <String, dynamic>{
+      "name": nameController.text.trim(),
+      "role": rolePicked.value,
+    };
+
+    data.addAllIf(rolePicked.value == "organization", {
+      "locationCord": GeoPoint(locationPicked.value.latitude, locationPicked.value.longitude),
+      "organizationColor": organizationColor.value.value,
+      "isVerified": false,
+      "inviteCode": ProfileService.createInviteCode(nameController.text.trim()),
+    });
+
+    data.addAllIf(rolePicked.value == "reporter", {
+      "xp": 0,
+    });
+
+    if (rolePicked.value == "employee") {
+      var result = await checkIfValidCode(inviteCodeController.text.trim());
+      if (!result["successful"]) {
+        showDialog(
+          context: Get.context!,
+          builder: (context) => const AlertDialog(
+            icon: Icon(Icons.warning_rounded),
+            title: Text("Не можахме да намерим организация с този код"),
+          ),
+        );
+        return;
+      }
+
+      data.addAll({
+        "organization": result["id"],
+      });
+    }
+
     try {
       await AuthService().signUp(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
-        name: nameController.text.trim(),
-        isOrganisation: isOrganization.value,
-        locationCord: locationPicked.value,
-        organizationColor: organizationColor.value,
-        role: isOrganization.value ? "organization" : "user",
+        data: data,
       );
     } on FirebaseException catch (e) {
       showDialog(
@@ -115,5 +142,22 @@ class SignUpController extends GetxController {
     );
 
     organizationColor.value = newColor;
+  }
+
+  Future<Map<String, dynamic>> checkIfValidCode(String value) async {
+    var store = FirebaseFirestore.instance;
+    var id = "";
+
+    var docs = await store
+        .collection("users")
+        .where("role", isEqualTo: "organization")
+        .where("inviteCode", isEqualTo: value)
+        .get();
+
+    if (docs.docs.isNotEmpty) {
+      id = docs.docs.first.id;
+    }
+
+    return {"successful": docs.docs.isNotEmpty, "id": id};
   }
 }

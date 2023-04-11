@@ -66,7 +66,7 @@ class HomeController extends GetxController {
           icon: await convertImageFileToCustomBitmapDescriptor(
             photo,
             title: name,
-            size: 150,
+            size: 130,
             titleBackgroundColor: color,
             addBorder: true,
             borderColor: color,
@@ -78,6 +78,7 @@ class HomeController extends GetxController {
         ),
       );
     }
+    showControls.value = true;
   }
 
   Future<BitmapDescriptor> convertImageFileToCustomBitmapDescriptor(Uint8List imageUint8List,

@@ -25,7 +25,7 @@ class ReportService {
 
     var reportData = <String, dynamic>{
       "organization": orgId,
-      "name": name,
+      "title": name,
       "description": description,
       "date": today,
       "location": GeoPoint(location.latitude, location.longitude),
@@ -38,18 +38,11 @@ class ReportService {
     var store = FirebaseFirestore.instance;
     var storage = FirebaseStorage.instance;
 
-    var photosLinks = <String>[];
     var reference = storage.ref("reports/$uuid");
     for (var i = 0; i < photos.length; i++) {
       var ref = reference.child(i.toString());
       ref.putFile(File(photos[i].path));
-
-      photosLinks.add(await ref.getDownloadURL());
     }
-
-    reportData.addAll({
-      "images": photosLinks,
-    });
 
     await store.collection("reports").doc(uuid).set(reportData);
   }

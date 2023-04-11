@@ -15,27 +15,27 @@ class SignUpView extends GetView<SignUpController> {
     Get.lazyPut(() => SignUpController());
 
     return Scaffold(
-      body: Form(
-        key: controller.formKey,
-        child: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) => [
-            SliverAppBar.large(
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) => [
+          SliverAppBar.large(
+            centerTitle: true,
+            title: Text(
+              "Регистрация",
+              style: Theme.of(context).textTheme.displaySmall,
+            ),
+            forceElevated: innerBoxIsScrolled,
+            flexibleSpace: const FlexibleSpaceBar(
               centerTitle: true,
               title: Text(
                 "Регистрация",
-                style: Theme.of(context).textTheme.displaySmall,
               ),
-              forceElevated: innerBoxIsScrolled,
-              flexibleSpace: const FlexibleSpaceBar(
-                centerTitle: true,
-                title: Text(
-                  "Регистрация",
-                ),
-                expandedTitleScale: 2,
-              ),
+              expandedTitleScale: 2,
             ),
-          ],
-          body: ListView(
+          ),
+        ],
+        body: Form(
+          key: controller.formKey,
+          child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 30.0),
             children: [
               const SizedBox(
@@ -44,8 +44,16 @@ class SignUpView extends GetView<SignUpController> {
               Obx(
                 () => TextFormField(
                   decoration: InputDecoration(
-                    label: Text(controller.isOrganization.value ? "Име на организацията" : "Име"),
+                    label: Text(controller.rolePicked.value == "organization" ? "Име на организацията" : "Име"),
                   ),
+                  controller: controller.nameController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Попълнете полето";
+                    }
+
+                    return null;
+                  },
                 ),
               ),
               const SizedBox(
@@ -125,48 +133,39 @@ class SignUpView extends GetView<SignUpController> {
                   children: [
                     DropdownButtonFormField(
                       decoration: const InputDecoration(label: Text("Вид акаунт")),
-                      value: 3,
+                      value: "reporter",
                       items: const [
-                        DropdownMenuItem<int>(
-                          value: 1,
+                        DropdownMenuItem<String>(
+                          value: "organization",
                           child: Text("Организация"),
                         ),
-                        DropdownMenuItem<int>(
-                          value: 2,
+                        DropdownMenuItem<String>(
+                          value: "employee",
                           child: Text("Работник"),
                         ),
-                        DropdownMenuItem<int>(
-                          value: 3,
+                        DropdownMenuItem<String>(
+                          value: "reporter",
                           child: Text("Докладващ"),
                         ),
                       ],
                       onChanged: (value) {
                         print(value);
+                        controller.rolePicked.value = value as String;
                         switch (value) {
-                          case 1:
+                          case "organization":
                             controller.optionalFields.value = Container(
                               child: organizationFields(context),
                             );
                             break;
 
-                          case 2:
+                          case "employee":
                             controller.optionalFields.value = Container(
-                              child: const Column(
-                                children: [
-                                  Text("Работник"),
-                                ],
-                              ),
+                              child: employeeFields(context),
                             );
                             break;
 
-                          case 3:
-                            controller.optionalFields.value = Container(
-                              child: const Column(
-                                children: [
-                                  Text("Докладващ"),
-                                ],
-                              ),
-                            );
+                          case "reporter":
+                            controller.optionalFields.value = Container();
                             break;
                         }
                       },
@@ -174,7 +173,7 @@ class SignUpView extends GetView<SignUpController> {
                     AnimatedSize(
                       duration: 700.ms,
                       curve: Curves.easeOutQuint,
-                      alignment: Alignment.bottomCenter,
+                      alignment: Alignment.topCenter,
                       child: controller.optionalFields.value,
                     ),
                   ],
@@ -256,6 +255,35 @@ class SignUpView extends GetView<SignUpController> {
             ),
             onTap: () => controller.changeColor(),
           ),
+        ),
+        const SizedBox(
+          height: 15,
+        ),
+      ],
+    );
+  }
+
+  Column employeeFields(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Divider(),
+        const SizedBox(
+          height: 15,
+        ),
+        TextFormField(
+          controller: controller.inviteCodeController,
+          decoration: const InputDecoration(
+            label: Text("Код"),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Попълнете полето";
+            }
+
+            return null;
+          },
         ),
         const SizedBox(
           height: 15,
