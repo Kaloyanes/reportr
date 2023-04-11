@@ -23,6 +23,7 @@ dependencies:
   path: ^1.8.2
   marker_icon: ^0.7.1
   flex_color_picker: ^3.2.0
+  crypt: ^4.2.1
 
 dev_dependencies:
   flutter_lints: ^2.0.0
