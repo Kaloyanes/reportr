@@ -1,5 +1,5 @@
 
-![Logo](https://cdn.discordapp.com/attachments/1045463014876397638/1095407841138966619/reportr_logo-removebg-preview.png)
+![Logo](https://ctrl.vi/i/ntbQeLX0jpg)
 
 # ReportR
 
