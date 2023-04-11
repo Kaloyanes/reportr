@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:core';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,7 +23,7 @@ class ReportService {
 
     final today = DateTime.now();
 
-    var ReportData = <String, dynamic>{
+    var reportData = <String, dynamic>{
       "organization": orgId,
       "name": name,
       "description": description,
@@ -31,7 +32,7 @@ class ReportService {
     };
 
     if (!isAnonymous) {
-      ReportData.addAll({"reporterId": user!.uid});
+      reportData.addAll({"reporterId": user!.uid});
     }
 
     var store = FirebaseFirestore.instance;
@@ -46,10 +47,19 @@ class ReportService {
       photosLinks.add(await ref.getDownloadURL());
     }
 
-    ReportData.addAll({
+    reportData.addAll({
       "images": photosLinks,
     });
 
-    await store.collection("reports").doc(uuid).set(ReportData);
+    await store.collection("reports").doc(uuid).set(reportData);
   }
+   Future<List<Map<String, dynamic>>> getReports(String orgid) async {
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection("reports")
+      .where("organization", isEqualTo: orgid)
+      .get();
+
+  return querySnapshot.docs.map((doc) => doc.data()).toList();
+}
+
 }
