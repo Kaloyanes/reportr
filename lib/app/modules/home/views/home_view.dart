@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reportr/app/components/map_switcher.dart';
 import 'package:reportr/app/modules/home/components/home_drawer.dart';
 import 'package:reportr/app/modules/home/components/report_sheet/views/report_sheet_view.dart';
+import 'package:reportr/app/services/geo_service.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -34,7 +35,7 @@ class HomeView extends GetView<HomeController> {
         ),
       ),
       body: FutureBuilder(
-        future: controller.getLocation(),
+        future: GeoService().getLocation(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(

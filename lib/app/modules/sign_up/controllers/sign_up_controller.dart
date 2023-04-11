@@ -1,23 +1,98 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flex_color_picker/flex_color_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:reportr/app/modules/sign_up/views/location_picker_view.dart';
+import 'package:reportr/app/services/auth_service.dart';
+import 'package:reportr/app/services/geo_service.dart';
 
 class SignUpController extends GetxController {
-  //TODO: Implement SignUpController
+  final formKey = GlobalKey<FormState>();
 
-  final count = 0.obs;
+  final isOrganization = false.obs;
+
+  late GoogleMapController mapController;
+
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+  final locationPicked = const LatLng(40, 20).obs;
+  final organizationColor = const Color.fromARGB(255, 255, 0, 0).obs;
+
+  final showPassword = false.obs;
+
   @override
   void onInit() {
+    setLocation();
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  Future setLocation() async {
+    locationPicked.value = await GeoService().getLocation();
   }
 
-  @override
-  void onClose() {
-    super.onClose();
+  Future register() async {
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
+
+    try {
+      await AuthService().login(emailController.text.trim(), passwordController.text.trim());
+    } on FirebaseException catch (e) {
+      showDialog(
+        context: Get.context!,
+        builder: (context) => AlertDialog(
+          icon: const Icon(Icons.warning),
+          title: Text(e.message!),
+        ),
+      );
+    }
   }
 
-  void increment() => count.value++;
+  Future<void> pickLocation() async {
+    var location = await Get.to<LatLng>(LocationPickerView(
+      location: locationPicked.value,
+    ));
+
+    if (location == null) return;
+
+    print(location);
+    locationPicked.value = location;
+    mapController.moveCamera(CameraUpdate.newLatLng(location));
+  }
+
+  Future changeColor() async {
+    // Wait for the dialog to return backgroundColor selection result.
+    final Color newColor = await showColorPickerDialog(
+      Get.context!,
+      organizationColor.value,
+      title: Text('Цвят на организацията', style: Theme.of(Get.context!).textTheme.titleLarge),
+      width: 50,
+      height: 40,
+      spacing: 0,
+      runSpacing: 0,
+      borderRadius: 0,
+      wheelDiameter: 165,
+      enableOpacity: false,
+      showColorCode: false,
+      colorCodeHasColor: true,
+      pickersEnabled: <ColorPickerType, bool>{
+        ColorPickerType.wheel: true,
+        ColorPickerType.accent: false,
+        ColorPickerType.primary: false,
+      },
+      showRecentColors: false,
+      actionButtons: const ColorPickerActionButtons(
+        okButton: true,
+        closeButton: true,
+        dialogActionButtons: true,
+      ),
+      // constraints: const BoxConstraints(minHeight: 480, minWidth: 320, maxWidth: 320),
+    );
+
+    organizationColor.value = newColor;
+  }
 }

@@ -36,6 +36,7 @@ class Themes {
           ),
         ),
       ),
+      appBarTheme: const AppBarTheme(shape: RoundedRectangleBorder()),
     );
   }
 }
