@@ -10,8 +10,15 @@ class AuthService {
   Future login(String email, String password) async =>
       await auth.signInWithEmailAndPassword(email: email, password: password);
 
-  Future signUp(String email, String password, String name,
-      {bool? isOrganisation, LatLng? locationCord, String? role, Color? organizationColor}) async {
+  Future signUp({
+    required String email,
+    required String password,
+    required String name,
+    bool? isOrganisation,
+    LatLng? locationCord,
+    String? role,
+    Color? organizationColor,
+  }) async {
     var user = await auth.createUserWithEmailAndPassword(email: email, password: password);
 
     var docId = user.user!.uid;
@@ -22,10 +29,10 @@ class AuthService {
     data.addAllIf(
       isOrganisation,
       {
-        "location": locationCord,
+        "location": GeoPoint(locationCord!.latitude, locationCord.longitude),
         "role": role,
-        "color": organizationColor,
-        "isVerfied": false,
+        "color": organizationColor!.value,
+        "isVerified": false,
       },
     );
 

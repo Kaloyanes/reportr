@@ -22,7 +22,15 @@ class SignUpController extends GetxController {
   final locationPicked = const LatLng(40, 20).obs;
   final organizationColor = const Color.fromARGB(255, 255, 0, 0).obs;
 
-  final showPassword = false.obs;
+  final hidePassword = true.obs;
+
+  final Rx<Widget> optionalFields = Container(
+    child: const Column(
+      children: [
+        Text("Докладващ"),
+      ],
+    ),
+  ).obs;
 
   @override
   void onInit() {
@@ -40,7 +48,15 @@ class SignUpController extends GetxController {
     }
 
     try {
-      await AuthService().login(emailController.text.trim(), passwordController.text.trim());
+      await AuthService().signUp(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+        name: nameController.text.trim(),
+        isOrganisation: isOrganization.value,
+        locationCord: locationPicked.value,
+        organizationColor: organizationColor.value,
+        role: isOrganization.value ? "organization" : "user",
+      );
     } on FirebaseException catch (e) {
       showDialog(
         context: Get.context!,
@@ -49,7 +65,12 @@ class SignUpController extends GetxController {
           title: Text(e.message!),
         ),
       );
+
+      return;
     }
+
+    Navigator.maybePop(Get.context!);
+    ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text("Успешно регистриран профил")));
   }
 
   Future<void> pickLocation() async {

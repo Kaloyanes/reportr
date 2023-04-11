@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reportr/app/components/map_switcher.dart';
-import 'package:reportr/app/modules/home/components/home_drawer.dart';
+import 'package:reportr/app/modules/home/components/drawer/drawer_component.dart';
 import 'package:reportr/app/modules/home/components/report_sheet/views/report_sheet_view.dart';
 import 'package:reportr/app/services/geo_service.dart';
 
@@ -15,7 +15,7 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const HomeDrawer(),
+      drawer: const DrawerComponent(),
       extendBodyBehindAppBar: true,
       key: controller.scaffKey,
       appBar: AppBar(
@@ -85,9 +85,7 @@ class HomeView extends GetView<HomeController> {
           return AnimatedSlide(
             curve: Curves.fastLinearToSlowEaseIn,
             duration: const Duration(seconds: 1, milliseconds: 400),
-            offset: controller.showControls.value
-                ? Offset.zero
-                : const Offset(0, 50),
+            offset: controller.showControls.value ? Offset.zero : const Offset(0, 50),
             child: FloatingActionButton(
               onPressed: () => controller.goToMyLocation(),
               child: const Icon(Icons.navigation),

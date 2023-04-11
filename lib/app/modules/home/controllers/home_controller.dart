@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:ui' as ui;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -25,7 +26,6 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     getLocations();
-    print("COLOR: ${Colors.indigo[700]!.value}");
     super.onInit();
   }
 
@@ -40,10 +40,15 @@ class HomeController extends GetxController {
   }
 
   Future getLocations() async {
-    var collection = await FirebaseFirestore.instance.collection("users").get();
+    var collection = await FirebaseFirestore.instance
+        .collection("users")
+        .where("role", isEqualTo: "organization")
+        .where("photoUrl", isNull: false)
+        .get();
 
     var docs = collection.docs;
 
+    inspect(docs);
     for (var i = 0; i < docs.length; i++) {
       var doc = docs[i].data();
       var name = doc["name"] as String;
@@ -52,8 +57,7 @@ class HomeController extends GetxController {
 
       if (doc.containsKey("color")) color = Color(doc["color"]);
 
-      var photo =
-          await FirebaseStorage.instance.refFromURL(doc["photoUrl"]).getData();
+      var photo = await FirebaseStorage.instance.refFromURL(doc["photoUrl"]).getData();
 
       if (photo == null) continue;
 
@@ -70,15 +74,13 @@ class HomeController extends GetxController {
           ),
           markerId: MarkerId(docs[i].id),
           position: LatLng(location.latitude, location.longitude),
-          onTap: () => Get.find<ReportSheetController>()
-              .showReportForm(name, docs[i].id),
+          onTap: () => Get.find<ReportSheetController>().showReportForm(name, docs[i].id),
         ),
       );
     }
   }
 
-  Future<BitmapDescriptor> convertImageFileToCustomBitmapDescriptor(
-      Uint8List imageUint8List,
+  Future<BitmapDescriptor> convertImageFileToCustomBitmapDescriptor(Uint8List imageUint8List,
       {int size = 150,
       bool addBorder = false,
       Color borderColor = Colors.white,
@@ -96,22 +98,17 @@ class HomeController extends GetxController {
 
     //make canvas clip path to prevent image drawing over the circle
     final Path clipPath = Path();
+    clipPath.addRRect(
+        RRect.fromRectAndRadius(Rect.fromLTWH(0, 0, size.toDouble(), size.toDouble()), const Radius.circular(100)));
     clipPath.addRRect(RRect.fromRectAndRadius(
-        Rect.fromLTWH(0, 0, size.toDouble(), size.toDouble()),
-        const Radius.circular(100)));
-    clipPath.addRRect(RRect.fromRectAndRadius(
-        Rect.fromLTWH(0, size * 8 / 10, size.toDouble(), size * 3 / 10),
-        const Radius.circular(100)));
+        Rect.fromLTWH(0, size * 8 / 10, size.toDouble(), size * 3 / 10), const Radius.circular(100)));
     canvas.clipPath(clipPath);
 
     //paintImage
     final ui.Codec codec = await ui.instantiateImageCodec(imageUint8List);
     final ui.FrameInfo imageFI = await codec.getNextFrame();
 
-    paintImage(
-        canvas: canvas,
-        rect: Rect.fromLTWH(0, 0, size.toDouble(), size.toDouble()),
-        image: imageFI.image);
+    paintImage(canvas: canvas, rect: Rect.fromLTWH(0, 0, size.toDouble(), size.toDouble()), image: imageFI.image);
 
     if (addBorder) {
       //draw Border
@@ -131,8 +128,7 @@ class HomeController extends GetxController {
       ..style = PaintingStyle.fill;
     canvas.drawRRect(
         RRect.fromRectAndRadius(
-            Rect.fromLTWH(0, size * 8 / 10, size.toDouble(), size * 3 / 10),
-            const Radius.circular(100)),
+            Rect.fromLTWH(0, size * 8 / 10, size.toDouble(), size * 3 / 10), const Radius.circular(100)),
         paint);
 
     //draw Title
@@ -144,15 +140,10 @@ class HomeController extends GetxController {
           color: titleColor,
         ));
     textPainter.layout();
-    textPainter.paint(
-        canvas,
-        Offset(radius - textPainter.width / 2,
-            size * 9.5 / 10 - textPainter.height / 2));
+    textPainter.paint(canvas, Offset(radius - textPainter.width / 2, size * 9.5 / 10 - textPainter.height / 2));
 
     //convert canvas as PNG bytes
-    final image = await pictureRecorder
-        .endRecording()
-        .toImage(size, (size * 1.1).toInt());
+    final image = await pictureRecorder.endRecording().toImage(size, (size * 1.1).toInt());
     final data = await image.toByteData(format: ui.ImageByteFormat.png);
 
     //convert PNG bytes as BitmapDescriptor

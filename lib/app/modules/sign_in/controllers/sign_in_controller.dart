@@ -16,8 +16,7 @@ class SignInController extends GetxController {
     }
 
     try {
-      await AuthService()
-          .login(emailController.text.trim(), passwordController.text.trim());
+      await AuthService().login(emailController.text.trim(), passwordController.text.trim());
     } on FirebaseException catch (e) {
       showDialog(
         context: Get.context!,
@@ -26,6 +25,11 @@ class SignInController extends GetxController {
           title: Text(e.message!),
         ),
       );
+
+      return;
     }
+
+    Get.back();
+    ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text("Успешно влязохте в акаунта си")));
   }
 }

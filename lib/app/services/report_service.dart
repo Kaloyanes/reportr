@@ -53,13 +53,15 @@ class ReportService {
 
     await store.collection("reports").doc(uuid).set(reportData);
   }
-   Future<List<Map<String, dynamic>>> getReports(String orgid) async {
-  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-      .collection("reports")
-      .where("organization", isEqualTo: orgid)
-      .get();
 
-  return querySnapshot.docs.map((doc) => doc.data()).toList();
-}
+  Future<List<Map<String, dynamic>>> getReports(String orgid) async {
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection("reports").where("organization", isEqualTo: orgid).get();
 
+    return querySnapshot.docs
+        .map(
+          (e) => Map<String, dynamic>.from(e.data() as Map),
+        )
+        .toList();
+  }
 }
