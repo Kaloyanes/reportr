@@ -1,5 +1,5 @@
 
-![Logo](https://cdn.discordapp.com/attachments/1045463014876397638/1095407841138966619/reportr_logo-removebg-preview.png)
+![Logo](https://cdn.discordapp.com/attachments/1045463014876397638/1095408884354650223/c2TFgd5i_4x.jpg)
 
 # ReportR
 
@@ -40,10 +40,10 @@ Another key lesson we learned is the power of collaboration. By working together
 3. The Benefits of Using Cutting-Edge Technologies:
 Working with the latest technologies, such as Flutter, allowed us to create an app that is more intuitive and user-friendly than older technologies would have allowed. We also found that using modern tools and frameworks helped us to streamline the development process and improve our productivity.
 
-4. The Importance of Staying Agile
+4. The Importance of Staying Agile:
 Throughout the development process, we had to remain flexible and adaptable in order to respond to changing requirements and new challenges. By staying agile and continuously iterating on our work, we believe that we were able to deliver a high-quality product that meets the needs of our users.
 
-5. The Value of Persistence
+5. The Value of Persistence:
 Finally, we learned that persistence is key to success in software development. Even when faced with setbacks and obstacles, we persevered and kept pushing forward. By staying focused on our goals and working together as a team, we were able to overcome challenges and create a product that we're proud of.
 
 ## Licenses
