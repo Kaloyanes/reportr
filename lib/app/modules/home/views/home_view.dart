@@ -83,7 +83,7 @@ class HomeView extends GetView<HomeController> {
       floatingActionButton: Obx(
         () {
           return AnimatedSlide(
-            curve: Curves.fastEaseInToSlowEaseOut,
+            curve: Curves.easeOutQuad,
             duration: const Duration(seconds: 1, milliseconds: 400),
             offset: controller.showControls.value ? Offset.zero : const Offset(0, 50),
             child: FloatingActionButton(

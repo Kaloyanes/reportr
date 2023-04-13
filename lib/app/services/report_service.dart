@@ -39,22 +39,13 @@ class ReportService {
     var storage = FirebaseStorage.instance;
 
     var reference = storage.ref("reports/$uuid");
+    var uploadTasks = <UploadTask>[];
+
     for (var i = 0; i < photos.length; i++) {
       var ref = reference.child(i.toString());
-      ref.putFile(File(photos[i].path));
+      uploadTasks.add(ref.putFile(File(photos[i].path)));
     }
 
-    await store.collection("reports").doc(uuid).set(reportData);
-  }
-
-  Future<List<Map<String, dynamic>>> getReports(String orgid) async {
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection("reports").where("organization", isEqualTo: orgid).get();
-
-    return querySnapshot.docs
-        .map(
-          (e) => Map<String, dynamic>.from(e.data() as Map),
-        )
-        .toList();
+    uploadTasks[0].then((p0) async => await store.collection("reports").doc(uuid).set(reportData));
   }
 }

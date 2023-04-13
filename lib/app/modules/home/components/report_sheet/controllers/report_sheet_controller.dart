@@ -21,8 +21,7 @@ class ReportSheetController extends GetxController {
   void showReportForm(String name, String id) {
     selectedObject.value = name;
     selectedId.value = id;
-    sheetController.animateTo(1,
-        duration: 500.milliseconds, curve: Curves.fastEaseInToSlowEaseOut);
+    sheetController.animateTo(1, duration: 500.milliseconds, curve: Curves.easeOutQuart);
   }
 
   Future<void> addPhoto() async {
@@ -102,13 +101,11 @@ class ReportSheetController extends GetxController {
       isAnonymous: anonReport.value,
     );
 
-    ScaffoldMessenger.of(Get.context!).showSnackBar(
-        const SnackBar(content: Text("Докладът е изпратен успешно.")));
+    ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text("Докладът е изпратен успешно.")));
 
     selectedPhotos.value = [];
     nameController.clear();
     descriptionController.clear();
-    sheetController.animateTo(0.1,
-        duration: 500.milliseconds, curve: Curves.fastEaseInToSlowEaseOut);
+    sheetController.animateTo(0.1, duration: 500.milliseconds, curve: Curves.easeOutQuart);
   }
 }

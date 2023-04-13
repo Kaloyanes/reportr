@@ -8,7 +8,7 @@ class SignInController extends GetxController {
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final showPassword = false.obs;
+  final hidePassword = true.obs;
 
   Future login() async {
     if (!formKey.currentState!.validate()) {

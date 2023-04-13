@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reportr/app/modules/home/components/report_sheet/controllers/report_sheet_controller.dart';
@@ -57,8 +58,7 @@ class ReportSheetView extends GetView<ReportSheetController> {
                 }
 
                 return Center(
-                  child: Text("Доклад към $val",
-                      style: Theme.of(context).textTheme.headlineMedium),
+                  child: Text("Доклад към $val", style: Theme.of(context).textTheme.headlineMedium),
                 );
               }),
               const SizedBox(
@@ -104,18 +104,17 @@ class ReportSheetView extends GetView<ReportSheetController> {
                       if (index == controller.selectedPhotos.length) {
                         return Card(
                           elevation: 3,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
+                          clipBehavior: Clip.hardEdge,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                           child: InkWell(
                             onTap: () => controller.addPhoto(),
-                            child: const SizedBox(
+                            child: SizedBox(
                               width: 200,
                               height: 100,
                               child: Center(
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: const [
                                     Icon(Icons.add_a_photo),
                                     Text("Добави снимка"),
                                   ],
@@ -128,6 +127,7 @@ class ReportSheetView extends GetView<ReportSheetController> {
 
                       return Card(
                         elevation: 3,
+                        clipBehavior: Clip.hardEdge,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -170,22 +170,21 @@ class ReportSheetView extends GetView<ReportSheetController> {
               const SizedBox(
                 height: 20,
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Obx(
-                  () => SwitchListTile.adaptive(
-                    title: const Text(
-                      "Анонимно докладаване?",
+              if (FirebaseAuth.instance.currentUser != null)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Obx(
+                    () => CheckboxListTile(
+                      title: const Text(
+                        "Анонимно докладаване?",
+                      ),
+                      value: controller.anonReport.value,
+                      onChanged: (value) => controller.anonReport.value = !controller.anonReport.value,
+                      selected: controller.anonReport.value,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                     ),
-                    value: controller.anonReport.value,
-                    onChanged: (value) => controller.anonReport.value =
-                        !controller.anonReport.value,
-                    selected: controller.anonReport.value,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15)),
                   ),
                 ),
-              ),
               const SizedBox(
                 height: 20,
               ),

@@ -52,7 +52,7 @@ class HomeController extends GetxController {
     for (var i = 0; i < docs.length; i++) {
       var doc = docs[i].data();
       var name = doc["name"] as String;
-      var location = doc["location"] as GeoPoint;
+      var location = doc["locationCord"] as GeoPoint;
       var color = Theme.of(Get.context!).colorScheme.primaryContainer;
 
       if (doc.containsKey("color")) color = Color(doc["color"]);

@@ -48,12 +48,11 @@ class SignInView extends GetView<SignInController> {
                   decoration: InputDecoration(
                     label: const Text("Парола"),
                     suffixIcon: IconButton(
-                      onPressed: () => controller.showPassword.value =
-                          !controller.showPassword.value,
+                      onPressed: () => controller.hidePassword.value = !controller.hidePassword.value,
                       icon: const Icon(Icons.remove_red_eye),
                     ),
                   ),
-                  obscureText: controller.showPassword.value,
+                  obscureText: controller.hidePassword.value,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Попълнете полето";
