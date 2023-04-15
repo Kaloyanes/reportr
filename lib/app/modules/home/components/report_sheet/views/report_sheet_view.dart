@@ -170,21 +170,30 @@ class ReportSheetView extends GetView<ReportSheetController> {
               const SizedBox(
                 height: 20,
               ),
-              if (FirebaseAuth.instance.currentUser != null)
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Obx(
-                    () => CheckboxListTile(
-                      title: const Text(
-                        "Анонимно докладаване?",
+              StreamBuilder(
+                stream: FirebaseAuth.instance.authStateChanges(),
+                initialData: FirebaseAuth.instance.currentUser,
+                builder: (context, snapshot) {
+                  if (snapshot.data == null) {
+                    return Container();
+                  }
+
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Obx(
+                      () => CheckboxListTile(
+                        title: const Text(
+                          "Анонимно докладаване?",
+                        ),
+                        value: controller.anonReport.value,
+                        onChanged: (value) => controller.anonReport.value = !controller.anonReport.value,
+                        selected: controller.anonReport.value,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                       ),
-                      value: controller.anonReport.value,
-                      onChanged: (value) => controller.anonReport.value = !controller.anonReport.value,
-                      selected: controller.anonReport.value,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                     ),
-                  ),
-                ),
+                  );
+                },
+              ),
               const SizedBox(
                 height: 20,
               ),

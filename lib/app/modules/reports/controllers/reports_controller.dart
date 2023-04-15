@@ -9,6 +9,7 @@ class ReportsContoller extends GetxController {
   @override
   void onInit() {
     setStream();
+
     super.onInit();
   }
 
@@ -21,8 +22,6 @@ class ReportsContoller extends GetxController {
       );
     }
 
-    print("GOT THE STREAM");
-
     stream.value = FirebaseFirestore.instance
         .collection("reports")
         .where(
@@ -31,8 +30,6 @@ class ReportsContoller extends GetxController {
         )
         .orderBy("date", descending: true)
         .snapshots();
-
-    print("SETT THE STREAM");
   }
 
   Future refreshList() async {

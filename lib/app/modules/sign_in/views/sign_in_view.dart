@@ -26,6 +26,7 @@ class SignInView extends GetView<SignInController> {
                 height: 20,
               ),
               TextFormField(
+                keyboardType: TextInputType.emailAddress,
                 controller: controller.emailController,
                 decoration: const InputDecoration(
                   label: Text("Емайл"),
@@ -62,7 +63,14 @@ class SignInView extends GetView<SignInController> {
                 ),
               ),
               const SizedBox(
-                height: 15,
+                height: 5,
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () => controller.forgotPassword(),
+                  child: const Text("Забравена парола?"),
+                ),
               ),
               FilledButton.tonalIcon(
                 onPressed: () => controller.login(),

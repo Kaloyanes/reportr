@@ -36,7 +36,10 @@ class ReportsView extends GetView<ReportsContoller> {
                 child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
-                    mainAxisExtent: 400,
+                    // mainAxisExtent: 440,
+                    childAspectRatio: 9 / 20,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
                   ),
                   itemCount: docs.length,
                   itemBuilder: (context, index) {

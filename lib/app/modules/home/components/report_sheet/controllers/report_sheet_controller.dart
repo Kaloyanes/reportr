@@ -68,11 +68,11 @@ class ReportSheetController extends GetxController {
   }
 
   Future<void> report() async {
-    if (!formKey.currentState!.validate()) {
+    if (selectedId.value == "") {
       await showDialog(
         context: Get.context!,
         builder: (context) => AlertDialog(
-          title: const Text("Оправете проблемите"),
+          title: const Text("Изберете организация от картата"),
           icon: const Icon(
             Icons.warning,
             color: Colors.red,
@@ -89,6 +89,8 @@ class ReportSheetController extends GetxController {
 
       return;
     }
+
+    if (!formKey.currentState!.validate()) return;
 
     String name = nameController.text.trim();
     String description = descriptionController.text.trim();

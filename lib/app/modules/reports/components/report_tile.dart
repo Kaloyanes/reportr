@@ -27,6 +27,9 @@ class ReportTile extends GetView<ReportTileController> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting || snapshot.data == null || !snapshot.hasData) {
             return Container(
+              constraints: const BoxConstraints(
+                maxHeight: 300,
+              ),
               child: const Center(
                 child: CircularProgressIndicator(),
               ),
@@ -46,7 +49,7 @@ class ReportTile extends GetView<ReportTileController> {
             child: Column(
               children: [
                 Container(
-                  constraints: const BoxConstraints(maxHeight: 300),
+                  constraints: const BoxConstraints(maxHeight: 250),
                   child: Hero(
                     tag: snapshot.data![0],
                     child: CachedNetworkImage(
@@ -69,8 +72,11 @@ class ReportTile extends GetView<ReportTileController> {
                   child: Text(
                     report.title,
                     style: Theme.of(context).textTheme.titleLarge,
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.left,
                   ),
+                ),
+                Expanded(
+                  child: Container(),
                 ),
                 Divider(
                   color: Theme.of(context).colorScheme.outline,
@@ -81,15 +87,22 @@ class ReportTile extends GetView<ReportTileController> {
                     children: [
                       Align(
                         alignment: Alignment.centerLeft,
+                        child: Text(report.reporterId == "anon" ? "Анонимен" : "Hello world"),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
                         child: Text(
                           controller.formatter.format(report.date),
                         ),
                       ),
-                      Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(report.reporterId == "anon" ? "Анонимен" : "Hello world")),
                     ],
                   ),
+                ),
+                const SizedBox(
+                  height: 10,
                 ),
               ],
             ),

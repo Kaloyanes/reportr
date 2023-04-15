@@ -129,9 +129,12 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
                 Card(
                   child: Column(
                     children: [
-                      Text("Описание", style: Theme.of(context).textTheme.headlineMedium),
+                      Text("Описание", style: Theme.of(context).textTheme.headlineSmall),
                       const Divider(),
-                      Text(controller.report.description, style: Theme.of(context).textTheme.bodyLarge)
+                      Text(
+                        controller.report.description,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      )
                     ],
                   ),
                 ),
