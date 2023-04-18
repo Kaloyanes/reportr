@@ -28,8 +28,8 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
         children: [
           Center(
             child: Container(
-              margin: const EdgeInsets.only(bottom: 20, top: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              margin: const EdgeInsets.symmetric(vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Text(
                 controller.report.title,
                 style: Theme.of(context).textTheme.headlineLarge,
@@ -157,11 +157,17 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
                 Card(
                   child: Column(
                     children: [
-                      Text("Описание", style: Theme.of(context).textTheme.headlineSmall),
-                      const Divider(),
-                      Text(
-                        controller.report.description,
-                        style: Theme.of(context).textTheme.bodyLarge,
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 7),
+                        child: Text("Описание", style: Theme.of(context).textTheme.headlineSmall),
+                      ),
+                      const Divider(height: 5),
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Text(
+                          controller.report.description,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
                       )
                     ],
                   ),

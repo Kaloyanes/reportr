@@ -29,7 +29,8 @@ class ReportService {
       "description": description,
       "date": today,
       "location": GeoPoint(location.latitude, location.longitude),
-      "reporterId": "anon"
+      "reporterId": "anon",
+      "rating": 0,
     };
 
     if (!isAnonymous) {

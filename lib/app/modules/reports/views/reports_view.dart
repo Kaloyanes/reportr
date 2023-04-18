@@ -25,7 +25,7 @@ class ReportsView extends GetView<ReportsContoller> {
             itemBuilder: (context) => [
               PopupMenuItem(
                 child: const Text("Най-скорошни"),
-                onTap: () => controller.sort("recent"),
+                onTap: () => controller.sort("date"),
               ),
               PopupMenuItem(
                 child: const Text("Най-приоритетни"),

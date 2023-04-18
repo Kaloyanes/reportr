@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Themes {
   static ThemeData generateTheme(bool darkMode) {
     var colorScheme = ColorScheme.fromSeed(
-      seedColor: Colors.red,
+      seedColor: Colors.deepPurple,
       brightness: darkMode ? Brightness.dark : Brightness.light,
     );
 
