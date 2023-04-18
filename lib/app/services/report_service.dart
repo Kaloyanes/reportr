@@ -29,10 +29,11 @@ class ReportService {
       "description": description,
       "date": today,
       "location": GeoPoint(location.latitude, location.longitude),
+      "reporterId": "anon"
     };
 
     if (!isAnonymous) {
-      reportData.addAll({"reporterId": user!.uid});
+      reportData["reporterId"] = user!.uid;
     }
 
     var store = FirebaseFirestore.instance;

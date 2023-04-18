@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:reportr/app/services/profile_service.dart';
 
 class ReportsContoller extends GetxController {
   Rx<Stream?> stream = const Stream.empty().obs;
+  final scaffKey = GlobalKey<ScaffoldState>();
+  final settingsBox = GetStorage("reportSettings");
 
   @override
   void onInit() {
@@ -28,7 +32,7 @@ class ReportsContoller extends GetxController {
           "organization",
           isEqualTo: data["role"] == "organization" ? FirebaseAuth.instance.currentUser!.uid : data["organization"],
         )
-        .orderBy("date", descending: true)
+        .orderBy(settingsBox.read("order") ?? "date", descending: true)
         .snapshots();
   }
 
@@ -38,5 +42,24 @@ class ReportsContoller extends GetxController {
     stream.value = const Stream.empty();
 
     stream.value = temp;
+  }
+
+  Future sort(String order) async {
+    var data = await ProfileService().getProfileInfo();
+
+    if (data == null) {
+      throw ArgumentError(
+        "Нямате права или не сте влезли в организация",
+      );
+    }
+
+    var strea = FirebaseFirestore.instance.collection("reports").where(
+          "organization",
+          isEqualTo: data["role"] == "organization" ? FirebaseAuth.instance.currentUser!.uid : data["organization"],
+        );
+
+    stream.value = strea.orderBy(order, descending: true).snapshots();
+
+    await settingsBox.write("order", order);
   }
 }

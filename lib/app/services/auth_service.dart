@@ -24,6 +24,7 @@ class AuthService {
     var store = FirebaseFirestore.instance;
 
     data.addAll({"email": email});
+    data.addAll({"photoUrl": ""});
 
     // var data = <String, dynamic>{"email": email, "name": name};
     // data.addAllIf(

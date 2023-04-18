@@ -69,24 +69,12 @@ class ReportSheetController extends GetxController {
 
   Future<void> report() async {
     if (selectedId.value == "") {
-      await showDialog(
-        context: Get.context!,
-        builder: (context) => AlertDialog(
-          title: const Text("Изберете организация от картата"),
-          icon: const Icon(
-            Icons.warning,
-            color: Colors.red,
-          ),
-          actionsAlignment: MainAxisAlignment.center,
-          actions: [
-            ElevatedButton(
-              onPressed: () => Get.back(),
-              child: const Text("Oк"),
-            ),
-          ],
-        ),
-      );
+      showError("Изберете организация от картата");
+      return;
+    }
 
+    if (selectedPhotos.isEmpty) {
+      showError("Не можете да нямате снимки");
       return;
     }
 
@@ -109,5 +97,25 @@ class ReportSheetController extends GetxController {
     nameController.clear();
     descriptionController.clear();
     sheetController.animateTo(0.1, duration: 500.milliseconds, curve: Curves.easeOutQuart);
+  }
+
+  Future<dynamic> showError(String title) {
+    return showDialog(
+      context: Get.context!,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        icon: const Icon(
+          Icons.warning,
+          color: Colors.red,
+        ),
+        actionsAlignment: MainAxisAlignment.center,
+        actions: [
+          ElevatedButton(
+            onPressed: () => Get.back(),
+            child: const Text("Oк"),
+          ),
+        ],
+      ),
+    );
   }
 }

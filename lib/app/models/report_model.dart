@@ -11,6 +11,7 @@ class Report {
   String organization;
   String reporterId;
   GeoPoint location;
+  double rating;
   Report({
     required this.id,
     required this.title,
@@ -19,6 +20,7 @@ class Report {
     required this.organization,
     required this.reporterId,
     required this.location,
+    required this.rating,
   });
 
   Map<String, dynamic> toMap() {
@@ -42,8 +44,11 @@ class Report {
       description: map['description'] as String,
       date: DateTime.fromMillisecondsSinceEpoch((map['date'] as Timestamp).millisecondsSinceEpoch),
       organization: map['organization'] as String,
-      reporterId: map['reporterId'] as String,
+      reporterId: map.containsKey("reporterId") ? map["reporterId"] : "anon",
       location: map['location'] as GeoPoint,
+      rating: double.parse(
+        map["rating"].toString(),
+      ),
     );
   }
 
@@ -64,6 +69,7 @@ class Report {
     String? organization,
     String? reporterId,
     GeoPoint? location,
+    double? rating,
   }) {
     return Report(
       id: id ?? this.id,
@@ -73,6 +79,7 @@ class Report {
       organization: organization ?? this.organization,
       reporterId: reporterId ?? this.reporterId,
       location: location ?? this.location,
+      rating: rating ?? this.rating,
     );
   }
 }

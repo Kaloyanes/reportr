@@ -2,13 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reportr/app/models/report_model.dart';
+import 'package:reportr/app/models/reporter_model.dart';
 import 'package:reportr/app/modules/report_details/views/report_details_view.dart';
 import 'package:reportr/app/modules/reports/components/report_tile_controller.dart';
 
 class ReportTile extends GetView<ReportTileController> {
-  const ReportTile({super.key, required this.report});
+  const ReportTile({super.key, required this.report, required this.reporter});
 
   final Report report;
+  final Reporter reporter;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class ReportTile extends GetView<ReportTileController> {
         ),
       ),
       child: FutureBuilder(
-        future: controller.getImages(report),
+        future: controller.getFirstImage(report),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting || snapshot.data == null || !snapshot.hasData) {
             return Container(
@@ -42,7 +44,8 @@ class ReportTile extends GetView<ReportTileController> {
                 () => const ReportDetailsView(),
                 arguments: {
                   "report": report,
-                  "images": snapshot.data,
+                  "reporter": reporter,
+                  "thumbnail": snapshot.data,
                 },
               );
             },
@@ -51,11 +54,11 @@ class ReportTile extends GetView<ReportTileController> {
                 Container(
                   constraints: const BoxConstraints(maxHeight: 250),
                   child: Hero(
-                    tag: snapshot.data![0],
+                    tag: snapshot.data!,
                     child: CachedNetworkImage(
-                      imageUrl: snapshot.data![0],
+                      imageUrl: snapshot.data!,
                       imageBuilder: (context, imageProvider) => ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
                         child: Image(
                           image: imageProvider,
                         ),
@@ -73,30 +76,41 @@ class ReportTile extends GetView<ReportTileController> {
                     report.title,
                     style: Theme.of(context).textTheme.titleLarge,
                     textAlign: TextAlign.left,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
                   ),
                 ),
                 Expanded(
                   child: Container(),
                 ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      controller.formatter.format(report.date),
+                    ),
+                  ),
+                ),
                 Divider(
                   color: Theme.of(context).colorScheme.outline,
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Column(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(report.reporterId == "anon" ? "Анонимен" : "Hello world"),
+                      CircleAvatar(
+                        radius: 15,
+                        foregroundImage: CachedNetworkImageProvider(reporter.photoUrl),
+                        child: const Icon(Icons.person),
                       ),
                       const SizedBox(
-                        height: 10,
+                        width: 10,
                       ),
                       Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          controller.formatter.format(report.date),
-                        ),
+                        alignment: Alignment.centerLeft,
+                        child: Text(reporter.name),
                       ),
                     ],
                   ),
