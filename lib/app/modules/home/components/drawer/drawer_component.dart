@@ -33,23 +33,15 @@ class _DrawerComponentState extends State<DrawerComponent> {
             padding: const EdgeInsets.symmetric(
               horizontal: 15,
             ),
-            child: FittedBox(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "ReportR",
-                        style: TextStyle(
-                          fontSize: 30,
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
+            child: Center(
+              child: FittedBox(
+                child: Text(
+                  "ReportR",
+                  style: TextStyle(
+                    fontSize: 30,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
-                ],
+                ),
               ),
             ),
           ),

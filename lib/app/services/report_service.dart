@@ -33,7 +33,7 @@ class ReportService {
       "rating": 0,
     };
 
-    if (!isAnonymous) {
+    if (!isAnonymous || FirebaseAuth.instance.currentUser != null) {
       reportData["reporterId"] = user!.uid;
     }
 

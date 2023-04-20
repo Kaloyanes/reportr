@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -88,7 +89,7 @@ class ReportSheetController extends GetxController {
       name,
       description,
       selectedPhotos,
-      isAnonymous: anonReport.value,
+      isAnonymous: FirebaseAuth.instance.currentUser == null ? true : anonReport.value,
     );
 
     ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text("Докладът е изпратен успешно.")));
@@ -97,6 +98,7 @@ class ReportSheetController extends GetxController {
     nameController.clear();
     descriptionController.clear();
     sheetController.animateTo(0.1, duration: 500.milliseconds, curve: Curves.easeOutQuart);
+    FocusScope.of(Get.context!).unfocus();
   }
 
   Future<dynamic> showError(String title) {

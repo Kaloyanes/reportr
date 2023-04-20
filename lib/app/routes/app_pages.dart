@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/profile/bindings/profile_binding.dart';
+import '../modules/profile/views/profile_view.dart';
 import '../modules/report_details/bindings/report_details_binding.dart';
 import '../modules/report_details/views/report_details_view.dart';
 import '../modules/sign_in/bindings/sign_in_binding.dart';
@@ -36,6 +38,11 @@ class AppPages {
       name: _Paths.REPORT_DETAILS,
       page: () => const ReportDetailsView(),
       binding: ReportDetailsBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROFILE,
+      page: () => const ProfileView(),
+      binding: ProfileBinding(),
     ),
   ];
 }

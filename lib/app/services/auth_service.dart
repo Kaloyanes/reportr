@@ -26,17 +26,6 @@ class AuthService {
     data.addAll({"email": email});
     data.addAll({"photoUrl": ""});
 
-    // var data = <String, dynamic>{"email": email, "name": name};
-    // data.addAllIf(
-    //   isOrganisation,
-    //   {
-    //     "location": GeoPoint(locationCord!.latitude, locationCord.longitude),
-    //     "role": role,
-    //     "color": organizationColor!.value,
-    //     "isVerified": false,
-    //   },
-    // );
-
     await store.collection("users").doc(docId).set(data);
   }
 

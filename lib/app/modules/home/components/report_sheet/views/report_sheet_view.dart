@@ -69,6 +69,7 @@ class ReportSheetView extends GetView<ReportSheetController> {
                 child: Column(
                   children: [
                     TextFormField(
+                      autofocus: false,
                       controller: controller.nameController,
                       decoration: const InputDecoration(
                         label: Text("Името на доклада"),
@@ -153,6 +154,7 @@ class ReportSheetView extends GetView<ReportSheetController> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: TextFormField(
+                  autofocus: false,
                   controller: controller.descriptionController,
                   decoration: const InputDecoration(
                     label: Text("Описание на доклада"),

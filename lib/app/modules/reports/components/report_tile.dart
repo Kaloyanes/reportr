@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:reportr/app/models/report_model.dart';
 import 'package:reportr/app/models/reporter_model.dart';
@@ -94,6 +95,21 @@ class ReportTile extends GetView<ReportTileController> {
                 ),
                 Divider(
                   color: Theme.of(context).colorScheme.outline,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                  child: Center(
+                    child: FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: RatingBar.builder(
+                        itemBuilder: (context, index) => const Icon(Icons.star),
+                        onRatingUpdate: (val) {},
+                        ignoreGestures: true,
+                        initialRating: report.rating,
+                        allowHalfRating: true,
+                      ),
+                    ),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
