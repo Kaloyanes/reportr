@@ -75,6 +75,7 @@ class SignUpController extends GetxController {
 
       data.addAll({
         "organization": result["id"],
+        "inviteCode": inviteCodeController.text.trim(),
       });
     }
 

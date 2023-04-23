@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:reportr/app/modules/chats/bindings/chats_binding.dart';
+import 'package:reportr/app/modules/chats/views/chats_view.dart';
 
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
@@ -44,5 +46,10 @@ class AppPages {
       page: () => const ProfileView(),
       binding: ProfileBinding(),
     ),
+    GetPage(
+      name: _Paths.CHATS,
+      page: () => const ChatsView(),
+      binding: ChatsBinding(),
+    )
   ];
 }

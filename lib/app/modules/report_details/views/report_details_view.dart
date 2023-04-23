@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -18,6 +19,10 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
     return Scaffold(
       appBar: AppBar(
         actions: [
+          IconButton(
+            onPressed: () => controller.createChat(),
+            icon: const Icon(CupertinoIcons.chat_bubble_fill),
+          ),
           IconButton(
             onPressed: () => controller.delete(),
             icon: const Icon(Icons.delete),

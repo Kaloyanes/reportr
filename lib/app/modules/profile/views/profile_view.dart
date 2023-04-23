@@ -3,10 +3,13 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:reportr/app/components/map_switcher.dart';
 import 'package:reportr/app/services/profile_service.dart';
 
 import '../controllers/profile_controller.dart';
@@ -23,10 +26,25 @@ class ProfileView extends GetView<ProfileController> {
           title: const Text('Профил'),
           centerTitle: true,
         ),
-        body: Column(
-          children: [
-            profilePicture(),
-          ],
+        body: Form(
+          key: controller.formKey,
+          child: Column(
+            children: [
+              profilePicture(),
+              TextFormField(
+                controller: controller.nameController,
+              ),
+              TextFormField(
+                controller: controller.emailController,
+              ),
+              TextFormField(
+                controller: controller.inviteController,
+              ),
+              AnimatedSize(
+                duration: 500.ms,
+              )
+            ],
+          ),
         ),
         floatingActionButton: Obx(
           () => FloatingActionButton(
@@ -131,6 +149,72 @@ class ProfileView extends GetView<ProfileController> {
               ),
             ),
           ),
+        ),
+      ],
+    );
+  }
+
+  Column organizationFields(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Divider(),
+        const SizedBox(
+          height: 15,
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            "Локация на организацията",
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+        ),
+        const SizedBox(
+          height: 15,
+        ),
+        SizedBox(
+          height: 150,
+          child: StreamBuilder(
+            stream: controller.locationLatLng.stream,
+            initialData: controller.locationLatLng.value,
+            builder: (context, snapshot) {
+              return MapSwitcher(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: GoogleMap(
+                    onMapCreated: (mapController) => controller.mapController = mapController,
+                    onTap: (argument) => controller.pickLocation(),
+                    initialCameraPosition: CameraPosition(
+                      target: snapshot.data ?? const LatLng(40, 20),
+                      zoom: 17,
+                    ),
+                    mapToolbarEnabled: false,
+                    liteModeEnabled: true,
+                    mapType: MapType.hybrid,
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(
+          height: 15,
+        ),
+        Obx(
+          () => ListTile(
+            title: const Text('Изберете цвят на организацията'),
+            trailing: ColorIndicator(
+              width: 44,
+              height: 44,
+              borderRadius: 22,
+              color: controller.organizationColor.value,
+            ),
+            onTap: () => controller.changeColor(),
+          ),
+        ),
+        const SizedBox(
+          height: 15,
         ),
       ],
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:reportr/app/modules/chats/views/chats_view.dart';
 import 'package:reportr/app/modules/home/components/drawer/drawer_destination.dart';
 import 'package:reportr/app/modules/profile/views/profile_view.dart';
 import 'package:reportr/app/modules/reports/views/reports_view.dart';
@@ -19,7 +20,14 @@ class UserContent extends StatelessWidget {
           DrawerDestination(
             icon: CupertinoIcons.doc,
             label: "Докладвания",
-            onTap: () => Get.to(const ReportsView()),
+            onTap: () => Get.to(() => const ReportsView()),
+          ),
+          DrawerDestination(
+            icon: CupertinoIcons.chat_bubble,
+            label: "Чатове",
+            onTap: () => Get.to(
+              () => const ChatsView(),
+            ),
           ),
           const Spacer(),
           DrawerDestination(

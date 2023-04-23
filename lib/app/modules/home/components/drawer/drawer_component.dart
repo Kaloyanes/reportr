@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -55,7 +56,31 @@ class _DrawerComponentState extends State<DrawerComponent> {
               }
 
               if (snapshot.hasData) {
-                return const UserContent();
+                return FutureBuilder(
+                  future: FirebaseFirestore.instance.collection("users").doc(snapshot.data!.uid).get(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+
+                    switch (snapshot.data!.data()!["role"]) {
+                      case "reporter":
+                        return const UserContent();
+
+                      case "employee":
+                        return const UserContent();
+
+                      case "organization":
+                        return const UserContent();
+                    }
+
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                );
               }
 
               return const AnonContent();

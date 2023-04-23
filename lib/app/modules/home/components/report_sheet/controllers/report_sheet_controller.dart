@@ -25,6 +25,17 @@ class ReportSheetController extends GetxController {
     sheetController.animateTo(1, duration: 500.milliseconds, curve: Curves.easeOutQuart);
   }
 
+  @override
+  void onInit() {
+    sheetController.addListener(() {
+      print(sheetController.size);
+      if (sheetController.size <= 0.2) {
+        FocusScope.of(Get.context!).unfocus();
+      }
+    });
+    super.onInit();
+  }
+
   Future<void> addPhoto() async {
     int chosen = await showDialog<int>(
           context: Get.context!,
