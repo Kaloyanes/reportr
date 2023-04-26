@@ -51,6 +51,10 @@ class ProfileView extends GetView<ProfileController> {
                       child: controller.roleChild.value,
                     ),
                   ),
+                  FilledButton.tonal(
+                    onPressed: () => controller.deleteProfile(),
+                    child: const Text("Изтрий профила"),
+                  ),
                   SizedBox(
                     height: Get.mediaQuery.viewPadding.bottom + 20,
                   )

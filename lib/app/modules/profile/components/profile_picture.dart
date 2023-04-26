@@ -75,7 +75,7 @@ class ProfilePicture extends StatelessWidget {
             alignment: Alignment.bottomRight,
             child: Container(
               decoration: BoxDecoration(
-                color: Theme.of(Get.context!).scaffoldBackgroundColor.withAlpha(100),
+                color: Theme.of(context).scaffoldBackgroundColor.withAlpha(100),
                 borderRadius: BorderRadius.circular(360),
               ),
               child: IconButton(

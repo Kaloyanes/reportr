@@ -72,8 +72,6 @@ class ChatsView extends GetView<ChatsController> {
                           initials += element[0];
                         });
 
-                        print(personData["photoUrl"]);
-
                         var reporter = Reporter.fromMap(personData, snapshot.data!.id);
 
                         return ListTile(

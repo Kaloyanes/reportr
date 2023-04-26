@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class Themes {
-  static ThemeData generateTheme(bool darkMode) {
-    var colorScheme = ColorScheme.fromSeed(
-      seedColor: Colors.deepPurple,
-      brightness: darkMode ? Brightness.dark : Brightness.light,
-    );
+  static ThemeData generateTheme(bool darkMode, {ColorScheme? color}) {
+    var brightness = darkMode ? Brightness.dark : Brightness.light;
+    var colorScheme = color?.copyWith(brightness: brightness) ??
+        ColorScheme.fromSeed(
+          seedColor: Colors.indigo,
+          brightness: brightness,
+        );
 
     return ThemeData(
         splashFactory: InkSparkle.splashFactory,

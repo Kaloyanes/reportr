@@ -264,7 +264,6 @@ class ChatController extends GetxController {
     var ref = FirebaseStorage.instance.ref("/chats/${Get.arguments["docId"]}/${file.name}");
     var upload = ref.putFile(File(file.path!));
 
-    print("uploading");
     upload.whenComplete(() async {
       collection.doc().set({
         "sender": FirebaseAuth.instance.currentUser!.uid,

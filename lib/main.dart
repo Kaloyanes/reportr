@@ -1,3 +1,4 @@
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,14 +43,18 @@ class App extends StatelessWidget {
       systemNavigationBarColor: Colors.transparent,
     ));
 
-    return GetMaterialApp(
-      title: "Application",
-      initialRoute: AppPages.INITIAL,
-      getPages: AppPages.routes,
-      debugShowCheckedModeBanner: false,
-      theme: Themes.generateTheme(false),
-      darkTheme: Themes.generateTheme(true),
-      routingCallback: (value) => HapticFeedback.mediumImpact(),
+    return DynamicColorBuilder(
+      builder: (lightDynamic, darkDynamic) {
+        return GetMaterialApp(
+          title: "Application",
+          initialRoute: AppPages.INITIAL,
+          getPages: AppPages.routes,
+          debugShowCheckedModeBanner: false,
+          theme: Themes.generateTheme(false, color: lightDynamic),
+          darkTheme: Themes.generateTheme(true, color: darkDynamic),
+          routingCallback: (value) => HapticFeedback.mediumImpact(),
+        );
+      },
     );
   }
 }

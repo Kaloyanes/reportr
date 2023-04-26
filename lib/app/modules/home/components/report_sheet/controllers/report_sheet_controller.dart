@@ -28,8 +28,7 @@ class ReportSheetController extends GetxController {
   @override
   void onInit() {
     sheetController.addListener(() {
-      print(sheetController.size);
-      if (sheetController.size <= 0.2) {
+      if (sheetController.size <= 0.3) {
         FocusScope.of(Get.context!).unfocus();
       }
     });

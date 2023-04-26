@@ -47,8 +47,8 @@ class FileMessage extends StatelessWidget {
           String path = dir.path;
 
           await dio.download(message.value, '$path/${ref.name}');
-          ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context).showSnackBar(
+          ScaffoldMessenger.of(Get.context!).clearSnackBars();
+          ScaffoldMessenger.of(Get.context!).showSnackBar(
             SnackBar(
               content: Text("Успешно изтеглихте ${ref.name}"),
               behavior: SnackBarBehavior.floating,

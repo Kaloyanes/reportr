@@ -9,11 +9,13 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:reportr/app/modules/profile/components/fields/employee_fields.dart';
 import 'package:reportr/app/modules/profile/components/fields/organization_fields.dart';
 import 'package:reportr/app/modules/profile/views/image_crop_view.dart';
 import 'package:reportr/app/modules/sign_up/views/location_picker_view.dart';
 import 'package:reportr/app/routes/app_pages.dart';
 import "package:path/path.dart" as p;
+import 'package:reportr/app/services/profile_service.dart';
 
 class ProfileController extends GetxController {
   late GoogleMapController mapController;
@@ -28,14 +30,17 @@ class ProfileController extends GetxController {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final ImagePicker _picker = ImagePicker();
+
   final auth = FirebaseAuth.instance;
   final storage = FirebaseStorage.instance;
   final store = FirebaseFirestore.instance;
 
+  final inviteCodeChanged = false.obs;
+
   final Rx<Widget> roleChild = Container().obs;
 
   Future<bool> exitPage() async {
-    FocusScope.of(Get.context!).requestFocus(FocusNode());
+    FocusScope.of(Get.context!).unfocus();
     if (!savedSettings.value) return Future.value(true);
 
     return await showDialog(
@@ -230,10 +235,14 @@ class ProfileController extends GetxController {
         ? LatLng((data["locationCord"] as GeoPoint).latitude, (data["locationCord"] as GeoPoint).longitude)
         : const LatLng(0, 0);
 
-    inviteController.text = data["role"] != "reporter" ? data["inviteCode"] : "";
+    inviteController.text = role.value != "reporter" ? data["inviteCode"] : "";
     if (role.value == "organization") {
       organizationColor.value = Color(data["organizationColor"]);
       roleChild.value = Container(child: OrganizationFields(controller: Get.find<ProfileController>()));
+    }
+
+    if (role.value == "employee") {
+      roleChild.value = Container(child: EmployeeFields(controller: Get.find<ProfileController>()));
     }
 
     setListeners();
@@ -254,13 +263,15 @@ class ProfileController extends GetxController {
 
     var data = <String, dynamic>{
       "name": nameController.text.trim(),
-      "inviteCode": inviteController.text.trim(),
     };
 
     data.addAllIf(role.value == "organization", {
       "locationCord": GeoPoint(locationLatLng.value.latitude, locationLatLng.value.longitude),
       "organizationColor": organizationColor.value.value,
+      "inviteCode": inviteController.text.trim(),
     });
+
+    data.addIf(role.value == "employee", "inviteCode", inviteController.text.trim());
 
     var email = emailController.text.trim();
     if (email != auth.currentUser!.email) {
@@ -368,5 +379,39 @@ class ProfileController extends GetxController {
     );
 
     organizationColor.value = newColor;
+  }
+
+  Future changeOrganization() async {
+    var result = await ProfileService.checkIfValidCode(inviteController.text.trim());
+
+    if (!result["successful"]) {
+      showDialog(
+        context: Get.context!,
+        builder: (context) => AlertDialog(
+          icon: const Icon(Icons.close, size: 40),
+          title: const Text("Не успяхме да намерим организация с този код"),
+          content: Expanded(
+            child: FilledButton(
+              child: const Text("Ок"),
+              onPressed: () => Get.back(),
+            ),
+          ),
+        ),
+      );
+      return;
+    }
+
+    inviteCodeChanged.value = false;
+
+    var org = result["organization"];
+    FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).update({
+      "organization": org,
+      "inviteCode": inviteController.text,
+    });
+    ScaffoldMessenger.of(Get.context!).showSnackBar(
+      const SnackBar(
+        content: Text("Организацията е запазена"),
+      ),
+    );
   }
 }
