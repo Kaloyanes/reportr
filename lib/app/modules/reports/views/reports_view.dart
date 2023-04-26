@@ -58,6 +58,7 @@ class ReportsView extends GetView<ReportsContoller> {
                 onRefresh: () => controller.refreshList(),
                 triggerMode: RefreshIndicatorTriggerMode.onEdge,
                 child: GridView.builder(
+                  cacheExtent: 1000,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
                     // mainAxisExtent: 440,

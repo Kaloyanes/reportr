@@ -116,11 +116,10 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Column(
               children: [
-                Row(
-                  children: [
-                    Flexible(
-                      flex: 1,
-                      child: Card(
+                FittedBox(
+                  child: Row(
+                    children: [
+                      Card(
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Row(
@@ -134,18 +133,17 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
                               const SizedBox(
                                 width: 10,
                               ),
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: FittedBox(child: Text(controller.reporter.name)),
+                              FittedBox(
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(controller.reporter.name),
+                                ),
                               ),
                             ],
                           ),
                         ),
                       ),
-                    ),
-                    Flexible(
-                      flex: 1,
-                      child: Card(
+                      Card(
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Row(
@@ -162,9 +160,9 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
                             ],
                           ),
                         ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
                 Card(
                   child: Column(

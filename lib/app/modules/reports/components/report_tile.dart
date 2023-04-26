@@ -28,17 +28,6 @@ class ReportTile extends GetView<ReportTileController> {
       child: FutureBuilder(
         future: controller.getFirstImage(report),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting || snapshot.data == null || !snapshot.hasData) {
-            return Container(
-              constraints: const BoxConstraints(
-                maxHeight: 300,
-              ),
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-
           return InkWell(
             onTap: () async {
               Get.to(
@@ -52,23 +41,36 @@ class ReportTile extends GetView<ReportTileController> {
             },
             child: Column(
               children: [
-                Container(
-                  constraints: const BoxConstraints(maxHeight: 250),
-                  child: Hero(
-                    createRectTween: (begin, end) => MaterialRectCenterArcTween(begin: begin, end: end),
-                    tag: snapshot.data!,
-                    child: CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      imageUrl: snapshot.data!,
-                      imageBuilder: (context, imageProvider) => ClipRRect(
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                        child: Image(
-                          image: imageProvider,
+                Builder(
+                  builder: (context) {
+                    if (snapshot.connectionState == ConnectionState.waiting ||
+                        snapshot.data == null ||
+                        !snapshot.hasData) {
+                      return const SizedBox(
+                        height: 200,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+
+                    return Container(
+                      child: Hero(
+                        createRectTween: (begin, end) => MaterialRectCenterArcTween(begin: begin, end: end),
+                        tag: snapshot.data!,
+                        child: CachedNetworkImage(
+                          fit: BoxFit.cover,
+                          imageUrl: snapshot.data!,
+                          imageBuilder: (context, imageProvider) => ClipRRect(
+                            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                            child: Image(
+                              image: imageProvider,
+                            ),
+                          ),
                         ),
                       ),
-                      fadeInDuration: 400.milliseconds,
-                    ),
-                  ),
+                    );
+                  },
                 ),
                 const SizedBox(
                   height: 10,
@@ -81,7 +83,7 @@ class ReportTile extends GetView<ReportTileController> {
                       style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 18),
                       textAlign: TextAlign.left,
                       // softWrap: false,
-                      maxLines: 3,
+                      maxLines: 2,
                     ),
                   ),
                 ),
@@ -117,22 +119,25 @@ class ReportTile extends GetView<ReportTileController> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      CircleAvatar(
-                        radius: 15,
-                        foregroundImage: CachedNetworkImageProvider(reporter.photoUrl),
-                        child: const Icon(Icons.person),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(reporter.name),
-                      ),
-                    ],
+                  child: FittedBox(
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        CircleAvatar(
+                          radius: 15,
+                          foregroundImage: CachedNetworkImageProvider(reporter.photoUrl),
+                          child: const Icon(Icons.person),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(reporter.name),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(

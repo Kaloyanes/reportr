@@ -189,7 +189,7 @@ class ReportDetailsController extends GetxController {
             ),
           ),
           Container(
-            margin: const EdgeInsets.all(20),
+            margin: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
             alignment: Alignment.topRight,
             child: FloatingActionButton(
               onPressed: () => Get.back(),

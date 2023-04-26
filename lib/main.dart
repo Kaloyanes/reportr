@@ -49,6 +49,7 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: Themes.generateTheme(false),
       darkTheme: Themes.generateTheme(true),
+      routingCallback: (value) => HapticFeedback.mediumImpact(),
     );
   }
 }
