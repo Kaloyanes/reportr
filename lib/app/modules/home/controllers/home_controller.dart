@@ -55,7 +55,7 @@ class HomeController extends GetxController {
       var location = doc["locationCord"] as GeoPoint;
       var color = Theme.of(Get.context!).colorScheme.primaryContainer;
 
-      if (doc.containsKey("color")) color = Color(doc["color"]);
+      if (doc.containsKey("organizationColor")) color = Color(doc["organizationColor"]);
 
       var photo = await FirebaseStorage.instance.refFromURL(doc["photoUrl"]).getData();
 

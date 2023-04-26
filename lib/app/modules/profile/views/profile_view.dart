@@ -1,16 +1,8 @@
-import 'dart:io';
-
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:reportr/app/components/map_switcher.dart';
-import 'package:reportr/app/services/profile_service.dart';
+import 'package:reportr/app/modules/profile/components/profile_picture.dart';
 
 import '../controllers/profile_controller.dart';
 
@@ -26,24 +18,45 @@ class ProfileView extends GetView<ProfileController> {
           title: const Text('Профил'),
           centerTitle: true,
         ),
-        body: Form(
-          key: controller.formKey,
-          child: Column(
-            children: [
-              profilePicture(),
-              TextFormField(
-                controller: controller.nameController,
+        body: SingleChildScrollView(
+          child: Form(
+            key: controller.formKey,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Column(
+                children: [
+                  ProfilePicture(controller: controller),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    decoration: const InputDecoration(label: Text("Име")),
+                    controller: controller.nameController,
+                    onChanged: (value) => controller.savedSettings.value = true,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(label: Text("Имейл")),
+                    controller: controller.emailController,
+                    onChanged: (value) => controller.savedSettings.value = true,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Obx(
+                    () => AnimatedSize(
+                      alignment: Alignment.topCenter,
+                      curve: Curves.easeOutExpo,
+                      duration: 500.ms,
+                      child: controller.roleChild.value,
+                    ),
+                  ),
+                  SizedBox(
+                    height: Get.mediaQuery.viewPadding.bottom + 20,
+                  )
+                ],
               ),
-              TextFormField(
-                controller: controller.emailController,
-              ),
-              TextFormField(
-                controller: controller.inviteController,
-              ),
-              AnimatedSize(
-                duration: 500.ms,
-              )
-            ],
+            ),
           ),
         ),
         floatingActionButton: Obx(
@@ -78,145 +91,6 @@ class ProfileView extends GetView<ProfileController> {
               ),
         ),
       ),
-    );
-  }
-
-  Widget profilePicture() {
-    return Stack(
-      alignment: Alignment.center,
-      fit: StackFit.loose,
-      clipBehavior: Clip.antiAlias,
-      children: [
-        Align(
-          alignment: Alignment.center,
-          child: StreamBuilder(
-            stream:
-                FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).snapshots(),
-            builder: (context, snapshot) => FutureBuilder(
-              future: ProfileService().getProfileInfo(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting || !snapshot.hasData || snapshot.hasError) {
-                  return const CircularProgressIndicator();
-                }
-
-                return Obx(() {
-                  if (controller.photo.value.path != "") {
-                    return CircleAvatar(
-                      radius: 100,
-                      foregroundImage: FileImage(
-                        File(controller.photo.value.path),
-                      ),
-                    );
-                  }
-
-                  var data = snapshot.data;
-
-                  Widget child = CircleAvatar(
-                    radius: 100,
-                    child: Text(
-                      data!["initials"] ?? "",
-                      style: const TextStyle(fontSize: 60),
-                    ),
-                  );
-
-                  if (data["photoUrl"]?.isNotEmpty ?? false) {
-                    child = CircleAvatar(
-                      radius: 100,
-                      foregroundImage: CachedNetworkImageProvider(data["photoUrl"] ?? ""),
-                    );
-                  }
-
-                  return child;
-                });
-              },
-            ),
-          ),
-        ),
-        SizedBox(
-          height: MediaQuery.of(Get.context!).size.height / 4.5,
-          width: 212,
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(Get.context!).scaffoldBackgroundColor.withAlpha(100),
-                borderRadius: BorderRadius.circular(360),
-              ),
-              child: IconButton(
-                onPressed: () => controller.selectPhoto(),
-                icon: const Icon(Icons.add_a_photo),
-                iconSize: 30,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Column organizationFields(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Divider(),
-        const SizedBox(
-          height: 15,
-        ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            "Локация на организацията",
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-        ),
-        const SizedBox(
-          height: 15,
-        ),
-        SizedBox(
-          height: 150,
-          child: StreamBuilder(
-            stream: controller.locationLatLng.stream,
-            initialData: controller.locationLatLng.value,
-            builder: (context, snapshot) {
-              return MapSwitcher(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: GoogleMap(
-                    onMapCreated: (mapController) => controller.mapController = mapController,
-                    onTap: (argument) => controller.pickLocation(),
-                    initialCameraPosition: CameraPosition(
-                      target: snapshot.data ?? const LatLng(40, 20),
-                      zoom: 17,
-                    ),
-                    mapToolbarEnabled: false,
-                    liteModeEnabled: true,
-                    mapType: MapType.hybrid,
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-        const SizedBox(
-          height: 15,
-        ),
-        Obx(
-          () => ListTile(
-            title: const Text('Изберете цвят на организацията'),
-            trailing: ColorIndicator(
-              width: 44,
-              height: 44,
-              borderRadius: 22,
-              color: controller.organizationColor.value,
-            ),
-            onTap: () => controller.changeColor(),
-          ),
-        ),
-        const SizedBox(
-          height: 15,
-        ),
-      ],
     );
   }
 }

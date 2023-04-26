@@ -61,13 +61,13 @@ class SignUpController extends GetxController {
     });
 
     if (rolePicked.value == "employee") {
-      var result = await checkIfValidCode(inviteCodeController.text.trim());
+      var result = await ProfileService.checkIfValidCode(inviteCodeController.text.trim());
       if (!result["successful"]) {
         showDialog(
           context: Get.context!,
           builder: (context) => const AlertDialog(
             icon: Icon(Icons.warning_rounded),
-            title: Text("Не можахме да намерим организация с този код"),
+            title: Text("Не успяхме да намерим организация с този код"),
           ),
         );
         return;
@@ -135,30 +135,15 @@ class SignUpController extends GetxController {
       },
       showRecentColors: false,
       actionButtons: const ColorPickerActionButtons(
-        okButton: true,
-        closeButton: true,
+        okButton: false,
+        closeButton: false,
         dialogActionButtons: true,
+        dialogCancelButtonLabel: "Отказ",
       ),
+
       // constraints: const BoxConstraints(minHeight: 480, minWidth: 320, maxWidth: 320),
     );
 
     organizationColor.value = newColor;
-  }
-
-  Future<Map<String, dynamic>> checkIfValidCode(String value) async {
-    var store = FirebaseFirestore.instance;
-    var id = "";
-
-    var docs = await store
-        .collection("users")
-        .where("role", isEqualTo: "organization")
-        .where("inviteCode", isEqualTo: value)
-        .get();
-
-    if (docs.docs.isNotEmpty) {
-      id = docs.docs.first.id;
-    }
-
-    return {"successful": docs.docs.isNotEmpty, "id": id};
   }
 }

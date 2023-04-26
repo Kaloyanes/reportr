@@ -53,4 +53,21 @@ class ProfileService {
         salt: "helreportr",
         rounds: Random().nextInt(10000) + 1000,
       ).hash.substring(0, 10);
+
+  static Future<Map<String, dynamic>> checkIfValidCode(String value) async {
+    var store = FirebaseFirestore.instance;
+    var id = "";
+
+    var docs = await store
+        .collection("users")
+        .where("role", isEqualTo: "organization")
+        .where("inviteCode", isEqualTo: value)
+        .get();
+
+    if (docs.docs.isNotEmpty) {
+      id = docs.docs.first.id;
+    }
+
+    return {"successful": docs.docs.isNotEmpty, "id": id};
+  }
 }

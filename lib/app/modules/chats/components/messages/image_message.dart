@@ -58,13 +58,17 @@ class ImageMessage extends StatelessWidget {
             ),
           );
         },
-        onLongPress: () => showModalBottomSheet(
-          context: context,
-          builder: (context) => MessageSettings(
-            doc: doc,
-            ref: FirebaseStorage.instance.refFromURL(message.value),
-          ),
-        ),
+        onLongPress: () {
+          if (!ownMessage) return;
+
+          showModalBottomSheet(
+            context: context,
+            builder: (context) => MessageSettings(
+              doc: doc,
+              ref: FirebaseStorage.instance.refFromURL(message.value),
+            ),
+          );
+        },
         child: Container(
           margin: const EdgeInsets.symmetric(
             horizontal: 20,

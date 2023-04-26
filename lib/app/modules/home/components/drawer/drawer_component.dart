@@ -48,6 +48,8 @@ class _DrawerComponentState extends State<DrawerComponent> {
           ),
 
           // Content
+          const Divider(),
+
           StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
@@ -65,20 +67,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
                       );
                     }
 
-                    switch (snapshot.data!.data()!["role"]) {
-                      case "reporter":
-                        return const UserContent();
-
-                      case "employee":
-                        return const UserContent();
-
-                      case "organization":
-                        return const UserContent();
-                    }
-
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
+                    return UserContent(role: snapshot.data!.data()!["role"]);
                   },
                 );
               }

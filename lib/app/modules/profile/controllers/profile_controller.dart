@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:reportr/app/modules/profile/components/fields/organization_fields.dart';
 import 'package:reportr/app/modules/profile/views/image_crop_view.dart';
 import 'package:reportr/app/modules/sign_up/views/location_picker_view.dart';
 import 'package:reportr/app/routes/app_pages.dart';
@@ -19,14 +20,10 @@ class ProfileController extends GetxController {
 
   final savedSettings = false.obs;
 
-  set setSavedSettings(bool val) => savedSettings.value = val;
-
   final deletePhoto = false.obs;
-
   set delPhoto(bool val) => deletePhoto.value = val;
 
   Rx<XFile> photo = XFile("").obs;
-
   set setPhoto(XFile val) => photo.value = val;
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -34,6 +31,8 @@ class ProfileController extends GetxController {
   final auth = FirebaseAuth.instance;
   final storage = FirebaseStorage.instance;
   final store = FirebaseFirestore.instance;
+
+  final Rx<Widget> roleChild = Container().obs;
 
   Future<bool> exitPage() async {
     FocusScope.of(Get.context!).requestFocus(FocusNode());
@@ -125,7 +124,7 @@ class ProfileController extends GetxController {
       );
 
       if (photoData == null) return;
-      setSavedSettings = true;
+      savedSettings.value = true;
 
       var path = selectedPhoto.path;
       var savePhoto = XFile.fromData(photoData);
@@ -182,6 +181,8 @@ class ProfileController extends GetxController {
   }
 
   Future<void> saveSettings() async {
+    FocusScope.of(Get.context!).unfocus();
+
     await saveInfo();
     if (deletePhoto.value) {
       await deletePhotoSetting();
@@ -189,7 +190,7 @@ class ProfileController extends GetxController {
       await savePhoto();
     }
 
-    setSavedSettings = false;
+    savedSettings.value = false;
     ScaffoldMessenger.of(Get.context!).showSnackBar(
       const SnackBar(
         content: Text("Запазени са промените"),
@@ -200,7 +201,7 @@ class ProfileController extends GetxController {
   @override
   void onClose() {
     setPhoto = XFile("");
-    setSavedSettings = false;
+    savedSettings.value = false;
     super.onClose();
   }
 
@@ -215,7 +216,6 @@ class ProfileController extends GetxController {
   final emailController = TextEditingController();
   final role = "".obs;
   final organizationColor = const Color.fromARGB(255, 247, 84, 84).obs;
-  final location = const GeoPoint(0, 0).obs;
   final locationLatLng = const LatLng(0, 0).obs;
 
   Future<void> getInfo() async {
@@ -226,22 +226,39 @@ class ProfileController extends GetxController {
     nameController.text = data!["name"];
     emailController.text = data["email"];
     role.value = data["role"];
-    location.value = data["role"] == "organization" ? data["locationCord"] : const GeoPoint(0, 0);
+    locationLatLng.value = data["role"] == "organization"
+        ? LatLng((data["locationCord"] as GeoPoint).latitude, (data["locationCord"] as GeoPoint).longitude)
+        : const LatLng(0, 0);
 
     inviteController.text = data["role"] != "reporter" ? data["inviteCode"] : "";
-    organizationColor.value = Color(data["organizationColor"]);
+    if (role.value == "organization") {
+      organizationColor.value = Color(data["organizationColor"]);
+      roleChild.value = Container(child: OrganizationFields(controller: Get.find<ProfileController>()));
+    }
+
+    setListeners();
+  }
+
+  void setListeners() {
+    locationLatLng.stream.listen((event) {
+      savedSettings.value = true;
+    });
+
+    organizationColor.stream.listen((event) {
+      savedSettings.value = true;
+    });
   }
 
   Future<void> saveInfo() async {
     var doc = FirebaseFirestore.instance.collection("users").doc(auth.currentUser!.uid);
 
     var data = <String, dynamic>{
-      "name": GetStringUtils(nameController.text.trim()).capitalize,
+      "name": nameController.text.trim(),
       "inviteCode": inviteController.text.trim(),
     };
 
     data.addAllIf(role.value == "organization", {
-      "locationCord": location.value,
+      "locationCord": GeoPoint(locationLatLng.value.latitude, locationLatLng.value.longitude),
       "organizationColor": organizationColor.value.value,
     });
 
@@ -342,9 +359,10 @@ class ProfileController extends GetxController {
       },
       showRecentColors: false,
       actionButtons: const ColorPickerActionButtons(
-        okButton: true,
-        closeButton: true,
+        okButton: false,
+        closeButton: false,
         dialogActionButtons: true,
+        dialogCancelButtonLabel: "Отказ",
       ),
       // constraints: const BoxConstraints(minHeight: 480, minWidth: 320, maxWidth: 320),
     );

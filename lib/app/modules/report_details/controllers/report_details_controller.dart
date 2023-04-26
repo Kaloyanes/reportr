@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -157,5 +159,45 @@ class ReportDetailsController extends GetxController {
       "docId": chatDocId.elementAt(0),
       "initials": "KS",
     });
+  }
+
+  void showPicture(String photoUrl) {
+    showCupertinoModalPopup(
+      context: Get.context!,
+      builder: (context) => Stack(
+        fit: StackFit.loose,
+        children: [
+          Align(
+            alignment: Alignment.center,
+            child: InteractiveViewer(
+              clipBehavior: Clip.none,
+              maxScale: 5,
+              child: Hero(
+                tag: photoUrl,
+                child: CachedNetworkImage(
+                  height: Get.height,
+                  width: Get.width,
+                  imageBuilder: (context, imageProvider) => ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image(
+                      image: imageProvider,
+                    ),
+                  ),
+                  imageUrl: photoUrl,
+                ),
+              ),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(20),
+            alignment: Alignment.topRight,
+            child: FloatingActionButton(
+              onPressed: () => Get.back(),
+              child: const Icon(Icons.close),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -15,129 +15,135 @@ class ChatsView extends GetView<ChatsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Чатове'),
-          centerTitle: true,
-        ),
-        body: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection("chats").orderBy("lastMessage", descending: true).snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.data == null || snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
-            }
+      appBar: AppBar(
+        title: const Text('Чатове'),
+        centerTitle: true,
+      ),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection("chats").orderBy("lastMessage", descending: true).snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.data == null || snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            var user = snapshot.data!.docs.where(
-              (element) => element.id.contains(FirebaseAuth.instance.currentUser!.uid),
-            );
-            if (user.isEmpty) {
-              return const Center(
-                child: Text("Няма чатове"),
-              );
-            }
+          var user = snapshot.data!.docs.where(
+            (element) => element.id.contains(FirebaseAuth.instance.currentUser!.uid),
+          );
 
-            return ListView(
-              children: [
-                for (var i = 0; i < user.length; i++)
-                  Builder(
-                    builder: (context) {
-                      var doc = user.elementAt(i);
+          if (user.isEmpty) {
+            return Center(
+              child: Text(
+                "Няма чатове",
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+            ).animate(delay: 500.ms).scaleXY(
+                  curve: Curves.fastLinearToSlowEaseIn,
+                  duration: 600.ms,
+                );
+          }
 
-                      var ids = doc.id.split(".");
-                      var otherPersonids = ids[0] == FirebaseAuth.instance.currentUser!.uid ? ids[1] : ids[0];
+          return ListView(
+            children: [
+              for (var i = 0; i < user.length; i++)
+                Builder(
+                  builder: (context) {
+                    var doc = user.elementAt(i);
 
-                      return FutureBuilder(
-                        future: FirebaseFirestore.instance.collection('users').doc(otherPersonids).get(),
-                        builder: (context, snapshot) {
-                          if (snapshot.data == null || snapshot.connectionState == ConnectionState.waiting) {
-                            return const Center(child: CircularProgressIndicator());
-                          }
+                    var ids = doc.id.split(".");
+                    var otherPersonids = ids[0] == FirebaseAuth.instance.currentUser!.uid ? ids[1] : ids[0];
 
-                          var personData = snapshot.data!.data() ?? {};
+                    return FutureBuilder(
+                      future: FirebaseFirestore.instance.collection('users').doc(otherPersonids).get(),
+                      builder: (context, snapshot) {
+                        if (snapshot.data == null || snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
+                        }
 
-                          if (personData.isEmpty) {
-                            return Container();
-                          }
+                        var personData = snapshot.data!.data() ?? {};
 
-                          personData.addAll({"uid": otherPersonids});
-                          String initials = "";
+                        if (personData.isEmpty) {
+                          return Container();
+                        }
 
-                          if (personData["photoUrl"] == null) {
-                            personData["name"].split(' ').forEach((element) {
-                              initials += element[0];
-                            });
-                          }
+                        personData.addAll({"uid": otherPersonids});
+                        String initials = "";
 
-                          var reporter = Reporter.fromMap(personData, snapshot.data!.id);
+                        personData["name"].toString().trim().split(' ').forEach((element) {
+                          initials += element[0];
+                        });
 
-                          return ListTile(
-                            leading: Hero(
-                              transitionOnUserGestures: true,
-                              tag: reporter.photoUrl != "" ? reporter.photoUrl : reporter,
-                              child: CircleAvatar(
-                                foregroundImage: CachedNetworkImageProvider(reporter.photoUrl),
-                                child: Text(initials),
-                              ),
+                        print(personData["photoUrl"]);
+
+                        var reporter = Reporter.fromMap(personData, snapshot.data!.id);
+
+                        return ListTile(
+                          leading: Hero(
+                            transitionOnUserGestures: true,
+                            tag: reporter,
+                            child: CircleAvatar(
+                              foregroundImage: CachedNetworkImageProvider(reporter.photoUrl),
+                              child: Text(initials),
                             ),
-                            title: Hero(
-                              transitionOnUserGestures: true,
-                              flightShuttleBuilder:
-                                  (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) =>
-                                      AnimatedBuilder(
-                                animation: animation,
-                                child: toHeroContext.widget,
-                                builder: (_, child) {
-                                  return DefaultTextStyle.merge(
-                                    child: child!,
-                                    style: TextStyle.lerp(
-                                      DefaultTextStyle.of(fromHeroContext).style,
-                                      DefaultTextStyle.of(toHeroContext).style,
-                                      flightDirection == HeroFlightDirection.push
-                                          ? 1 - animation.value
-                                          : animation.value,
-                                    ),
-                                  );
-                                },
-                              ),
-                              tag: doc.id,
-                              child: Text(
-                                personData["name"],
-                                style: Theme.of(context).textTheme.titleLarge,
-                              ),
+                          ),
+                          title: Hero(
+                            transitionOnUserGestures: true,
+                            flightShuttleBuilder:
+                                (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) =>
+                                    AnimatedBuilder(
+                              animation: animation,
+                              child: toHeroContext.widget,
+                              builder: (_, child) {
+                                return DefaultTextStyle.merge(
+                                  child: child!,
+                                  style: TextStyle.lerp(
+                                    DefaultTextStyle.of(fromHeroContext).style,
+                                    DefaultTextStyle.of(toHeroContext).style,
+                                    flightDirection == HeroFlightDirection.push ? 1 - animation.value : animation.value,
+                                  ),
+                                );
+                              },
                             ),
-                            onTap: () async {
-                              Get.to(
-                                () => const ChatView(),
-                                arguments: {
-                                  "reporter": reporter,
-                                  "docId": doc.id,
-                                  "initials": initials,
-                                },
-                              );
-                            },
-                          );
-                        },
-                      );
-                    },
-                  )
-              ]
-                  .animate(
-                    interval: 100.ms,
-                  )
-                  .slideX(
-                    curve: Curves.easeOutQuint,
-                    begin: 2,
-                    duration: 1000.ms,
-                  )
-                  .blurX(
-                    begin: 5,
-                    end: 0,
-                    // curve: Curves.easeInOutExpo,
-                    curve: Curves.easeOutQuart,
-                    duration: 600.ms,
-                    delay: 200.ms,
-                  ),
-            );
-          },
-        ));
+                            tag: doc.id,
+                            child: Text(
+                              personData["name"],
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                          ),
+                          onTap: () async {
+                            Get.to(
+                              () => const ChatView(),
+                              arguments: {
+                                "reporter": reporter,
+                                "docId": doc.id,
+                                "initials": initials,
+                              },
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                )
+            ]
+                .animate(
+                  interval: 100.ms,
+                )
+                .slideX(
+                  curve: Curves.easeOutQuint,
+                  begin: 2,
+                  duration: 1000.ms,
+                )
+                .blurX(
+                  begin: 5,
+                  end: 0,
+                  // curve: Curves.easeInOutExpo,
+                  curve: Curves.easeOutQuart,
+                  duration: 600.ms,
+                  delay: 200.ms,
+                ),
+          );
+        },
+      ),
+    );
   }
 }

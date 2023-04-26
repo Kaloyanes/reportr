@@ -55,8 +55,10 @@ class ReportTile extends GetView<ReportTileController> {
                 Container(
                   constraints: const BoxConstraints(maxHeight: 250),
                   child: Hero(
+                    createRectTween: (begin, end) => MaterialRectCenterArcTween(begin: begin, end: end),
                     tag: snapshot.data!,
                     child: CachedNetworkImage(
+                      fit: BoxFit.cover,
                       imageUrl: snapshot.data!,
                       imageBuilder: (context, imageProvider) => ClipRRect(
                         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -73,12 +75,14 @@ class ReportTile extends GetView<ReportTileController> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Text(
-                    report.title,
-                    style: Theme.of(context).textTheme.titleLarge,
-                    textAlign: TextAlign.left,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
+                  child: Expanded(
+                    child: Text(
+                      report.title,
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 18),
+                      textAlign: TextAlign.left,
+                      // softWrap: false,
+                      maxLines: 3,
+                    ),
                   ),
                 ),
                 Expanded(

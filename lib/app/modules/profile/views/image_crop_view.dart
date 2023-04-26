@@ -33,7 +33,7 @@ class ImageCropView extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           var control = Get.find<ProfileController>();
-          control.setSavedSettings = true;
+          control.savedSettings.value = true;
           cropController.crop();
         },
         icon: const Icon(Icons.save_rounded),

@@ -50,36 +50,43 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
                 pageSnapping: true,
                 controller: controller.pageController,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Hero(
-                      tag: Get.arguments["thumbnail"],
-                      child: CachedNetworkImage(
-                        imageUrl: Get.arguments["thumbnail"],
-                        imageBuilder: (context, imageProvider) => ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Image(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
+                  GestureDetector(
+                    onTap: () => controller.showPicture(Get.arguments["thumbnail"]),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Hero(
+                        createRectTween: (begin, end) => MaterialRectArcTween(begin: begin, end: end),
+                        tag: Get.arguments["thumbnail"],
+                        child: CachedNetworkImage(
+                          imageUrl: Get.arguments["thumbnail"],
+                          imageBuilder: (context, imageProvider) => ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
                           ),
+                          fadeInDuration: 400.milliseconds,
                         ),
-                        fadeInDuration: 400.milliseconds,
                       ),
                     ),
                   ),
                   for (var image in controller.photos.sublist(1))
                     Padding(
                       padding: const EdgeInsets.all(10),
-                      child: CachedNetworkImage(
-                        imageUrl: image,
-                        imageBuilder: (context, imageProvider) => ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Image(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
+                      child: GestureDetector(
+                        onTap: () => controller.showPicture(image),
+                        child: CachedNetworkImage(
+                          imageUrl: image,
+                          imageBuilder: (context, imageProvider) => ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
                           ),
+                          fadeInDuration: 400.milliseconds,
                         ),
-                        fadeInDuration: 400.milliseconds,
                       ),
                     ),
                 ],
@@ -129,7 +136,7 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
                               ),
                               Align(
                                 alignment: Alignment.centerLeft,
-                                child: Text(controller.reporter.name),
+                                child: FittedBox(child: Text(controller.reporter.name)),
                               ),
                             ],
                           ),

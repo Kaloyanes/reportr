@@ -37,7 +37,7 @@ class ChatView extends GetView<ChatController> {
                   children: [
                     Hero(
                       transitionOnUserGestures: true,
-                      tag: controller.reporter.photoUrl,
+                      tag: controller.reporter,
                       child: CircleAvatar(
                         foregroundImage: CachedNetworkImageProvider(controller.reporter.photoUrl),
                         child: Text(controller.initials),

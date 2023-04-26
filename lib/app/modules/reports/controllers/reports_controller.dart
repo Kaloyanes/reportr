@@ -26,6 +26,28 @@ class ReportsContoller extends GetxController {
       );
     }
 
+    if (data["organization"].toString().trim().isEmpty) {
+      showDialog(
+        context: Get.context!,
+        builder: (context) => AlertDialog(
+          icon: const Icon(Icons.warning),
+          title: const Text("Нямате организация"),
+          actionsAlignment: MainAxisAlignment.center,
+          actions: [
+            FilledButton(
+              onPressed: () {
+                Get.back();
+                Get.back();
+              },
+              child: const Text("Ок"),
+            )
+          ],
+        ),
+      );
+
+      return;
+    }
+
     stream.value = FirebaseFirestore.instance
         .collection("reports")
         .where(
