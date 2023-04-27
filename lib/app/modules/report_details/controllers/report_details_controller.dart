@@ -46,7 +46,7 @@ class ReportDetailsController extends GetxController {
           context: Get.context!,
           builder: (context) => AlertDialog(
             icon: const Icon(Icons.warning),
-            title: const Text("Желаете ли да изтриите ревюто завинаги?"),
+            title: const Text("Желаете ли да изтриите доклада завинаги?"),
             actions: [
               ElevatedButton(
                 onPressed: () => Get.back(result: false),
