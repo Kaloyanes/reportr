@@ -37,7 +37,7 @@ class WorkerManagerView extends GetView<WorkerManagerController> {
           if (employees.isEmpty) {
             return Center(
               child: Text(
-                "Няма чатове",
+                "Няма работници",
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
             ).animate(delay: 500.ms).scaleXY(
