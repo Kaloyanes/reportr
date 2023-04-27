@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:reportr/app/models/report_model.dart';
@@ -16,6 +16,7 @@ class ReportDetailsController extends GetxController {
     Get.arguments["thumbnail"],
   ].obs;
   final Reporter reporter = Get.arguments["reporter"];
+  final bool sender = Get.arguments["sender"];
 
   @override
   void onInit() {
@@ -48,11 +49,11 @@ class ReportDetailsController extends GetxController {
             icon: const Icon(Icons.warning),
             title: const Text("Желаете ли да изтриите доклада завинаги?"),
             actions: [
-              ElevatedButton(
+              FilledButton(
                 onPressed: () => Get.back(result: false),
                 child: const Text("Не"),
               ),
-              ElevatedButton(
+              FilledButton(
                 onPressed: () => Get.back(result: true),
                 child: const Text("Да"),
               ),
@@ -162,7 +163,7 @@ class ReportDetailsController extends GetxController {
   }
 
   void showPicture(String photoUrl) {
-    showCupertinoModalPopup(
+    showDialog(
       context: Get.context!,
       builder: (context) => Stack(
         fit: StackFit.loose,
@@ -197,7 +198,10 @@ class ReportDetailsController extends GetxController {
             ),
           ),
         ],
-      ),
+      ).animate().scaleXY(
+            curve: Curves.fastLinearToSlowEaseIn,
+            duration: 600.ms,
+          ),
     );
   }
 }

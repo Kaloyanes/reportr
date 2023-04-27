@@ -19,10 +19,11 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(
-            onPressed: () => controller.createChat(),
-            icon: const Icon(CupertinoIcons.chat_bubble_fill),
-          ),
+          if (!controller.sender)
+            IconButton(
+              onPressed: () => controller.createChat(),
+              icon: const Icon(CupertinoIcons.chat_bubble_fill),
+            ),
           IconButton(
             onPressed: () => controller.delete(),
             icon: const Icon(Icons.delete),
