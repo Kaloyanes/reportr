@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -49,22 +50,22 @@ class ProfileController extends GetxController {
         icon: const Icon(Icons.warning, size: 30),
         title: const Text("Сигурни ли сте, че не искате да запазите промените?"),
         actions: [
-          TextButton(
-            onPressed: () {
-              HapticFeedback.lightImpact();
-              Navigator.pop(context, true);
-            },
-            child: const Text("Да"),
-          ),
-          TextButton(
+          FilledButton(
             onPressed: () {
               HapticFeedback.lightImpact();
               Navigator.pop(context, false);
             },
             child: const Text("Не"),
           ),
+          FilledButton(
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              Navigator.pop(context, true);
+            },
+            child: const Text("Да"),
+          ),
         ],
-      ),
+      ).animate().scaleXY(duration: 600.ms, curve: Curves.fastLinearToSlowEaseIn),
     );
   }
 
@@ -307,14 +308,14 @@ class ProfileController extends GetxController {
         ),
         title: const Text("Сигурни ли сте, че искате да си изтрийте профила?"),
         actions: [
-          TextButton(
+          FilledButton(
+            onPressed: () => Get.back(result: false),
+            child: const Text("Не"),
+          ),
+          FilledButton(
             onPressed: () => Get.back(result: true),
             child: const Text("Да"),
           ),
-          TextButton(
-            onPressed: () => Get.back(result: false),
-            child: const Text("Не"),
-          )
         ],
       ),
     );
@@ -403,7 +404,7 @@ class ProfileController extends GetxController {
 
     inviteCodeChanged.value = false;
 
-    var org = result["organization"];
+    var org = result["id"];
     FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).update({
       "organization": org,
       "inviteCode": inviteController.text,
@@ -413,5 +414,39 @@ class ProfileController extends GetxController {
         content: Text("Организацията е запазена"),
       ),
     );
+  }
+
+  Future leaveOrganization() async {
+    var exitOrg = await showDialog<bool>(
+          context: Get.context!,
+          builder: (context) => AlertDialog(
+            icon: const Icon(
+              Icons.warning,
+              color: Colors.red,
+              size: 30,
+            ),
+            title: const Text("Сигурни ли сте, че искате да си изтрийте профила?"),
+            actions: [
+              FilledButton(
+                onPressed: () => Get.back(result: false),
+                child: const Text("Не"),
+              ),
+              FilledButton(
+                onPressed: () => Get.back(result: true),
+                child: const Text("Да"),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+
+    if (!exitOrg) {
+      return;
+    }
+
+    FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).update({
+      "organization": "",
+      "inviteCode": "",
+    });
   }
 }
