@@ -120,14 +120,12 @@ class ReportTile extends GetView<ReportTileController> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Expanded(
-                    child: Text(
-                      report.title,
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 18),
-                      textAlign: TextAlign.left,
-                      // softWrap: false,
-                      maxLines: 2,
-                    ),
+                  child: Text(
+                    report.title,
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 18),
+                    textAlign: TextAlign.left,
+                    // softWrap: false,
+                    maxLines: 2,
                   ),
                 ),
                 Expanded(
@@ -149,33 +147,6 @@ class ReportTile extends GetView<ReportTileController> {
                 Divider(
                   color: Theme.of(context).colorScheme.outline,
                 ),
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
-                //   child: Center(
-                //     child: FittedBox(
-                //       fit: BoxFit.fitWidth,
-                //       child: Row(
-                //         children: [
-                //           Icon(
-                //             Icons.star,
-                //             // color: Colors.yellow
-                //             color: Theme.of(context).colorScheme.primary,
-                //           ),
-                //           Text(
-                //             report.rating.toStringAsFixed(1),
-                //           ),
-                //           // RatingBar.builder(
-                //           //   itemBuilder: (context, index) => const Icon(Icons.star),
-                //           //   onRatingUpdate: (val) {},
-                //           //   ignoreGestures: true,
-                //           //   initialRating: report.rating,
-                //           //   allowHalfRating: true,
-                //           // ),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                // ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   child: FittedBox(
