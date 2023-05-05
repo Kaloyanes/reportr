@@ -22,6 +22,9 @@ class ReportsView extends GetView<ReportsContoller> {
         centerTitle: true,
         actions: [
           PopupMenuButton(
+            padding: EdgeInsets.zero,
+            position: PopupMenuPosition.over,
+            clipBehavior: Clip.hardEdge,
             itemBuilder: (context) => [
               PopupMenuItem(
                 child: const Text("Най-скорошни"),
@@ -34,10 +37,10 @@ class ReportsView extends GetView<ReportsContoller> {
             ],
             icon: const Icon(Icons.sort),
           ),
-          IconButton(
-            onPressed: () => controller.scaffKey.currentState!.openEndDrawer(),
-            icon: const Icon(Icons.filter_alt),
-          ),
+          // IconButton(
+          //   onPressed: () => controller.scaffKey.currentState!.openEndDrawer(),
+          //   icon: const Icon(Icons.filter_alt),
+          // ),
         ],
       ),
       body: Padding(
@@ -58,7 +61,7 @@ class ReportsView extends GetView<ReportsContoller> {
                 onRefresh: () => controller.refreshList(),
                 triggerMode: RefreshIndicatorTriggerMode.onEdge,
                 child: GridView.builder(
-                  cacheExtent: 1000,
+                  cacheExtent: 10000,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
                     // mainAxisExtent: 440,

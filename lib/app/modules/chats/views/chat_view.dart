@@ -20,6 +20,7 @@ class ChatView extends GetView<ChatController> {
     );
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         key: controller.appBarKey,
         leadingWidth: 40,
@@ -103,6 +104,8 @@ class ChatView extends GetView<ChatController> {
               () => CupertinoScrollbar(
                 controller: controller.listController,
                 child: ListView.builder(
+                  clipBehavior: Clip.hardEdge,
+                  addAutomaticKeepAlives: true,
                   cacheExtent: 500,
                   semanticChildCount: controller.messages.length,
                   itemCount: controller.messages.length,
@@ -142,7 +145,14 @@ class ChatView extends GetView<ChatController> {
               ),
             ),
           ),
-          ChatBottomBar(controller: controller),
+          AnimatedContainer(
+            curve: Curves.easeOutCirc,
+            duration: 300.milliseconds,
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: ChatBottomBar(controller: controller),
+          ),
         ],
       ),
     );

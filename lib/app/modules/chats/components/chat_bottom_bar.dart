@@ -14,7 +14,6 @@ class ChatBottomBar extends StatelessWidget {
     return BottomAppBar(
       elevation: 1,
       height: 110,
-      // height: MediaQuery.of(context).padding.bottom + 90,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

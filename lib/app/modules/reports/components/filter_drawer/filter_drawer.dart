@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reportr/app/modules/reports/components/filter_drawer/filter_drawer_controller.dart';
 
-class FilterDrawer extends StatelessWidget {
+class FilterDrawer extends GetView<FilterDrawerController> {
   const FilterDrawer({super.key});
 
   @override
@@ -20,9 +20,34 @@ class FilterDrawer extends StatelessWidget {
             ),
           ),
           const Divider(),
-          const Text("Анонимно"),
-          RadioListTile(value: 1, groupValue: 2, onChanged: (val) {}),
-          RadioListTile(value: 2, groupValue: 2, onChanged: (val) {}),
+          Obx(
+            () => Column(
+              children: [
+                Text("Какъв вид доклади?", style: Theme.of(context).textTheme.headlineSmall),
+                RadioListTile(
+                  value: 1,
+                  groupValue: controller.anonFilter.value,
+                  onChanged: (val) => controller.anonFilter.value = val ?? 1,
+                  title: const Text("Всички"),
+                  selected: controller.anonFilter.value == 1,
+                ),
+                RadioListTile(
+                  value: 2,
+                  groupValue: controller.anonFilter.value,
+                  onChanged: (val) => controller.anonFilter.value = val ?? 2,
+                  title: const Text("Само от хора"),
+                  selected: controller.anonFilter.value == 2,
+                ),
+                RadioListTile(
+                  value: 3,
+                  groupValue: controller.anonFilter.value,
+                  onChanged: (val) => controller.anonFilter.value = val ?? 3,
+                  title: const Text("Само анонимни"),
+                  selected: controller.anonFilter.value == 3,
+                ),
+              ],
+            ),
+          ),
           const Divider(),
         ],
       ),
