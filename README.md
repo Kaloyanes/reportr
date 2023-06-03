@@ -46,6 +46,20 @@ Throughout the development process, we had to remain flexible and adaptable in o
 5. The Value of Persistence:
 Finally, we learned that persistence is key to success in software development. Even when faced with setbacks and obstacles, we persevered and kept pushing forward. By staying focused on our goals and working together as a team, we were able to overcome challenges and create a product that we're proud of.
 
+# Tech Stack
+
+**Client:** Flutter
+
+**Development** Figma
+
+**Server** Firebase
+
+
+# Authors
+- [@Kaloyan](https://github.com/KaloyanStoyanov06)
+
+- [@Valery](https://github.com/Valery-a)
+
 
 ## Feedback / Contact
 
