@@ -27,6 +27,41 @@ flutter pub get
 flutter run
 ```
 
+## Screenshots
+
+# Home With Organizations Shown
+![Screenshot_20230809-220005](https://github.com/KaloyanStoyanov06/reportr/assets/51166786/1b02bf62-73bb-490b-bbfe-df6b3586e261)
+
+# Report An Incident
+![Screenshot_20230809-220011](https://github.com/KaloyanStoyanov06/reportr/assets/51166786/6e797da3-15ed-4f0a-a4d6-23b702dd4c40)
+
+# Upload A Picture Of The Incident
+![Screenshot_20230809-220021](https://github.com/KaloyanStoyanov06/reportr/assets/51166786/eab9b34e-d9c4-4fc1-b67e-03d7428d9de4)
+
+# Reports Shown To An Organization
+![Screenshot_20230809-220033](https://github.com/KaloyanStoyanov06/reportr/assets/51166786/b612f2a0-1eb8-4585-abfa-ae553e0143f6)
+
+# Chat System Where You can Share Details About An Incident
+![Screenshot_20230809-220047](https://github.com/KaloyanStoyanov06/reportr/assets/51166786/9c97da11-9bb2-4c61-87dd-dacaabe1cce5)
+
+# Manage The Workers In An Organization
+![Screenshot_20230809-220054](https://github.com/KaloyanStoyanov06/reportr/assets/51166786/c387ada4-cd5c-42c0-8f0d-df03266dfeca)
+
+# Profile Editor
+![Screenshot_20230809-220100](https://github.com/KaloyanStoyanov06/reportr/assets/51166786/6a771d95-d870-4c7d-a17e-d0865aa0e501)
+
+# Sign In
+![Screenshot_20230809-220109](https://github.com/KaloyanStoyanov06/reportr/assets/51166786/563bf9f0-8f45-433f-b635-541331920a50)
+
+# Sign Up As A Reporter
+![Screenshot_20230809-220115](https://github.com/KaloyanStoyanov06/reportr/assets/51166786/4407a9db-ca21-4950-8065-f76b4cb8568b)
+
+# Sign Up As A Worker
+![Screenshot_20230809-220118](https://github.com/KaloyanStoyanov06/reportr/assets/51166786/56549044-46ef-40e5-8f50-2703bd3010b7)
+
+# Sign Up As An Organization
+![Screenshot_20230809-220126](https://github.com/KaloyanStoyanov06/reportr/assets/51166786/605e4bbe-b123-483b-a686-7088d4dbed39)
+
 ## What did we learn?
 
 During the development of ReportR, we gained valuable insights and experiences that have helped us to improve our skills as software developers and collaborators. Here are some of the key lessons we learned along the way:
@@ -50,7 +85,7 @@ Finally, we learned that persistence is key to success in software development. 
 
 **Client:** Flutter
 
-**Development** Figma
+**Design** Figma
 
 **Server** Firebase
 
