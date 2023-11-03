@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,135 +24,72 @@ class ChatView extends GetView<ChatController> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        key: controller.appBarKey,
-        leadingWidth: 40,
-        elevation: 1,
-        title: GestureDetector(
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              FittedBox(
-                fit: BoxFit.fitWidth,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Hero(
-                      transitionOnUserGestures: true,
-                      tag: controller.reporter,
-                      child: CircleAvatar(
-                        foregroundImage: CachedNetworkImageProvider(controller.reporter.photoUrl),
-                        child: Text(controller.initials),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    Hero(
-                      transitionOnUserGestures: true,
-                      flightShuttleBuilder:
-                          (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) =>
-                              AnimatedBuilder(
-                        animation: animation,
-                        child: toHeroContext.widget,
-                        builder: (_, child) {
-                          return DefaultTextStyle.merge(
-                            child: child ?? const Text("maika ti"),
-                            style: TextStyle.lerp(
-                              DefaultTextStyle.of(toHeroContext).style,
-                              DefaultTextStyle.of(fromHeroContext).style,
-                              flightDirection == HeroFlightDirection.pop ? 1 - animation.value : animation.value,
-                            ),
-                          );
-                        },
-                      ),
-                      tag: controller.docId,
-                      child: Text(
-                        controller.reporter.name,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                    ),
-                  ],
-                ),
+        scrolledUnderElevation: 0,
+        elevation: 0,
+        title: Row(
+          children: [
+            CircleAvatar(
+              foregroundImage: CachedNetworkImageProvider(controller.reporter.photoUrl),
+              child: Text(controller.initials),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              controller.reporter.name,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
-              const Spacer(flex: 1),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  PopupMenuButton(
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        child: const Text(
-                          "Изтрий чата",
-                          style: TextStyle(
-                            color: Colors.red,
-                          ),
-                        ),
-                        onTap: () => controller.deleteChat(),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       body: Column(
+        mainAxisSize: MainAxisSize.max,
         children: [
           Expanded(
+            flex: 8,
             child: Obx(
-              () => CupertinoScrollbar(
-                controller: controller.listController,
-                child: ListView.builder(
-                  clipBehavior: Clip.hardEdge,
-                  addAutomaticKeepAlives: true,
-                  cacheExtent: 500,
-                  semanticChildCount: controller.messages.length,
-                  itemCount: controller.messages.length,
-                  reverse: true,
-                  controller: controller.listController,
-                  itemBuilder: (context, i) {
-                    var item = controller.messages.reversed.elementAt(i);
-                    bool isOwnMessage = item.sender == FirebaseAuth.instance.currentUser!.uid;
+              () => ListView.builder(
+                reverse: true,
+                itemCount: controller.messages.length,
+                itemBuilder: (context, index) {
+                  var item = controller.messages.reversed.elementAt(index);
+                  bool isOwnMessage = item.sender == FirebaseAuth.instance.currentUser!.uid;
 
-                    switch (item.type) {
-                      case "image":
-                        return ImageMessage(
-                          key: UniqueKey(),
-                          ownMessage: isOwnMessage,
-                          message: item,
-                          doc: controller.collection.doc(item.msgId),
-                        );
+                  switch (item.type) {
+                    case "image":
+                      return ImageMessage(
+                        key: UniqueKey(),
+                        ownMessage: isOwnMessage,
+                        message: item,
+                        doc: controller.collection.doc(item.msgId),
+                      );
 
-                      case "file":
-                        return FileMessage(
-                          key: UniqueKey(),
-                          message: item,
-                          ownMessage: isOwnMessage,
-                          doc: controller.collection.doc(item.msgId),
-                        );
+                    case "file":
+                      return FileMessage(
+                        key: UniqueKey(),
+                        message: item,
+                        ownMessage: isOwnMessage,
+                        doc: controller.collection.doc(item.msgId),
+                      );
 
-                      default:
-                        return ChatMessage(
-                          key: UniqueKey(),
-                          ownMessage: isOwnMessage,
-                          message: item,
-                          doc: controller.collection.doc(item.msgId),
-                        );
-                    }
-                  },
-                ),
+                    default:
+                      return ChatMessage(
+                        key: UniqueKey(),
+                        ownMessage: isOwnMessage,
+                        message: item,
+                        doc: controller.collection.doc(item.msgId),
+                        initials: controller.initials,
+                        photoUrl: controller.reporter.photoUrl,
+                      );
+                  }
+                },
               ),
             ),
           ),
-          AnimatedContainer(
-            curve: Curves.easeOutCirc,
-            duration: 300.milliseconds,
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-            ),
+          Padding(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom)
+                .add(const EdgeInsets.symmetric(vertical: 30)),
             child: ChatBottomBar(controller: controller),
           ),
         ],
@@ -158,3 +97,33 @@ class ChatView extends GetView<ChatController> {
     );
   }
 }
+
+
+// var item = controller.messages.reversed.elementAt(i);
+//                     bool isOwnMessage = item.sender == FirebaseAuth.instance.currentUser!.uid;
+
+//                     switch (item.type) {
+//                       case "image":
+//                         return ImageMessage(
+//                           key: UniqueKey(),
+//                           ownMessage: isOwnMessage,
+//                           message: item,
+//                           doc: controller.collection.doc(item.msgId),
+//                         );
+
+//                       case "file":
+//                         return FileMessage(
+//                           key: UniqueKey(),
+//                           message: item,
+//                           ownMessage: isOwnMessage,
+//                           doc: controller.collection.doc(item.msgId),
+//                         );
+
+//                       default:
+//                         return ChatMessage(
+//                           key: UniqueKey(),
+//                           ownMessage: isOwnMessage,
+//                           message: item,
+//                           doc: controller.collection.doc(item.msgId),
+//                         );
+//                     }

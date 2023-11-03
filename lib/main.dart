@@ -8,7 +8,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:image_picker_android/image_picker_android.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'package:reportr/firebase_options.dart';
-import 'package:reportr/themes.dart';
+import 'package:reportr/app/data/themes.dart';
 
 import 'app/routes/app_pages.dart';
 
@@ -50,9 +50,8 @@ class App extends StatelessWidget {
           initialRoute: AppPages.INITIAL,
           getPages: AppPages.routes,
           debugShowCheckedModeBanner: false,
-          theme: Themes.generateTheme(false, color: lightDynamic),
-          darkTheme: Themes.generateTheme(true, color: darkDynamic),
-          routingCallback: (value) => HapticFeedback.mediumImpact(),
+          theme: Themes.light,
+          darkTheme: Themes.dark,
         );
       },
     );
