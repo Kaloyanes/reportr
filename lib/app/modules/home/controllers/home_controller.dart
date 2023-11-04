@@ -39,6 +39,12 @@ class HomeController extends GetxController {
     );
   }
 
+  Future<void> loadDarkMap() async {
+    var style = await rootBundle.loadString('lib/app/assets/darkMap.json');
+
+    mapController.setMapStyle(style);
+  }
+
   Future getLocations() async {
     var collection = await FirebaseFirestore.instance
         .collection("users")
@@ -82,7 +88,7 @@ class HomeController extends GetxController {
   }
 
   Future<BitmapDescriptor> convertImageFileToCustomBitmapDescriptor(Uint8List imageUint8List,
-      {int size = 150,
+      {int size = 200,
       bool addBorder = false,
       Color borderColor = Colors.white,
       double borderSize = 10,
@@ -119,10 +125,6 @@ class HomeController extends GetxController {
         ..strokeWidth = borderSize;
       canvas.drawCircle(Offset(radius, radius), radius, paint);
     }
-
-    // if (title.split(" ").length > 1) {
-    //   title = title.split(" ")[0];
-    // }
 
     paint
       ..color = titleBackgroundColor

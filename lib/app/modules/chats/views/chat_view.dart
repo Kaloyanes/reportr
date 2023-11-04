@@ -5,7 +5,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:reportr/app/components/back_button.dart';
 import 'package:reportr/app/modules/chats/components/chat_bottom_bar.dart';
 import 'package:reportr/app/modules/chats/components/messages/chat_message.dart';
 import 'package:reportr/app/modules/chats/components/messages/file_message.dart';
@@ -42,6 +44,7 @@ class ChatView extends GetView<ChatController> {
             ),
           ],
         ),
+        leading: const CustomBackButton(),
       ),
       body: Column(
         mainAxisSize: MainAxisSize.max,
@@ -71,6 +74,8 @@ class ChatView extends GetView<ChatController> {
                         message: item,
                         ownMessage: isOwnMessage,
                         doc: controller.collection.doc(item.msgId),
+                        initials: controller.initials,
+                        photoUrl: controller.reporter.photoUrl,
                       );
 
                     default:
@@ -86,6 +91,10 @@ class ChatView extends GetView<ChatController> {
                 },
               ),
             ),
+          ),
+          const Divider(
+            height: 1,
+            thickness: 0.5,
           ),
           Padding(
             padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom)

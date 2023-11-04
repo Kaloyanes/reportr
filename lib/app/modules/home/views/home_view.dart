@@ -18,77 +18,114 @@ class HomeView extends GetView<HomeController> {
       drawer: const DrawerComponent(),
       extendBodyBehindAppBar: true,
       key: controller.scaffKey,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        toolbarHeight: 80,
-        leadingWidth: 80,
-        leading: Container(
-          margin: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
-            color: Theme.of(context).colorScheme.primaryContainer,
-          ),
-          child: IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () => controller.openDrawer(),
-          ),
-        ),
-      ),
-      body: FutureBuilder(
-        future: GeoService().getLocation(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: AlertDialog(
-                icon: const Icon(
-                  Icons.warning,
-                  size: 40,
+
+      body: Stack(
+        children: [
+          FutureBuilder(
+            future: GeoService().getLocation(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Center(
+                  child: AlertDialog(
+                    icon: const Icon(
+                      Icons.warning,
+                      size: 40,
+                    ),
+                    iconColor: Colors.red,
+                    title: Text(
+                      snapshot.error as String,
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                  ),
+                );
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              return MapSwitcher(
+                child: Obx(
+                  () => GoogleMap(
+                    myLocationEnabled: true,
+                    initialCameraPosition: CameraPosition(
+                      target: snapshot.data ?? const LatLng(50, 50),
+                      zoom: 15,
+                    ),
+                    zoomControlsEnabled: false,
+                    myLocationButtonEnabled: false,
+                    mapType: MapType.normal,
+                    compassEnabled: false,
+                    onMapCreated: (GoogleMapController mapControl) {
+                      controller.mapController = mapControl;
+                      if (Theme.of(context).colorScheme.brightness == Brightness.dark) {
+                        controller.loadDarkMap();
+                      }
+                    },
+                    markers: controller.markers.toSet(),
+                    mapToolbarEnabled: false,
+                  ),
                 ),
-                iconColor: Colors.red,
-                title: Text(
-                  snapshot.error as String,
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
+              );
+            },
+          ),
+          Align(
+            alignment: const Alignment(-0.9, -0.9),
+            child: Container(
+              width: 55,
+              height: 55,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Theme.of(context).colorScheme.primaryContainer,
+                boxShadow: [
+                  BoxShadow(
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                    blurRadius: 20,
+                    spreadRadius: 5,
+                    offset: const Offset(0, 0),
+                  ),
+                ],
               ),
-            );
-          }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          return MapSwitcher(
-            child: Obx(
-              () => GoogleMap(
-                myLocationEnabled: true,
-                initialCameraPosition: CameraPosition(
-                  target: snapshot.data ?? const LatLng(50, 50),
-                  zoom: 15,
+              clipBehavior: Clip.hardEdge,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => controller.scaffKey.currentState!.openDrawer(),
+                  child: const Icon(
+                    Icons.menu,
+                  ),
                 ),
-                zoomControlsEnabled: false,
-                myLocationButtonEnabled: false,
-                mapType: MapType.hybrid,
-                onMapCreated: (GoogleMapController mapControl) {
-                  controller.mapController = mapControl;
-                },
-                markers: controller.markers.toSet(),
               ),
             ),
-          );
-        },
+          ),
+        ],
       ),
-      bottomSheet: const ReportSheetView(),
+      // bottomSheet: const ReportSheetView(),
       floatingActionButton: Obx(
         () {
           return AnimatedSlide(
-            curve: Curves.easeOutQuad,
-            duration: const Duration(seconds: 1, milliseconds: 400),
+            curve: Curves.easeOutQuint,
+            duration: const Duration(milliseconds: 600),
             offset: controller.showControls.value ? Offset.zero : const Offset(0, 50),
-            child: FloatingActionButton(
-              onPressed: () => controller.goToMyLocation(),
-              child: const Icon(Icons.navigation),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(14),
+                color: Theme.of(context).colorScheme.primaryContainer,
+                boxShadow: [
+                  BoxShadow(
+                    color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5),
+                    blurRadius: 20,
+                    spreadRadius: 5,
+                    offset: const Offset(0, 0),
+                  ),
+                ],
+              ),
+              child: FloatingActionButton(
+                onPressed: () => controller.goToMyLocation(),
+                child: const Icon(Icons.navigation),
+              ),
             ),
           );
         },

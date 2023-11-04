@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
+import 'package:reportr/app/components/back_button.dart';
 import 'package:reportr/app/models/reporter_model.dart';
 
 import '../controllers/chats_controller.dart';
@@ -18,6 +19,7 @@ class ChatsView extends GetView<ChatsController> {
       appBar: AppBar(
         title: const Text('Чатове'),
         centerTitle: true,
+        leading: const CustomBackButton(),
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection("chats").orderBy("lastMessage", descending: true).snapshots(),

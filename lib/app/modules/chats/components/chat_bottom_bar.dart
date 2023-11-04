@@ -70,13 +70,22 @@ class ChatBottomBar extends StatelessWidget {
               controller: controller.messageController,
               textInputAction: TextInputAction.newline,
               maxLines: null,
+              // minFontSize: 20,
+              presetFontSizes: const [
+                18,
+                16,
+                14,
+                12,
+                10,
+                8,
+              ],
               decoration: InputDecoration(
                 hintStyle: TextStyle(
                   color: Colors.grey.shade400,
                 ),
                 hintText: "Напиши съобщение...",
                 border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 5),
               ),
             ),
           ),

@@ -19,10 +19,6 @@ class SignUpView extends GetView<SignUpController> {
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
           SliverAppBar.large(
             centerTitle: true,
-            title: Text(
-              "Регистрация",
-              style: Theme.of(context).textTheme.displaySmall,
-            ),
             forceElevated: innerBoxIsScrolled,
             flexibleSpace: const FlexibleSpaceBar(
               centerTitle: true,
