@@ -38,10 +38,7 @@ class ChatsView extends GetView<ChatsController> {
                 "Няма чатове",
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
-            ).animate(delay: 500.ms).scaleXY(
-                  curve: Curves.fastLinearToSlowEaseIn,
-                  duration: 600.ms,
-                );
+            );
           }
 
           return ListView(
@@ -124,23 +121,7 @@ class ChatsView extends GetView<ChatsController> {
                     );
                   },
                 )
-            ]
-                .animate(
-                  interval: 100.ms,
-                )
-                .slideX(
-                  curve: Curves.easeOutQuint,
-                  begin: 2,
-                  duration: 1000.ms,
-                )
-                .blurX(
-                  begin: 5,
-                  end: 0,
-                  // curve: Curves.easeInOutExpo,
-                  curve: Curves.easeOutQuart,
-                  duration: 600.ms,
-                  delay: 200.ms,
-                ),
+            ],
           );
         },
       ),

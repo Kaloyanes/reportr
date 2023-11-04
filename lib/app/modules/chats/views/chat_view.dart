@@ -98,7 +98,7 @@ class ChatView extends GetView<ChatController> {
           ),
           Padding(
             padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom)
-                .add(const EdgeInsets.symmetric(vertical: 30)),
+                .add(const EdgeInsets.symmetric(vertical: 20)),
             child: ChatBottomBar(controller: controller),
           ),
         ],
