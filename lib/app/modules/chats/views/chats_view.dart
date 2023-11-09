@@ -17,7 +17,7 @@ class ChatsView extends GetView<ChatsController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Чатове'),
+        title: Text("chats".tr),
         centerTitle: true,
         leading: const CustomBackButton(),
       ),
@@ -35,7 +35,7 @@ class ChatsView extends GetView<ChatsController> {
           if (user.isEmpty) {
             return Center(
               child: Text(
-                "Няма чатове",
+                "no_chats".tr,
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
             );

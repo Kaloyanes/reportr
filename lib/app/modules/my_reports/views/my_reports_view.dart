@@ -16,7 +16,7 @@ class MyReportsView extends GetView<MyReportsController> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Мойте доклади'),
+          title: Text("my_reports".tr),
           centerTitle: true,
         ),
         body: FutureBuilder(
@@ -36,7 +36,7 @@ class MyReportsView extends GetView<MyReportsController> {
             if (docs.isEmpty) {
               return Center(
                 child: Text(
-                  "Нямаш доклади",
+                  "no_reports".tr,
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ).animate(delay: 500.ms).scaleXY(

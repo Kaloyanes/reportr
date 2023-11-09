@@ -20,7 +20,7 @@ class FilterDrawerController extends GetxController {
 
       if (data == null) {
         throw ArgumentError(
-          "Нямате права или не сте влезли в организация",
+          "no_rights_or_havent_joined_org".tr,
         );
       }
 

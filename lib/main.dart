@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker_android/image_picker_android.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
+import 'package:reportr/app/data/local_messages.dart';
 import 'package:reportr/firebase_options.dart';
 import 'package:reportr/app/data/themes.dart';
 
@@ -42,18 +43,16 @@ class App extends StatelessWidget {
       statusBarColor: Colors.transparent,
       systemNavigationBarColor: Colors.transparent,
     ));
-
-    return DynamicColorBuilder(
-      builder: (lightDynamic, darkDynamic) {
-        return GetMaterialApp(
-          title: "Application",
-          initialRoute: AppPages.INITIAL,
-          getPages: AppPages.routes,
-          debugShowCheckedModeBanner: false,
-          theme: Themes.light,
-          darkTheme: Themes.dark,
-        );
-      },
+    var settingsStorage = GetStorage("reportSettings");
+    return GetMaterialApp(
+      title: "Application",
+      initialRoute: AppPages.INITIAL,
+      getPages: AppPages.routes,
+      debugShowCheckedModeBanner: false,
+      theme: Themes.light,
+      darkTheme: Themes.dark,
+      translations: LocalMessages(),
+      locale: Locale(settingsStorage.read("language") ?? Get.deviceLocale!.languageCode),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -58,11 +59,13 @@ class HomeView extends GetView<HomeController> {
                     myLocationButtonEnabled: false,
                     mapType: MapType.normal,
                     compassEnabled: false,
-                    onMapCreated: (GoogleMapController mapControl) {
-                      controller.mapController = mapControl;
+                    onMapCreated: (GoogleMapController mapControl) async {
                       if (Theme.of(context).colorScheme.brightness == Brightness.dark) {
-                        controller.loadDarkMap();
+                        var style = await rootBundle.loadString('lib/app/assets/darkMap.json');
+
+                        mapControl.setMapStyle(style);
                       }
+                      controller.mapController = mapControl;
                     },
                     markers: controller.markers.toSet(),
                     mapToolbarEnabled: false,

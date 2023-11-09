@@ -14,8 +14,8 @@ class EmployeeFields extends StatelessWidget {
       children: [
         TextFormField(
           controller: controller.inviteController,
-          decoration: const InputDecoration(
-            label: Text("Код"),
+          decoration: InputDecoration(
+            label: Text("code".tr),
           ),
           onChanged: (value) => controller.inviteCodeChanged.value = true,
         ),
@@ -30,15 +30,18 @@ class EmployeeFields extends StatelessWidget {
             height: controller.inviteCodeChanged.value ? 45 : 0,
             margin: EdgeInsets.only(bottom: controller.inviteCodeChanged.value ? 20 : 0),
             child: FilledButton(
+              style: FilledButton.styleFrom(
+                fixedSize: const Size.fromWidth(200),
+              ),
               onPressed: () => controller.changeOrganization(),
-              child: const Text("Сложи нова организация"),
+              child: Text("place_new_organization".tr),
             ),
           ),
         ),
         FilledButton.tonalIcon(
             icon: const Icon(Icons.logout),
             onPressed: () => controller.leaveOrganization(),
-            label: const Text("Напусни организацията"))
+            label: Text("leave_organization".tr))
       ],
     );
   }

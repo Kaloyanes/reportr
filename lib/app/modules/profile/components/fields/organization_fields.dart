@@ -1,5 +1,6 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reportr/app/components/map_switcher.dart';
@@ -8,7 +9,7 @@ import 'package:reportr/app/services/profile_service.dart';
 
 class OrganizationFields extends StatelessWidget {
   const OrganizationFields({
-    super.key,
+    super.key, 
     required this.controller,
   });
 
@@ -27,7 +28,7 @@ class OrganizationFields extends StatelessWidget {
         Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            "Локация на организацията",
+            "organization_location".tr,
             style: Theme.of(context).textTheme.titleMedium,
           ),
         ),
@@ -44,7 +45,13 @@ class OrganizationFields extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: GoogleMap(
-                    onMapCreated: (mapController) => controller.mapController = mapController,
+                    onMapCreated: (mapController) async {
+                      if (Theme.of(context).colorScheme.brightness == Brightness.dark) {
+                        var darkmap = await rootBundle.loadString("lib/app/assets/darkMap.json");
+                        await mapController.setMapStyle(darkmap);
+                      }
+                      controller.mapController = mapController;
+                    },
                     onTap: (argument) => controller.pickLocation(),
                     initialCameraPosition: CameraPosition(
                       target: snapshot.data ?? const LatLng(40, 20),
@@ -52,7 +59,6 @@ class OrganizationFields extends StatelessWidget {
                     ),
                     mapToolbarEnabled: false,
                     liteModeEnabled: true,
-                    mapType: MapType.hybrid,
                   ),
                 ),
               );
@@ -64,7 +70,7 @@ class OrganizationFields extends StatelessWidget {
         ),
         Obx(
           () => ListTile(
-            title: const Text('Изберете цвят на организацията'),
+            title: Text('choose_color_for_organization'.tr),
             trailing: ColorIndicator(
               width: 44,
               height: 44,
@@ -87,11 +93,12 @@ class OrganizationFields extends StatelessWidget {
           height: 10,
         ),
         FilledButton(
+          style: FilledButton.styleFrom(fixedSize: const Size.fromWidth(200)),
           onPressed: () {
             controller.inviteController.text = ProfileService.createInviteCode(controller.nameController.text);
             controller.savedSettings.value = true;
           },
-          child: const Text("Генерирай нов код"),
+          child: Text("generate_new_code".tr),
         ),
       ],
     );

@@ -14,7 +14,7 @@ class WorkerManagerView extends GetView<WorkerManagerController> {
     Get.lazyPut(() => WorkerManagerController());
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Работници'),
+        title: Text('workers'.tr),
         centerTitle: true,
       ),
       body: StreamBuilder(
@@ -37,7 +37,7 @@ class WorkerManagerView extends GetView<WorkerManagerController> {
           if (employees.isEmpty) {
             return Center(
               child: Text(
-                "Няма работници",
+                "no_workers".tr,
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
             ).animate(delay: 500.ms).scaleXY(

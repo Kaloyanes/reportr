@@ -1,5 +1,6 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import 'package:get/get.dart';
@@ -18,14 +19,14 @@ class SignUpView extends GetView<SignUpController> {
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
           SliverAppBar.large(
-            centerTitle: true,
             forceElevated: innerBoxIsScrolled,
-            flexibleSpace: const FlexibleSpaceBar(
+            flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
               title: Text(
-                "Регистрация",
+                "sign_up".tr,
               ),
               expandedTitleScale: 2,
+              titlePadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             ),
           ),
         ],
@@ -40,12 +41,12 @@ class SignUpView extends GetView<SignUpController> {
               Obx(
                 () => TextFormField(
                   decoration: InputDecoration(
-                    label: Text(controller.rolePicked.value == "organization" ? "Име на организацията" : "Име"),
+                    label: Text(controller.rolePicked.value == "organization" ? "organization_name".tr : "name".tr),
                   ),
                   controller: controller.nameController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Попълнете полето";
+                      return "fill_field".tr;
                     }
 
                     return null;
@@ -57,15 +58,15 @@ class SignUpView extends GetView<SignUpController> {
               ),
               TextFormField(
                 controller: controller.emailController,
-                decoration: const InputDecoration(
-                  label: Text("Емайл"),
+                decoration: InputDecoration(
+                  label: Text("email".tr),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return "Попълнете полето";
+                    return "fill_field".tr;
                   }
 
-                  if (!value.isEmail) return "Неправилен имейл";
+                  if (!value.isEmail) return "invalid_email".tr;
                   return null;
                 },
               ),
@@ -76,7 +77,7 @@ class SignUpView extends GetView<SignUpController> {
                 () => TextFormField(
                   controller: controller.passwordController,
                   decoration: InputDecoration(
-                    label: const Text("Парола"),
+                    label: Text("password".tr),
                     suffixIcon: IconButton(
                       onPressed: () => controller.hidePassword.value = !controller.hidePassword.value,
                       icon: const Icon(Icons.remove_red_eye),
@@ -85,11 +86,11 @@ class SignUpView extends GetView<SignUpController> {
                   obscureText: controller.hidePassword.value,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Попълнете полето";
+                      return "fill_field".tr;
                     }
 
                     if (value.trim() != controller.confirmPasswordController.text.trim()) {
-                      return "Паролите не се съвпадат";
+                      return "passwords_do_not_match".tr;
                     }
                     return null;
                   },
@@ -102,7 +103,7 @@ class SignUpView extends GetView<SignUpController> {
                 () => TextFormField(
                   controller: controller.confirmPasswordController,
                   decoration: InputDecoration(
-                    label: const Text("Повтори парола"),
+                    label: Text("confirm_password".tr),
                     suffixIcon: IconButton(
                       onPressed: () => controller.hidePassword.value = !controller.hidePassword.value,
                       icon: const Icon(Icons.remove_red_eye),
@@ -111,10 +112,10 @@ class SignUpView extends GetView<SignUpController> {
                   obscureText: controller.hidePassword.value,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Попълнете полето";
+                      return "fill_field".tr;
                     }
                     if (value.trim() != controller.passwordController.text.trim()) {
-                      return "Паролите не се съвпадат";
+                      return "passwords_do_not_match".tr;
                     }
 
                     return null;
@@ -128,20 +129,20 @@ class SignUpView extends GetView<SignUpController> {
                 () => Column(
                   children: [
                     DropdownButtonFormField(
-                      decoration: const InputDecoration(label: Text("Вид акаунт")),
+                      decoration: InputDecoration(label: Text("type_account".tr)),
                       value: "reporter",
-                      items: const [
+                      items: [
                         DropdownMenuItem<String>(
                           value: "organization",
-                          child: Text("Организация"),
+                          child: Text("organization".tr),
                         ),
                         DropdownMenuItem<String>(
                           value: "employee",
-                          child: Text("Работник"),
+                          child: Text("employee".tr),
                         ),
                         DropdownMenuItem<String>(
                           value: "reporter",
-                          child: Text("Докладващ"),
+                          child: Text("reporter".tr),
                         ),
                       ],
                       onChanged: (value) {
@@ -181,7 +182,7 @@ class SignUpView extends GetView<SignUpController> {
               FilledButton.tonalIcon(
                 onPressed: () => controller.register(),
                 icon: const Icon(Icons.app_registration_rounded),
-                label: const Text("Регистрирай"),
+                label: Text("sign_up".tr),
               ),
               SizedBox(
                 height: Get.mediaQuery.viewPadding.bottom,
@@ -205,7 +206,7 @@ class SignUpView extends GetView<SignUpController> {
         Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            "Локация на организацията",
+            "organization_location".tr,
             style: Theme.of(context).textTheme.titleMedium,
           ),
         ),
@@ -222,7 +223,13 @@ class SignUpView extends GetView<SignUpController> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: GoogleMap(
-                    onMapCreated: (mapController) => controller.mapController = mapController,
+                    onMapCreated: (mapController) async {
+                      if (Theme.of(context).colorScheme.brightness == Brightness.dark) {
+                        var darkmap = await rootBundle.loadString("lib/app/assets/darkMap.json");
+                        await mapController.setMapStyle(darkmap);
+                      }
+                      controller.mapController = mapController;
+                    },
                     onTap: (argument) => controller.pickLocation(),
                     initialCameraPosition: CameraPosition(
                       target: snapshot.data ?? const LatLng(40, 20),
@@ -230,7 +237,6 @@ class SignUpView extends GetView<SignUpController> {
                     ),
                     mapToolbarEnabled: false,
                     liteModeEnabled: true,
-                    mapType: MapType.hybrid,
                   ),
                 ),
               );
@@ -242,7 +248,7 @@ class SignUpView extends GetView<SignUpController> {
         ),
         Obx(
           () => ListTile(
-            title: const Text('Изберете цвят на организацията'),
+            title: Text('choose_color_for_organization'.tr),
             trailing: ColorIndicator(
               width: 44,
               height: 44,
@@ -270,12 +276,12 @@ class SignUpView extends GetView<SignUpController> {
         ),
         TextFormField(
           controller: controller.inviteCodeController,
-          decoration: const InputDecoration(
-            label: Text("Код"),
+          decoration: InputDecoration(
+            label: Text("code".tr),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return "Попълнете полето";
+              return "fill_field".tr;
             }
 
             return null;

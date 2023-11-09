@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:reportr/app/modules/chats/views/chats_view.dart';
 import 'package:reportr/app/modules/home/components/drawer/drawer_destination.dart';
@@ -23,18 +24,18 @@ class UserContent extends StatelessWidget {
           if (role == "organization" || role == "employee")
             DrawerDestination(
               icon: CupertinoIcons.doc,
-              label: "Докладвания",
+              label: "reports".tr,
               onTap: () => Get.to(() => const ReportsView()),
             ),
           if (role == "reporter")
             DrawerDestination(
               icon: CupertinoIcons.doc,
-              label: "Мойте доклади",
+              label: "my_reports".tr,
               onTap: () => Get.to(() => const MyReportsView()),
             ),
           DrawerDestination(
             icon: CupertinoIcons.chat_bubble,
-            label: "Чатове",
+            label: "chats".tr,
             onTap: () => Get.to(
               () => const ChatsView(),
             ),
@@ -42,20 +43,20 @@ class UserContent extends StatelessWidget {
           if (role == "organization")
             DrawerDestination(
               icon: Icons.person_search,
-              label: "Работници",
+              label: "workers".tr,
               onTap: () => Get.to(() => const WorkerManagerView()),
             ),
           const Spacer(),
           DrawerDestination(
             icon: CupertinoIcons.profile_circled,
-            label: "Профил",
+            label: "profile".tr,
             onTap: () => Get.to(() => const ProfileView()),
           ),
           const SizedBox(height: 10),
           DrawerDestination(
             icon: Icons.logout,
-            label: "Излез",
-            onTap: () async => await AuthService().logOut(),
+            label: "sign_out".tr,
+            onTap: () async => {await AuthService().logOut(), await HapticFeedback.lightImpact()},
           ),
         ],
       ),

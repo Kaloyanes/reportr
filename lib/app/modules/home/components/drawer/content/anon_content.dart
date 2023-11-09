@@ -15,13 +15,13 @@ class AnonContent extends StatelessWidget {
         children: [
           DrawerDestination(
             icon: Icons.login,
-            label: "Влез",
+            label: "sign_in".tr,
             onTap: () => Get.to(() => const SignInView()),
           ),
           const SizedBox(height: 10),
           DrawerDestination(
             icon: Icons.app_registration_rounded,
-            label: "Създай акаунт",
+            label: "create_account".tr,
             onTap: () => Get.to(() => const SignUpView()),
           ),
           const Spacer(),

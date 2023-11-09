@@ -22,7 +22,7 @@ class ReportsContoller extends GetxController {
 
     if (data == null) {
       throw ArgumentError(
-        "Нямате права или не сте влезли в организация",
+        "no_rights_or_havent_joined_org",
       );
     }
 
@@ -31,7 +31,7 @@ class ReportsContoller extends GetxController {
         context: Get.context!,
         builder: (context) => AlertDialog(
           icon: const Icon(Icons.warning),
-          title: const Text("Нямате организация"),
+          title: Text("no_organization".tr),
           actionsAlignment: MainAxisAlignment.center,
           actions: [
             FilledButton(
@@ -71,7 +71,7 @@ class ReportsContoller extends GetxController {
 
     if (data == null) {
       throw ArgumentError(
-        "Нямате права или не сте влезли в организация",
+        "no_rights_or_havent_joined_org".tr,
       );
     }
 

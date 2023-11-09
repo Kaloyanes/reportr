@@ -15,7 +15,7 @@ class FilterDrawer extends GetView<FilterDrawerController> {
           Container(
             margin: const EdgeInsets.all(20),
             child: Text(
-              "Филтри",
+              "filters".tr,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ),
@@ -23,26 +23,26 @@ class FilterDrawer extends GetView<FilterDrawerController> {
           Obx(
             () => Column(
               children: [
-                Text("Какъв вид доклади?", style: Theme.of(context).textTheme.headlineSmall),
+                Text("type_of_reports".tr, style: Theme.of(context).textTheme.headlineSmall),
                 RadioListTile(
                   value: 1,
                   groupValue: controller.anonFilter.value,
                   onChanged: (val) => controller.anonFilter.value = val ?? 1,
-                  title: const Text("Всички"),
+                  title: Text("all".tr),
                   selected: controller.anonFilter.value == 1,
                 ),
                 RadioListTile(
                   value: 2,
                   groupValue: controller.anonFilter.value,
                   onChanged: (val) => controller.anonFilter.value = val ?? 2,
-                  title: const Text("Само от хора"),
+                  title: Text("only_by_registered_users".tr),
                   selected: controller.anonFilter.value == 2,
                 ),
                 RadioListTile(
                   value: 3,
                   groupValue: controller.anonFilter.value,
                   onChanged: (val) => controller.anonFilter.value = val ?? 3,
-                  title: const Text("Само анонимни"),
+                  title: Text("only_anon".tr),
                   selected: controller.anonFilter.value == 3,
                 ),
               ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reportr/app/components/map_switcher.dart';
@@ -43,7 +44,12 @@ class LocationPickerView extends GetView<LocationPickerControlller> {
               mapToolbarEnabled: false,
               zoomControlsEnabled: false,
               tiltGesturesEnabled: false,
-              mapType: MapType.hybrid,
+              onMapCreated: (mapController) async {
+                if (Theme.of(context).colorScheme.brightness == Brightness.dark) {
+                  var darkMap = await rootBundle.loadString("lib/app/assets/darkMap.json");
+                  mapController.setMapStyle(darkMap);
+                }
+              },
             ),
           ),
           const Center(

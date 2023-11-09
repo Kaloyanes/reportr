@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:auto_size_text_field/auto_size_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:reportr/app/modules/chats/controllers/chat_controller.dart';
 
 class ChatBottomBar extends StatefulWidget {
@@ -37,8 +38,6 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
         color: Colors.transparent,
       ),
       child: Stack(
-        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        // crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Align(
             alignment: Alignment.centerLeft,
@@ -56,23 +55,23 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
               },
               clipBehavior: Clip.hardEdge,
               itemBuilder: (context) => [
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 2,
                   child: Row(
                     children: [
-                      Icon(Icons.image),
-                      SizedBox(width: 10),
-                      Text("Снимка"),
+                      const Icon(Icons.image),
+                      const SizedBox(width: 10),
+                      Text("picture".tr),
                     ],
                   ),
                 ),
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 4,
                   child: Row(
                     children: [
-                      Icon(Icons.file_upload),
-                      SizedBox(width: 10),
-                      Text("Файл"),
+                      const Icon(Icons.file_upload),
+                      const SizedBox(width: 10),
+                      Text("file".tr),
                     ],
                   ),
                 ),

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:reportr/app/models/employee_model.dart';
 import 'package:reportr/app/modules/worker_manager/controllers/worker_manager_controller.dart';
 
@@ -30,9 +31,9 @@ class WorkerTile extends StatelessWidget {
           }
         },
         itemBuilder: (context) => <PopupMenuEntry<int>>[
-          const PopupMenuItem(
+          PopupMenuItem(
             value: 1,
-            child: Text("Премахнете потребителя", style: TextStyle(color: Colors.red)),
+            child: Text("remove_user".tr, style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),

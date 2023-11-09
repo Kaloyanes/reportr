@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:reportr/app/services/auth_service.dart';
@@ -25,8 +26,8 @@ class SignInController extends GetxController {
     }
 
     Get.back();
-    Get.back();
-    ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text("Успешно влязохте в акаунта си")));
+    ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(content: Text("success_login".tr)));
+    await HapticFeedback.lightImpact();
   }
 
   Future forgotPassword() async {
@@ -36,7 +37,7 @@ class SignInController extends GetxController {
     var email = await showDialog<String>(
       context: Get.context!,
       builder: (context) => AlertDialog(
-        title: const Text("Забравена парола"),
+        title: Text("forgot_password".tr),
         content: Form(
           key: forgotFormKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -44,7 +45,7 @@ class SignInController extends GetxController {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                "Моля въведете Емайла ви, и ние ще ви изпратим линк на пощата за да въведете нова парола",
+                "forgot_password_description".tr,
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(
@@ -53,16 +54,16 @@ class SignInController extends GetxController {
               TextFormField(
                 keyboardType: TextInputType.emailAddress,
                 controller: emailForgotController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   isCollapsed: false,
-                  label: Text("Емайл"),
+                  label: Text("email".tr),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return "Попълнете полето";
+                    return "fill_field".tr;
                   }
 
-                  if (!value.isEmail) return "Неправилен имейл";
+                  if (!value.isEmail) return "invalid_email".tr;
                   return null;
                 },
               ),
@@ -72,13 +73,13 @@ class SignInController extends GetxController {
         actions: [
           FilledButton.tonal(
             onPressed: () => Get.back(result: "return"),
-            child: const Text("Откажи"),
+            child: Text("cancel".tr),
           ),
           FilledButton.tonal(
             onPressed: () {
               if (forgotFormKey.currentState!.validate()) Get.back(result: emailForgotController.text.trim());
             },
-            child: const Text("Изпрати"),
+            child: Text("submit".tr),
           ),
         ],
       ).animate().scaleXY(
@@ -96,7 +97,7 @@ class SignInController extends GetxController {
       return;
     }
 
-    ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text("Изпратен е линк на вашия емайл")));
+    ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(content: Text("success_forgot_password".tr)));
   }
 
   void showError(String message) {

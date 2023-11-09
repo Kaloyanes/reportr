@@ -11,11 +11,11 @@ class ProfileView extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
     Get.lazyPut(() => ProfileController());
-    return WillPopScope(
-      onWillPop: () => controller.exitPage(),
+    return PopScope(
+      onPopInvoked: (exit) => controller.exitPage(),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Профил'),
+          title: Text("profile".tr),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
@@ -55,9 +55,10 @@ class ProfileView extends GetView<ProfileController> {
                     height: 10,
                   ),
                   FilledButton.tonalIcon(
+                    style: FilledButton.styleFrom(fixedSize: const Size.fromWidth(200)),
                     icon: const Icon(Icons.delete_forever),
                     onPressed: () => controller.deleteProfile(),
-                    label: const Text("Изтрий профила"),
+                    label: Text("delete_profile".tr),
                   ),
                   SizedBox(
                     height: Get.mediaQuery.viewPadding.bottom + 20,

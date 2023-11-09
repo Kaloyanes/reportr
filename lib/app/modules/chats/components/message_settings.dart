@@ -35,7 +35,7 @@ class MessageSettings extends StatelessWidget {
         const SizedBox(height: 20),
         ListTile(
           leading: const Icon(Icons.delete),
-          title: const Text("Изтрийте съобщението"),
+          title: Text("delete_message".tr),
           onTap: () async {
             Get.back();
             Get.find<ChatController>().messages.removeWhere((element) => element.msgId == doc.id);
@@ -47,7 +47,8 @@ class MessageSettings extends StatelessWidget {
               await ref!.delete();
             }
           },
-          tileColor: Theme.of(context).colorScheme.tertiaryContainer,
+          tileColor: Theme.of(context).colorScheme.errorContainer,
+          textColor: Theme.of(context).colorScheme.onErrorContainer,
         ),
         SizedBox(
           height: Get.mediaQuery.padding.bottom,

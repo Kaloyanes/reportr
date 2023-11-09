@@ -19,7 +19,6 @@ class ImageCropView extends StatelessWidget {
         backgroundColor: Colors.black.withAlpha(100),
       ),
       body: Crop(
-        // progressIndicator: const CircularProgressIndicator(),
         initialSize: 0.5,
         image: _imageData,
         controller: cropController,
@@ -37,7 +36,7 @@ class ImageCropView extends StatelessWidget {
           cropController.crop();
         },
         icon: const Icon(Icons.save_rounded),
-        label: const Text("Запази"),
+        label: Text("save".tr),
         elevation: 2,
         heroTag: "saveButton",
       ),

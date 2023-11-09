@@ -170,7 +170,7 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(top: 10, bottom: 7),
-                        child: Text("Описание", style: Theme.of(context).textTheme.headlineSmall),
+                        child: Text("description".tr, style: Theme.of(context).textTheme.headlineSmall),
                       ),
                       const Divider(height: 5),
                       Padding(
@@ -223,7 +223,7 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
                   height: 30,
                 ),
                 Text(
-                  "Оценете доклада по приоритет",
+                  "rate_report_by_priority".tr,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(

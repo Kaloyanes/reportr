@@ -18,7 +18,7 @@ class ReportsView extends GetView<ReportsContoller> {
       key: controller.scaffKey,
       endDrawer: const FilterDrawer(),
       appBar: AppBar(
-        title: const Text("Доклади"),
+        title: Text("reports".tr),
         centerTitle: true,
         actions: [
           PopupMenuButton(
@@ -27,11 +27,11 @@ class ReportsView extends GetView<ReportsContoller> {
             clipBehavior: Clip.hardEdge,
             itemBuilder: (context) => [
               PopupMenuItem(
-                child: const Text("Най-скорошни"),
+                child: Text("most_recent".tr),
                 onTap: () => controller.sort("date"),
               ),
               PopupMenuItem(
-                child: const Text("Най-приоритетни"),
+                child: Text("top_priority".tr),
                 onTap: () => controller.sort("rating"),
               ),
             ],
