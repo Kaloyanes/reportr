@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:reportr/app/components/back_button.dart';
 import 'package:reportr/app/modules/sign_up/views/sign_up_view.dart';
 
 import '../controllers/sign_in_controller.dart';
@@ -11,7 +12,9 @@ class SignInView extends GetView<SignInController> {
   Widget build(BuildContext context) {
     Get.lazyPut(() => SignInController());
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: const CustomBackButton(),
+      ),
       body: Form(
         key: controller.formKey,
         child: Padding(

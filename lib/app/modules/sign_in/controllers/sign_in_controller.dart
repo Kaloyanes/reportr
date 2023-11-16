@@ -75,7 +75,7 @@ class SignInController extends GetxController {
             onPressed: () => Get.back(result: "return"),
             child: Text("cancel".tr),
           ),
-          FilledButton.tonal(
+          FilledButton(
             onPressed: () {
               if (forgotFormKey.currentState!.validate()) Get.back(result: emailForgotController.text.trim());
             },

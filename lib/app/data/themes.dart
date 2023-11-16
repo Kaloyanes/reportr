@@ -18,18 +18,18 @@ class Themes {
   );
 
   static ThemeData dark = generateTheme(ColorScheme(
-    background: const Color.fromARGB(255, 12, 12, 12),
-    surface: const Color.fromARGB(255, 12, 12, 12),
-    primary: Colors.deepPurple.shade400,
-    onPrimary: Colors.white,
-    secondary: const Color.fromARGB(255, 50, 50, 50),
-    onSecondary: Colors.white,
-    error: Colors.red,
-    onError: Colors.white,
-    onBackground: Colors.white,
-    brightness: Brightness.dark,
-    onSurface: Colors.white,
-  ));
+      background: const Color.fromARGB(255, 12, 12, 12),
+      surface: const Color.fromARGB(255, 12, 12, 12),
+      primary: Colors.deepPurple.shade400,
+      onPrimary: Colors.white,
+      secondary: const Color.fromARGB(255, 50, 50, 50),
+      onSecondary: Colors.white,
+      error: Colors.red,
+      onError: Colors.white,
+      onBackground: Colors.white,
+      brightness: Brightness.dark,
+      onSurface: Colors.white,
+      primaryContainer: Colors.deepPurple.shade400));
 
   static ThemeData generateTheme(ColorScheme color) {
     return ThemeData(
@@ -49,13 +49,13 @@ class Themes {
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(15),
           borderSide: BorderSide(
             color: color.primary,
           ),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(
             color: Colors.red,
           ),

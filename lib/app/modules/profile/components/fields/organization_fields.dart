@@ -9,7 +9,7 @@ import 'package:reportr/app/services/profile_service.dart';
 
 class OrganizationFields extends StatelessWidget {
   const OrganizationFields({
-    super.key, 
+    super.key,
     required this.controller,
   });
 
@@ -84,7 +84,7 @@ class OrganizationFields extends StatelessWidget {
           height: 15,
         ),
         TextFormField(
-          decoration: const InputDecoration(label: Text("Код за покана")),
+          decoration: InputDecoration(label: Text("organization_code_for_invite".tr)),
           controller: controller.inviteController,
           readOnly: true,
           onChanged: (value) => controller.savedSettings.value = true,

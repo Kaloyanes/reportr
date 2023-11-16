@@ -17,7 +17,7 @@ class ChatsView extends GetView<ChatsController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("chats".tr),
+        title: Text('chats'.tr),
         centerTitle: true,
         leading: const CustomBackButton(),
       ),
@@ -35,10 +35,13 @@ class ChatsView extends GetView<ChatsController> {
           if (user.isEmpty) {
             return Center(
               child: Text(
-                "no_chats".tr,
+                "Няма чатове",
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
-            );
+            ).animate(delay: 500.ms).scaleXY(
+                  curve: Curves.fastLinearToSlowEaseIn,
+                  duration: 600.ms,
+                );
           }
 
           return ListView(
@@ -74,37 +77,13 @@ class ChatsView extends GetView<ChatsController> {
                         var reporter = Reporter.fromMap(personData, snapshot.data!.id);
 
                         return ListTile(
-                          leading: Hero(
-                            transitionOnUserGestures: true,
-                            tag: reporter,
-                            child: CircleAvatar(
-                              foregroundImage: CachedNetworkImageProvider(reporter.photoUrl),
-                              child: Text(initials),
-                            ),
+                          leading: CircleAvatar(
+                            foregroundImage: CachedNetworkImageProvider(reporter.photoUrl),
+                            child: Text(initials),
                           ),
-                          title: Hero(
-                            transitionOnUserGestures: true,
-                            flightShuttleBuilder:
-                                (flightContext, animation, flightDirection, fromHeroContext, toHeroContext) =>
-                                    AnimatedBuilder(
-                              animation: animation,
-                              child: toHeroContext.widget,
-                              builder: (_, child) {
-                                return DefaultTextStyle.merge(
-                                  child: child!,
-                                  style: TextStyle.lerp(
-                                    DefaultTextStyle.of(fromHeroContext).style,
-                                    DefaultTextStyle.of(toHeroContext).style,
-                                    flightDirection == HeroFlightDirection.push ? 1 - animation.value : animation.value,
-                                  ),
-                                );
-                              },
-                            ),
-                            tag: doc.id,
-                            child: Text(
-                              personData["name"],
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
+                          title: Text(
+                            personData["name"],
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
                           onTap: () async {
                             Get.to(
@@ -121,7 +100,23 @@ class ChatsView extends GetView<ChatsController> {
                     );
                   },
                 )
-            ],
+            ]
+                .animate(
+                  interval: 100.ms,
+                )
+                .slideX(
+                  curve: Curves.easeOutQuint,
+                  begin: 2,
+                  duration: 1000.ms,
+                )
+                .blurX(
+                  begin: 5,
+                  end: 0,
+                  // curve: Curves.easeInOutExpo,
+                  curve: Curves.easeOutQuart,
+                  duration: 600.ms,
+                  delay: 200.ms,
+                ),
           );
         },
       ),

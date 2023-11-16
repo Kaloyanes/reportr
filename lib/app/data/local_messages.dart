@@ -36,6 +36,11 @@ class LocalMessages extends Translations {
           "workers": "Workers",
           "profile": "Profile",
           "sign_out": "Sign out",
+          "file": "File",
+          "picture": "Picture",
+          "delete_profile": "Delete profile",
+          "generate_new_code": "Generate new code",
+          "organization_code_for_invite": "Organization code for invite",
         },
         'bg_BG': {
           "sign_in": "Влизане",

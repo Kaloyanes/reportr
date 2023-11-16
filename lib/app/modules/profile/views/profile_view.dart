@@ -28,7 +28,7 @@ class ProfileView extends GetView<ProfileController> {
                   ProfilePicture(controller: controller),
                   const SizedBox(height: 20),
                   TextFormField(
-                    decoration: const InputDecoration(label: Text("Име")),
+                    decoration: InputDecoration(label: Text("name".tr)),
                     controller: controller.nameController,
                     onChanged: (value) => controller.savedSettings.value = true,
                   ),
@@ -36,7 +36,7 @@ class ProfileView extends GetView<ProfileController> {
                     height: 10,
                   ),
                   TextFormField(
-                    decoration: const InputDecoration(label: Text("Имейл")),
+                    decoration: InputDecoration(label: Text("email".tr)),
                     controller: controller.emailController,
                     onChanged: (value) => controller.savedSettings.value = true,
                   ),

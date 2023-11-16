@@ -5,6 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:reportr/app/components/back_button.dart';
 import 'package:reportr/app/components/map_switcher.dart';
 
 import '../controllers/sign_up_controller.dart';
@@ -19,14 +20,17 @@ class SignUpView extends GetView<SignUpController> {
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
           SliverAppBar.large(
+            toolbarHeight: 55,
+            leadingWidth: 55,
+            leading: const CustomBackButton(),
             forceElevated: innerBoxIsScrolled,
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
               title: Text(
                 "sign_up".tr,
               ),
-              expandedTitleScale: 2,
-              titlePadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              // expandedTitleScale: ,
+              titlePadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             ),
           ),
         ],
