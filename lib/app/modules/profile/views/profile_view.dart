@@ -55,7 +55,8 @@ class ProfileView extends GetView<ProfileController> {
                     height: 10,
                   ),
                   FilledButton.tonalIcon(
-                    style: FilledButton.styleFrom(fixedSize: const Size.fromWidth(200)),
+                    style: FilledButton.styleFrom(
+                        fixedSize: const Size.fromWidth(200), backgroundColor: Colors.red.shade600),
                     icon: const Icon(Icons.delete_forever),
                     onPressed: () => controller.deleteProfile(),
                     label: Text("delete_profile".tr),

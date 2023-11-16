@@ -183,7 +183,7 @@ class SignUpView extends GetView<SignUpController> {
               const SizedBox(
                 height: 15,
               ),
-              FilledButton.tonalIcon(
+              FilledButton.icon(
                 onPressed: () => controller.register(),
                 icon: const Icon(Icons.app_registration_rounded),
                 label: Text("sign_up".tr),

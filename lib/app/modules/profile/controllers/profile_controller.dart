@@ -75,26 +75,26 @@ class ProfileController extends GetxController {
     var imageSource = await showDialog<String>(
       context: Get.context!,
       builder: (context) => AlertDialog(
-        title: const Text("Изберете действие"),
+        title: Text("choose_option".tr),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              title: const Text("Камера"),
+              title: Text("camera".tr),
               leading: const Icon(
                 Icons.camera_alt,
               ),
               onTap: () => Get.back(result: "camera"),
             ),
             ListTile(
-              title: const Text("Галерия"),
+              title: Text("gallery".tr),
               leading: const Icon(
                 Icons.photo,
               ),
               onTap: () => Get.back(result: "gallery"),
             ),
             ListTile(
-              title: const Text("Изтрий снимката"),
+              title: Text("delete_profile_picture".tr),
               leading: const Icon(
                 Icons.delete,
               ),
@@ -425,15 +425,15 @@ class ProfileController extends GetxController {
               color: Colors.red,
               size: 30,
             ),
-            title: const Text("Сигурни ли сте, че искате да си изтрийте профила?"),
+            title: Text("leave_organization_question".tr),
             actions: [
               FilledButton(
                 onPressed: () => Get.back(result: false),
-                child: const Text("Не"),
+                child: Text("cancel".tr),
               ),
               FilledButton(
                 onPressed: () => Get.back(result: true),
-                child: const Text("Да"),
+                child: Text("yes".tr),
               ),
             ],
           ),
