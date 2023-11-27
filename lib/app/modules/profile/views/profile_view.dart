@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import 'package:get/get.dart';
+import 'package:reportr/app/components/back_button.dart';
 import 'package:reportr/app/modules/profile/components/profile_picture.dart';
 
 import '../controllers/profile_controller.dart';
@@ -17,6 +18,7 @@ class ProfileView extends GetView<ProfileController> {
         appBar: AppBar(
           title: Text("profile".tr),
           centerTitle: true,
+          leading: const CustomBackButton(),
         ),
         body: SingleChildScrollView(
           child: Form(

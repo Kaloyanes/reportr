@@ -39,7 +39,7 @@ class ReportsContoller extends GetxController {
                 Get.back();
                 Get.back();
               },
-              child: const Text("Ок"),
+              child: Text("ok".tr),
             )
           ],
         ),
@@ -80,8 +80,11 @@ class ReportsContoller extends GetxController {
           isEqualTo: data["role"] == "organization" ? FirebaseAuth.instance.currentUser!.uid : data["organization"],
         );
 
-    stream.value = strea.orderBy(order, descending: true).snapshots();
+    var ordered = strea.orderBy(order, descending: true);
 
+    if (order == "rating") ordered = ordered.orderBy("date", descending: true);
+
+    stream.value = ordered.snapshots();
     await settingsBox.write("order", order);
   }
 }

@@ -15,6 +15,7 @@ import 'package:reportr/app/models/reporter_model.dart';
 import 'package:reportr/app/modules/chats/chat_messages/views/location_picker.dart';
 import 'package:reportr/app/modules/chats/components/photo_picker.dart';
 import 'package:reportr/app/modules/chats/models/message_model.dart';
+import 'package:reportr/app/modules/home/components/report_sheet/components/photo_picker_dialog.dart';
 import 'package:uuid/uuid.dart';
 
 class ChatController extends GetxController {
@@ -163,9 +164,9 @@ class ChatController extends GetxController {
   }
 
   Future<void> takePicture() async {
-    var option = await showModalBottomSheet<String>(
+    var option = await showDialog<String>(
       context: Get.context!,
-      builder: (context) => const PhotoPickerSheet(),
+      builder: (context) => const PhotoPickerDialog(),
     );
 
     ImageSource imageSource;

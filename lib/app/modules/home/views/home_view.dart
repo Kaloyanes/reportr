@@ -19,7 +19,6 @@ class HomeView extends GetView<HomeController> {
       drawer: const DrawerComponent(),
       extendBodyBehindAppBar: true,
       key: controller.scaffKey,
-
       body: Stack(
         children: [
           FutureBuilder(

@@ -18,7 +18,7 @@ class PhotoPickerDialog extends StatelessWidget {
             onTap: () {
               Get.back(result: 1);
             },
-            title: const Text("От галерията"),
+            title: Text("gallery".tr),
             leading: const Icon(
               Icons.photo_rounded,
             ),
@@ -30,7 +30,7 @@ class PhotoPickerDialog extends StatelessWidget {
             onTap: () {
               Get.back(result: 2);
             },
-            title: const Text("През камерата"),
+            title: Text("camera".tr),
             leading: const Icon(
               Icons.camera,
             ),
@@ -42,7 +42,7 @@ class PhotoPickerDialog extends StatelessWidget {
             onTap: () {
               Get.back(result: -1);
             },
-            title: const Text("Отказ"),
+            title: Text("cancel".tr),
             leading: const Icon(
               Icons.cancel,
             ),

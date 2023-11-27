@@ -48,21 +48,21 @@ class ProfileController extends GetxController {
       context: Get.context!,
       builder: (context) => AlertDialog(
         icon: const Icon(Icons.warning, size: 30),
-        title: const Text("Сигурни ли сте, че не искате да запазите промените?"),
+        title: Text("save_changes_question".tr),
         actions: [
           FilledButton(
             onPressed: () {
               HapticFeedback.lightImpact();
               Navigator.pop(context, false);
             },
-            child: const Text("Не"),
+            child: Text("no".tr),
           ),
           FilledButton(
             onPressed: () {
               HapticFeedback.lightImpact();
               Navigator.pop(context, true);
             },
-            child: const Text("Да"),
+            child: Text("yes".tr),
           ),
         ],
       ).animate().scaleXY(duration: 600.ms, curve: Curves.fastLinearToSlowEaseIn),

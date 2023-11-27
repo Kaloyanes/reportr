@@ -6,31 +6,25 @@ import 'package:get/get.dart';
 import 'package:reportr/app/modules/home/components/report_sheet/controllers/report_sheet_controller.dart';
 
 class ReportSheetView extends GetView<ReportSheetController> {
-  const ReportSheetView({super.key});
+  const ReportSheetView(this.name, this.id, {super.key});
+
+  final String name;
+  final String id;
 
   @override
   Widget build(BuildContext context) {
-    Get.lazyPut(() => ReportSheetController());
+    Get.lazyPut(() => ReportSheetController(id));
     return DraggableScrollableSheet(
       controller: controller.sheetController,
       expand: false,
-      initialChildSize: 0.1,
+      initialChildSize: 0.7,
       maxChildSize: 1,
-      minChildSize: 0.1,
+      minChildSize: 0.2,
       builder: (context, scrollController) {
-        return ReportForm(scrollController, context);
-      },
-    );
-  }
-
-  Padding ReportForm(ScrollController scrollController, BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0.0),
-      child: SingleChildScrollView(
-        controller: scrollController,
-        child: Form(
+        return Form(
           key: controller.formKey,
-          child: Column(
+          child: ListView(
+            controller: scrollController,
             children: [
               SizedBox(
                 height: Get.mediaQuery.viewPadding.top + 10,
@@ -46,21 +40,15 @@ class ReportSheetView extends GetView<ReportSheetController> {
               SizedBox(
                 height: Get.mediaQuery.viewPadding.top - 10,
               ),
-              Obx(() {
-                String val = controller.selectedObject.value;
-
-                if (val == "") {
-                  return Text(
-                    "Цъкнете върху някое кръгче, за да докладвате",
-                    style: Theme.of(context).textTheme.headlineSmall,
-                    textAlign: TextAlign.center,
-                  );
-                }
-
-                return Center(
-                  child: Text("Доклад към $val", style: Theme.of(context).textTheme.headlineMedium),
-                );
-              }),
+              Center(
+                child: Text(
+                    "report_to".trParams(
+                      {
+                        "organization": name,
+                      },
+                    ),
+                    style: Theme.of(context).textTheme.headlineMedium),
+              ),
               const SizedBox(
                 height: 20,
               ),
@@ -71,22 +59,19 @@ class ReportSheetView extends GetView<ReportSheetController> {
                     TextFormField(
                       autofocus: false,
                       controller: controller.nameController,
-                      decoration: const InputDecoration(
-                        label: Text("Името на доклада"),
+                      decoration: InputDecoration(
+                        label: Text("report_name".tr),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Попълнете полето";
+                          return "fill_field".tr;
                         }
 
                         return null;
                       },
                     ),
                     const SizedBox(
-                      height: 10,
-                    ),
-                    const SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
                   ],
                 ),
@@ -115,9 +100,9 @@ class ReportSheetView extends GetView<ReportSheetController> {
                               child: Center(
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: const [
-                                    Icon(Icons.add_a_photo),
-                                    Text("Добави снимка"),
+                                  children: [
+                                    const Icon(Icons.add_a_photo),
+                                    Text("add_picture".tr),
                                   ],
                                 ),
                               ),
@@ -156,13 +141,13 @@ class ReportSheetView extends GetView<ReportSheetController> {
                 child: TextFormField(
                   autofocus: false,
                   controller: controller.descriptionController,
-                  decoration: const InputDecoration(
-                    label: Text("Описание на доклада"),
+                  decoration: InputDecoration(
+                    label: Text("report_description".tr),
                   ),
                   maxLines: null,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Попълнете полето";
+                      return "fill_field".tr;
                     }
 
                     return null;
@@ -184,12 +169,12 @@ class ReportSheetView extends GetView<ReportSheetController> {
                     padding: const EdgeInsets.all(8.0),
                     child: Obx(
                       () => CheckboxListTile(
-                        title: const Text(
-                          "Анонимно докладаване?",
+                        title: Text(
+                          "anonymous_report".tr,
                         ),
                         value: controller.anonReport.value,
                         onChanged: (value) => controller.anonReport.value = !controller.anonReport.value,
-                        selected: controller.anonReport.value,
+                        selected: !controller.anonReport.value,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                       ),
                     ),
@@ -201,16 +186,16 @@ class ReportSheetView extends GetView<ReportSheetController> {
               ),
               FilledButton.tonalIcon(
                 onPressed: () => controller.report(),
-                label: const Text("Докладвай"),
+                label: Text("report".tr),
                 icon: const Icon(Icons.report),
               ),
               SizedBox(
-                height: Get.mediaQuery.systemGestureInsets.bottom,
+                height: Get.mediaQuery.viewInsets.bottom + 20,
               ),
             ],
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

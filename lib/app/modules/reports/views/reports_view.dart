@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:reportr/app/components/back_button.dart';
 import 'package:reportr/app/models/report_model.dart';
 import 'package:reportr/app/models/reporter_model.dart';
 import 'package:reportr/app/modules/reports/components/filter_drawer/filter_drawer.dart';
@@ -20,6 +21,7 @@ class ReportsView extends GetView<ReportsContoller> {
       appBar: AppBar(
         title: Text("reports".tr),
         centerTitle: true,
+        leading: const CustomBackButton(),
         actions: [
           PopupMenuButton(
             padding: EdgeInsets.zero,
@@ -37,10 +39,6 @@ class ReportsView extends GetView<ReportsContoller> {
             ],
             icon: const Icon(Icons.sort),
           ),
-          // IconButton(
-          //   onPressed: () => controller.scaffKey.currentState!.openEndDrawer(),
-          //   icon: const Icon(Icons.filter_alt),
-          // ),
         ],
       ),
       body: Padding(

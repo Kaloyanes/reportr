@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,6 +9,9 @@ import 'package:reportr/app/modules/home/components/report_sheet/components/phot
 import 'package:reportr/app/services/report_service.dart';
 
 class ReportSheetController extends GetxController {
+  final String id;
+  ReportSheetController(this.id);
+
   final formKey = GlobalKey<FormState>();
   final sheetController = DraggableScrollableController();
 
@@ -27,10 +32,12 @@ class ReportSheetController extends GetxController {
 
   @override
   void onInit() {
-    sheetController.addListener(() {
-      if (sheetController.size <= 0.3) {
-        FocusScope.of(Get.context!).unfocus();
-      }
+    FocusScope.of(Get.context!).addListener(() {
+      Timer(const Duration(milliseconds: 50), () {
+        if (FocusScope.of(Get.context!).hasFocus) {
+          sheetController.animateTo(0.1, duration: 500.milliseconds, curve: Curves.easeOutQuart);
+        }
+      });
     });
     super.onInit();
   }
@@ -79,13 +86,8 @@ class ReportSheetController extends GetxController {
   }
 
   Future<void> report() async {
-    if (selectedId.value == "") {
-      showError("Изберете организация от картата");
-      return;
-    }
-
     if (selectedPhotos.isEmpty) {
-      showError("Не можете да нямате снимки");
+      showError("no_pictures_error".tr);
       return;
     }
 
@@ -95,19 +97,19 @@ class ReportSheetController extends GetxController {
     String description = descriptionController.text.trim();
 
     await ReportService().report(
-      selectedId.value,
+      id,
       name,
       description,
       selectedPhotos,
       isAnonymous: FirebaseAuth.instance.currentUser == null ? true : anonReport.value,
     );
 
-    ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text("Докладът е изпратен успешно.")));
+    ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(content: Text("report_success".tr)));
 
     selectedPhotos.value = [];
     nameController.clear();
     descriptionController.clear();
-    sheetController.animateTo(0.1, duration: 500.milliseconds, curve: Curves.easeOutQuart);
+    Get.back();
     FocusScope.of(Get.context!).unfocus();
   }
 

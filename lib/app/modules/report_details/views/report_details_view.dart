@@ -5,6 +5,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:reportr/app/components/back_button.dart';
 import 'package:reportr/app/components/map_switcher.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -18,6 +19,7 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
     Get.lazyPut(() => ReportDetailsController());
     return Scaffold(
       appBar: AppBar(
+        leading: CustomBackButton(),
         actions: [
           if (!controller.sender)
             IconButton(
@@ -251,7 +253,7 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
                             controller.reportRating.value != controller.report.rating
                         ? BoxConstraints.expand(height: 70, width: Get.width)
                         : const BoxConstraints.expand(height: 0, width: 0),
-                    child: ElevatedButton(onPressed: () => controller.updateRating(), child: const Text("Оценете")),
+                    child: ElevatedButton(onPressed: () => controller.updateRating(), child: Text("rate".tr)),
                   ),
                 ),
               ],

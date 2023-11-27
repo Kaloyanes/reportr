@@ -24,7 +24,7 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
   void initState() {
     widget.controller.messageController.addListener(() {
       setState(() {
-        hasText = widget.controller.messageController.text.isNotEmpty;
+        hasText = widget.controller.messageController.text.trim().isNotEmpty;
       });
     });
     super.initState();
@@ -87,6 +87,7 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
             curve: Curves.easeOutExpo,
             alignment: hasText ? const Alignment(-0.1, 0) : Alignment.centerRight,
             child: AnimatedContainer(
+              transformAlignment: Alignment.centerLeft,
               duration: const Duration(milliseconds: 500),
               curve: Curves.easeOutExpo,
               width: hasText ? MediaQuery.of(context).size.width * 0.7 : MediaQuery.of(context).size.width * 0.85,

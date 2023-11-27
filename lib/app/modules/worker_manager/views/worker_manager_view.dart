@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import 'package:get/get.dart';
+import 'package:reportr/app/components/back_button.dart';
 import 'package:reportr/app/models/employee_model.dart';
 import 'package:reportr/app/modules/worker_manager/components/worker_tile.dart';
 
@@ -16,6 +17,7 @@ class WorkerManagerView extends GetView<WorkerManagerController> {
       appBar: AppBar(
         title: Text('workers'.tr),
         centerTitle: true,
+        leading: const CustomBackButton(),
       ),
       body: StreamBuilder(
         stream: controller.employeeStream,
