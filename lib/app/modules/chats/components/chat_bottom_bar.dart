@@ -109,7 +109,7 @@ class _ChatBottomBarState extends State<ChatBottomBar> {
                   hintStyle: TextStyle(
                     color: Colors.grey.shade400,
                   ),
-                  hintText: "Напиши съобщение...",
+                  hintText: "type_message".tr,
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(horizontal: 5),
                 ),
