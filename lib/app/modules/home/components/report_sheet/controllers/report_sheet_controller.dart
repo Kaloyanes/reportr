@@ -24,10 +24,8 @@ class ReportSheetController extends GetxController {
   final TextEditingController descriptionController = TextEditingController();
   final anonReport = false.obs;
 
-  void showReportForm(String name, String id) {
-    selectedObject.value = name;
-    selectedId.value = id;
-    sheetController.animateTo(1, duration: 500.milliseconds, curve: Curves.easeOutQuart);
+  void showReportForm({double progress = 0.7}) {
+    sheetController.animateTo(progress, duration: 600.milliseconds, curve: Curves.easeInOutCubicEmphasized);
   }
 
   @override
@@ -35,9 +33,13 @@ class ReportSheetController extends GetxController {
     FocusScope.of(Get.context!).addListener(() {
       Timer(const Duration(milliseconds: 50), () {
         if (FocusScope.of(Get.context!).hasFocus) {
-          sheetController.animateTo(0.1, duration: 500.milliseconds, curve: Curves.easeOutQuart);
+          showReportForm(progress: 0.9);
         }
       });
+    });
+
+    Timer(const Duration(milliseconds: 50), () {
+      showReportForm();
     });
     super.onInit();
   }

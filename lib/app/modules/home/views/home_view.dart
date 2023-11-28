@@ -15,10 +15,29 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    if (Theme.of(context).brightness == Brightness.dark) {
+      SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(
+          statusBarIconBrightness: Brightness.light,
+          systemNavigationBarColor: Colors.transparent,
+          statusBarColor: Colors.transparent,
+        ),
+      );
+    } else {
+      SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(
+          statusBarIconBrightness: Brightness.dark,
+          systemNavigationBarColor: Colors.transparent,
+          statusBarColor: Colors.transparent,
+        ),
+      );
+    }
+
     return Scaffold(
       drawer: const DrawerComponent(),
       extendBodyBehindAppBar: true,
       key: controller.scaffKey,
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           FutureBuilder(
@@ -74,7 +93,7 @@ class HomeView extends GetView<HomeController> {
             },
           ),
           Align(
-            alignment: const Alignment(-0.9, -0.9),
+            alignment: const Alignment(-0.85, -0.85),
             child: Container(
               width: 55,
               height: 55,
@@ -85,7 +104,7 @@ class HomeView extends GetView<HomeController> {
                   BoxShadow(
                     color: Theme.of(context).colorScheme.primaryContainer,
                     blurRadius: 20,
-                    spreadRadius: 5,
+                    spreadRadius: 3,
                     offset: const Offset(0, 0),
                   ),
                 ],
@@ -97,6 +116,7 @@ class HomeView extends GetView<HomeController> {
                   onTap: () => controller.scaffKey.currentState!.openDrawer(),
                   child: const Icon(
                     Icons.menu,
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -104,33 +124,30 @@ class HomeView extends GetView<HomeController> {
           ),
         ],
       ),
-      // bottomSheet: const ReportSheetView(),
       floatingActionButton: Obx(
-        () {
-          return AnimatedSlide(
-            curve: Curves.easeOutQuint,
-            duration: const Duration(milliseconds: 600),
-            offset: controller.showControls.value ? Offset.zero : const Offset(0, 50),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14),
-                color: Theme.of(context).colorScheme.primaryContainer,
-                boxShadow: [
-                  BoxShadow(
-                    color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5),
-                    blurRadius: 20,
-                    spreadRadius: 5,
-                    offset: const Offset(0, 0),
-                  ),
-                ],
-              ),
-              child: FloatingActionButton(
-                onPressed: () => controller.goToMyLocation(),
-                child: const Icon(Icons.navigation),
-              ),
+        () => AnimatedSlide(
+          curve: Curves.easeOutQuint,
+          duration: const Duration(milliseconds: 600),
+          offset: controller.showControls.value ? Offset.zero : const Offset(0, 50),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              color: Theme.of(context).colorScheme.primaryContainer,
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5),
+                  blurRadius: 20,
+                  spreadRadius: 3,
+                  offset: const Offset(0, 0),
+                ),
+              ],
             ),
-          );
-        },
+            child: FloatingActionButton(
+              onPressed: () => controller.goToMyLocation(),
+              child: const Icon(Icons.navigation),
+            ),
+          ),
+        ),
       ),
     );
   }

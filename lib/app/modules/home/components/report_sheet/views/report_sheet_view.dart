@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,17 +15,18 @@ class ReportSheetView extends GetView<ReportSheetController> {
   @override
   Widget build(BuildContext context) {
     Get.lazyPut(() => ReportSheetController(id));
+
     return DraggableScrollableSheet(
       controller: controller.sheetController,
       expand: false,
-      initialChildSize: 0.7,
+      initialChildSize: 0,
       maxChildSize: 1,
-      minChildSize: 0.2,
-      builder: (context, scrollController) {
-        return Form(
-          key: controller.formKey,
-          child: ListView(
-            controller: scrollController,
+      minChildSize: 0,
+      builder: (context, scrollController) => Form(
+        key: controller.formKey,
+        child: SingleChildScrollView(
+          controller: scrollController,
+          child: Column(
             children: [
               SizedBox(
                 height: Get.mediaQuery.viewPadding.top + 10,
@@ -53,10 +55,19 @@ class ReportSheetView extends GetView<ReportSheetController> {
                 height: 20,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                padding: const EdgeInsets.symmetric(horizontal: 18),
                 child: Column(
                   children: [
                     TextFormField(
+                      onTap: () {
+                        Timer(const Duration(milliseconds: 400), () {
+                          scrollController.animateTo(
+                            0.4,
+                            duration: 600.milliseconds,
+                            curve: Curves.easeInOutCubicEmphasized,
+                          );
+                        });
+                      },
                       autofocus: false,
                       controller: controller.nameController,
                       decoration: InputDecoration(
@@ -137,21 +148,34 @@ class ReportSheetView extends GetView<ReportSheetController> {
                 height: 20,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: TextFormField(
-                  autofocus: false,
-                  controller: controller.descriptionController,
-                  decoration: InputDecoration(
-                    label: Text("report_description".tr),
-                  ),
-                  maxLines: null,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "fill_field".tr;
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                child: FocusScope(
+                  onFocusChange: (value) {
+                    if (value) {
+                      Timer(const Duration(milliseconds: 240), () {
+                        scrollController.animateTo(
+                          scrollController.positions.last.maxScrollExtent,
+                          duration: 600.milliseconds,
+                          curve: Curves.easeInOutCubicEmphasized,
+                        );
+                      });
                     }
-
-                    return null;
                   },
+                  child: TextFormField(
+                    autofocus: false,
+                    controller: controller.descriptionController,
+                    decoration: InputDecoration(
+                      label: Text("report_description".tr),
+                    ),
+                    maxLines: null,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "fill_field".tr;
+                      }
+
+                      return null;
+                    },
+                  ),
                 ),
               ),
               const SizedBox(
@@ -194,8 +218,8 @@ class ReportSheetView extends GetView<ReportSheetController> {
               ),
             ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

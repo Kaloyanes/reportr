@@ -88,6 +88,11 @@ class HomeController extends GetxController {
       isScrollControlled: true,
       builder: (context) => ReportSheetView(name, id),
     );
+
+    Timer(
+      const Duration(milliseconds: 50),
+      () => Get.find<ReportSheetController>().showReportForm(),
+    );
   }
 
   Future<BitmapDescriptor> convertImageFileToCustomBitmapDescriptor(Uint8List imageUint8List,
