@@ -10,10 +10,12 @@ class CustomBackButton extends StatelessWidget {
     return AspectRatio(
       aspectRatio: 1,
       child: Container(
-        height: 50,
+        height: 560,
         width: 50,
         clipBehavior: Clip.hardEdge,
-        margin: const EdgeInsets.all(7),
+        margin: const EdgeInsets.all(7).add(const EdgeInsets.only(
+          left: 5,
+        )),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: Colors.white.withOpacity(0.05),

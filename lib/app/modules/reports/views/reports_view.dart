@@ -17,7 +17,6 @@ class ReportsView extends GetView<ReportsContoller> {
     Get.lazyPut(() => ReportsContoller());
     return Scaffold(
       key: controller.scaffKey,
-      endDrawer: const FilterDrawer(),
       appBar: AppBar(
         title: Text("reports".tr),
         centerTitle: true,

@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:reportr/app/modules/chats/components/message_settings.dart';
 import 'package:reportr/app/modules/chats/models/message_model.dart';
@@ -35,40 +36,52 @@ class FileMessage extends StatelessWidget {
         onLongPress: () async {
           if (!ownMessage) return;
 
-          await showModalBottomSheet<String>(
+          await showDialog<String>(
             context: context,
-            builder: (context) => MessageSettings(
-              doc: doc,
+            builder: (context) => Material(
+              child: MessageSettings(
+                doc: doc,
+              ),
             ),
           );
         },
         onTap: () async {
+          Dio dio = Dio();
+          Directory dir = await getDownloadsDirectory() ?? await getApplicationDocumentsDirectory();
+          String path = dir.path;
+
+          if (File("$path/${ref.name}").existsSync()) {
+            OpenFile.open('$path/${ref.name}');
+            return;
+          }
+
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text("Стартира изтеглянето на ${ref.name}"),
+              content: Text("start_download".trParams({"file": ref.name})),
               behavior: SnackBarBehavior.floating,
-              // elevation: 20,
+              elevation: 20,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
             ),
           );
-          Dio dio = Dio();
-          Directory dir = await getApplicationDocumentsDirectory();
-          String path = dir.path;
 
           await dio.download(message.value, '$path/${ref.name}');
           ScaffoldMessenger.of(Get.context!).clearSnackBars();
           ScaffoldMessenger.of(Get.context!).showSnackBar(
             SnackBar(
-              content: Text("Успешно изтеглихте ${ref.name}"),
+              content: Text("finished_download".trParams({"file": ref.name})),
               behavior: SnackBarBehavior.floating,
-              // elevation: 20,
+              elevation: 20,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
             ),
           );
+
+          // Open File
+          OpenFile.open('$path/${ref.name}');
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 7),
           child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               if (!ownMessage)
                 Container(
@@ -80,27 +93,29 @@ class FileMessage extends StatelessWidget {
                   ),
                 ),
               Container(
+                alignment: Alignment.centerRight,
                 constraints: BoxConstraints(maxWidth: Get.width / 2),
                 padding: const EdgeInsets.all(15.0),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: ownMessage ? const Radius.circular(40) : const Radius.circular(10),
-                      bottomRight: const Radius.circular(40),
-                      bottomLeft: const Radius.circular(40),
-                      topRight: ownMessage ? const Radius.circular(10) : const Radius.circular(40),
+                  borderRadius: BorderRadius.only(
+                    topLeft: ownMessage ? const Radius.circular(40) : const Radius.circular(10),
+                    bottomRight: const Radius.circular(40),
+                    bottomLeft: const Radius.circular(40),
+                    topRight: ownMessage ? const Radius.circular(10) : const Radius.circular(40),
+                  ),
+                  color: ownMessage
+                      ? Theme.of(context).colorScheme.primaryContainer
+                      : Theme.of(context).colorScheme.secondaryContainer,
+                  boxShadow: [
+                    BoxShadow(
+                      color: ownMessage
+                          ? Theme.of(context).colorScheme.primaryContainer
+                          : Theme.of(context).colorScheme.secondaryContainer,
+                      blurRadius: 15,
+                      offset: const Offset(0, 0),
                     ),
-                    color: ownMessage
-                        ? Theme.of(context).colorScheme.primaryContainer
-                        : Theme.of(context).colorScheme.secondaryContainer,
-                    boxShadow: [
-                      BoxShadow(
-                        color: ownMessage
-                            ? Theme.of(context).colorScheme.primaryContainer
-                            : Theme.of(context).colorScheme.secondaryContainer,
-                        blurRadius: 15,
-                        offset: const Offset(0, 0),
-                      ),
-                    ]),
+                  ],
+                ),
                 child: Row(
                   children: [
                     const Icon(

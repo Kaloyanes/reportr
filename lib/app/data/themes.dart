@@ -4,7 +4,7 @@ class Themes {
   static ThemeData light = generateTheme(
     ColorScheme(
       background: Colors.white, // Light background for a light theme
-      primary: Colors.blue, // Primary color can stay the same if it contrasts well
+      primary: Colors.indigo, // Primary color can stay the same if it contrasts well
       onPrimary: Colors.white, // Text on primary might need to be darker for readability
       secondary: Colors.grey.shade300, // A lighter shade for secondary background
       onSecondary: Colors.black, // Text on secondary needs to be dark for readability
@@ -17,10 +17,11 @@ class Themes {
     ),
   );
 
-  static ThemeData dark = generateTheme(ColorScheme(
+  static ThemeData dark = generateTheme(
+    ColorScheme(
       background: const Color.fromARGB(255, 12, 12, 12),
       surface: const Color.fromARGB(255, 12, 12, 12),
-      primary: Colors.deepPurple.shade400,
+      primary: Colors.deepPurple.shade300,
       onPrimary: Colors.white,
       secondary: const Color.fromARGB(255, 50, 50, 50),
       onSecondary: Colors.white,
@@ -29,7 +30,9 @@ class Themes {
       onBackground: Colors.white,
       brightness: Brightness.dark,
       onSurface: Colors.white,
-      primaryContainer: Colors.deepPurple.shade400));
+      primaryContainer: Colors.deepPurple.shade300,
+    ),
+  );
 
   static ThemeData generateTheme(ColorScheme color) {
     return ThemeData(

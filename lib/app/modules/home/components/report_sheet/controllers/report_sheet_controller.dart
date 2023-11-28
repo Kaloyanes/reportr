@@ -128,7 +128,7 @@ class ReportSheetController extends GetxController {
         actions: [
           ElevatedButton(
             onPressed: () => Get.back(),
-            child: const Text("Oк"),
+            child: Text("ok".tr),
           ),
         ],
       ),
