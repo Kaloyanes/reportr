@@ -37,13 +37,12 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      systemNavigationBarContrastEnforced: false,
-      systemStatusBarContrastEnforced: false,
-      statusBarColor: Colors.transparent,
-      systemNavigationBarColor: Colors.transparent,
-    ));
+
     var settingsStorage = GetStorage("reportSettings");
+    settingsStorage.listenKey("language", (value) async {
+      await Get.updateLocale(Locale(value));
+    });
+
     return GetMaterialApp(
       title: "Application",
       initialRoute: AppPages.INITIAL,

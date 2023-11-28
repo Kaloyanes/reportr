@@ -23,6 +23,7 @@ class WorkerTile extends StatelessWidget {
         child: Text(controller.getInitials(employee.name)),
       ),
       trailing: PopupMenuButton(
+        clipBehavior: Clip.hardEdge,
         onSelected: (value) {
           switch (value) {
             case 1:

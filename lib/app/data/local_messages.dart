@@ -66,6 +66,10 @@ class LocalMessages extends Translations {
           "description": "Description",
           "most_recent": "Most recent",
           "top_priority": "Top priority",
+          "remove_user": "Remove user",
+          "started_download": "Started download of file @file",
+          "finished_download": "Finished download of file @file",
+          "delete_message": "Delete message",
         },
         'bg_BG': {
           "sign_in": "Влизане",

@@ -93,7 +93,7 @@ class HomeView extends GetView<HomeController> {
             },
           ),
           Align(
-            alignment: const Alignment(-0.85, -0.85),
+            alignment: const Alignment(-0.9, -0.85),
             child: Container(
               width: 55,
               height: 55,

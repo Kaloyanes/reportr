@@ -59,15 +59,6 @@ class ReportSheetView extends GetView<ReportSheetController> {
                 child: Column(
                   children: [
                     TextFormField(
-                      onTap: () {
-                        Timer(const Duration(milliseconds: 400), () {
-                          scrollController.animateTo(
-                            0.4,
-                            duration: 600.milliseconds,
-                            curve: Curves.easeInOutCubicEmphasized,
-                          );
-                        });
-                      },
                       autofocus: false,
                       controller: controller.nameController,
                       decoration: InputDecoration(
@@ -152,10 +143,12 @@ class ReportSheetView extends GetView<ReportSheetController> {
                 child: FocusScope(
                   onFocusChange: (value) {
                     if (value) {
-                      Timer(const Duration(milliseconds: 240), () {
-                        scrollController.animateTo(
+                      Timer(const Duration(milliseconds: 250), () async {
+                        controller.sheetController
+                            .animateTo(1, duration: 350.milliseconds, curve: Curves.easeInOutCubicEmphasized);
+                        await scrollController.animateTo(
                           scrollController.positions.last.maxScrollExtent,
-                          duration: 600.milliseconds,
+                          duration: 400.milliseconds,
                           curve: Curves.easeInOutCubicEmphasized,
                         );
                       });
