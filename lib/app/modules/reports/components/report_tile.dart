@@ -31,6 +31,10 @@ class ReportTile extends GetView<ReportTileController> {
           return Material(
             child: InkWell(
               onTap: () async {
+                if (snapshot.connectionState == ConnectionState.waiting || snapshot.data == null || !snapshot.hasData) {
+                  return;
+                }
+
                 Get.to(
                   () => const ReportDetailsView(),
                   arguments: {
@@ -151,7 +155,6 @@ class ReportTile extends GetView<ReportTileController> {
                   const SizedBox(
                     height: 10,
                   ),
-                  // Date Time
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Row(
@@ -172,62 +175,6 @@ class ReportTile extends GetView<ReportTileController> {
                       ],
                     ),
                   ),
-
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  //   child: Text(
-                  //     report.title,
-                  //     style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 18),
-                  //     textAlign: TextAlign.left,
-                  //     // softWrap: false,
-                  //     maxLines: 2,
-                  //   ),
-                  // ),
-                  // Expanded(
-                  //   child: Container(),
-                  // ),
-                  // Row(
-                  //   children: [
-                  //     Padding(
-                  //       padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  //       child: Align(
-                  //         alignment: Alignment.centerLeft,
-                  //         child: Text(
-                  //           controller.formatter.format(report.date),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-                  // Divider(
-                  //   color: Theme.of(context).colorScheme.outline,
-                  // ),
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  //   child: FittedBox(
-                  //     alignment: Alignment.centerLeft,
-                  //     child: Row(
-                  //       mainAxisAlignment: MainAxisAlignment.start,
-                  //       children: [
-                  //         CircleAvatar(
-                  //           radius: 15,
-                  //           foregroundImage: CachedNetworkImageProvider(reporter.photoUrl),
-                  //           child: const Icon(Icons.person),
-                  //         ),
-                  //         const SizedBox(
-                  //           width: 10,
-                  //         ),
-                  //         Align(
-                  //           alignment: Alignment.centerLeft,
-                  //           child: Text(reporter.name),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-                  // const SizedBox(
-                  //   height: 10,
-                  // ),
                 ],
               ),
             ),

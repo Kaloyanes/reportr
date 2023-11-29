@@ -46,6 +46,7 @@ class LocalMessages extends Translations {
           "place_new_organization": "Join new organization",
           "yes": "Yes",
           "no": "No",
+          "ok": "Ok",
           "choose_option": "Choose option",
           "camera": "Camera",
           "gallery": "Gallery",
@@ -71,6 +72,9 @@ class LocalMessages extends Translations {
           "finished_download": "Finished download of @file",
           "delete_message": "Delete message",
           "type_message": "Type here...",
+          "cant_type_to_yourself": "You can't type to yourself",
+          "required_account_to_chat": "You need to have an account to chat",
+          "changed_rating": "You have successfully changed the rating",
         },
         'bg_BG': {
           "sign_in": "Влизане",

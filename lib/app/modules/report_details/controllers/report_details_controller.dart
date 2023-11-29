@@ -47,15 +47,15 @@ class ReportDetailsController extends GetxController {
           context: Get.context!,
           builder: (context) => AlertDialog(
             icon: const Icon(Icons.warning),
-            title: const Text("Желаете ли да изтриите доклада завинаги?"),
+            title: Text("delete_forever_report".tr),
             actions: [
               FilledButton(
                 onPressed: () => Get.back(result: false),
-                child: const Text("Не"),
+                child: Text("no".tr),
               ),
               FilledButton(
                 onPressed: () => Get.back(result: true),
-                child: const Text("Да"),
+                child: Text("yes".tr),
               ),
             ],
           ),
@@ -75,8 +75,8 @@ class ReportDetailsController extends GetxController {
     });
 
     ScaffoldMessenger.of(Get.context!).showSnackBar(
-      const SnackBar(
-        content: Text("Променихте оценката"),
+      SnackBar(
+        content: Text("changed_rating".tr),
       ),
     );
   }
@@ -109,8 +109,8 @@ class ReportDetailsController extends GetxController {
         context: Get.context!,
         builder: (context) => AlertDialog(
           icon: const Icon(Icons.warning),
-          title: const Text("Трябва да сте в акаунт за да можете да пишете на лично"),
-          actions: [FilledButton.tonal(onPressed: () => Get.back(), child: const Text("Ок"))],
+          title: Text("required_account_to_chat".tr),
+          actions: [FilledButton.tonal(onPressed: () => Get.back(), child: Text("ok".tr))],
         ),
       );
 
@@ -122,8 +122,8 @@ class ReportDetailsController extends GetxController {
         context: Get.context!,
         builder: (context) => AlertDialog(
           icon: const Icon(Icons.warning),
-          title: const Text("Не можете да пишете на себе си"),
-          actions: [FilledButton.tonal(onPressed: () => Get.back(), child: const Text("Ок"))],
+          title: Text("cant_type_to_yourself".tr),
+          actions: [FilledButton.tonal(onPressed: () => Get.back(), child: Text("ok".tr))],
         ),
       );
 
@@ -158,7 +158,7 @@ class ReportDetailsController extends GetxController {
     Get.to(() => const ChatView(), arguments: {
       "reporter": reporter,
       "docId": chatDocId.elementAt(0),
-      "initials": "KS",
+      "initials": reporter.name.trim().split(" ").map((e) => e[0]).join(""),
     });
   }
 
