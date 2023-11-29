@@ -93,6 +93,7 @@ class ChatsView extends GetView<ChatsController> {
                                 "docId": doc.id,
                                 "initials": initials,
                               },
+                              preventDuplicates: true,
                             );
                           },
                         );

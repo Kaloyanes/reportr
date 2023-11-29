@@ -338,9 +338,10 @@ class ProfileController extends GetxController {
   }
 
   Future<void> pickLocation() async {
-    var location = await Get.to<LatLng>(LocationPickerView(
-      location: locationLatLng.value,
-    ));
+    var location = await Get.to<LatLng>(
+      LocationPickerView(location: locationLatLng.value),
+      preventDuplicates: true,
+    );
 
     if (location == null) return;
 

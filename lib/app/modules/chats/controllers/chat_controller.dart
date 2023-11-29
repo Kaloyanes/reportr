@@ -136,7 +136,7 @@ class ChatController extends GetxController {
   }
 
   Future<void> pickLocation() async {
-    var latlng = await Get.to<LatLng>(() => const LocationPickerView());
+    var latlng = await Get.to<LatLng>(() => const LocationPickerView(), preventDuplicates: true);
 
     if (latlng == null) return;
     var data = {

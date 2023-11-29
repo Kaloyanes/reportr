@@ -54,7 +54,13 @@ class _DrawerComponentState extends State<DrawerComponent> {
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
-                return const CircularProgressIndicator();
+                return const Column(
+                  children: [
+                    Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ],
+                );
               }
 
               if (snapshot.hasData) {
@@ -62,8 +68,10 @@ class _DrawerComponentState extends State<DrawerComponent> {
                   future: FirebaseFirestore.instance.collection("users").doc(snapshot.data!.uid).get(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
+                      return const Expanded(
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
                       );
                     }
 
