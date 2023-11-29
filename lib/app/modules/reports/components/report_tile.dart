@@ -22,136 +22,105 @@ class ReportTile extends GetView<ReportTileController> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(
-          color: Theme.of(context).colorScheme.outline,
+          color: Theme.of(context).colorScheme.outline.withOpacity(0.5),
         ),
       ),
       child: FutureBuilder(
         future: controller.getFirstImage(report),
         builder: (context, snapshot) {
-          return InkWell(
-            onTap: () async {
-              Get.to(
-                () => const ReportDetailsView(),
-                arguments: {
-                  "report": report,
-                  "reporter": reporter,
-                  "thumbnail": snapshot.data,
-                  "sender": sender,
-                },
-              );
-            },
-            child: Column(
-              children: [
-                Builder(
-                  builder: (context) {
-                    if (snapshot.connectionState == ConnectionState.waiting ||
-                        snapshot.data == null ||
-                        !snapshot.hasData) {
-                      return const SizedBox(
-                        height: 200,
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-                    }
+          return Material(
+            child: InkWell(
+              onTap: () async {
+                Get.to(
+                  () => const ReportDetailsView(),
+                  arguments: {
+                    "report": report,
+                    "reporter": reporter,
+                    "thumbnail": snapshot.data,
+                    "sender": sender,
+                  },
+                );
+              },
+              enableFeedback: true,
+              child: Column(
+                children: [
+                  Builder(
+                    builder: (context) {
+                      if (snapshot.connectionState == ConnectionState.waiting ||
+                          snapshot.data == null ||
+                          !snapshot.hasData) {
+                        return const SizedBox(
+                          height: 250,
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      }
 
-                    return Container(
-                      child: Stack(
+                      return Stack(
                         children: [
-                          Hero(
-                            createRectTween: (begin, end) => MaterialRectCenterArcTween(begin: begin, end: end),
-                            tag: snapshot.data!,
-                            child: CachedNetworkImage(
-                              fit: BoxFit.cover,
-                              imageUrl: snapshot.data!,
-                              imageBuilder: (context, imageProvider) => ClipRRect(
-                                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                                child: Image(
-                                  image: imageProvider,
-                                ),
+                          Container(
+                            constraints: const BoxConstraints(
+                              maxHeight: 250,
+                            ),
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: CachedNetworkImageProvider(snapshot.data!),
                               ),
+                              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
                             ),
                           ),
-                          Row(
+                          const Row(
                             children: [
-                              const Spacer(),
+                              Spacer(),
                               Stack(
                                 children: [
-                                  Container(
-                                    width: 63,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).colorScheme.background.withAlpha(100),
-                                      borderRadius: const BorderRadius.only(
-                                        bottomLeft: Radius.circular(20),
-                                      ),
-                                    ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.star, color: Colors.yellow,
-                                        // color: Theme.of(context).colorScheme.primary,
-                                      ),
-                                      Text(
-                                        report.rating.toStringAsFixed(1),
-                                        style: Theme.of(context).textTheme.labelLarge,
-                                      ),
-                                      // RatingBar.builder(
-                                      //   itemBuilder: (context, index) => const Icon(Icons.star),
-                                      //   onRatingUpdate: (val) {},
-                                      //   ignoreGestures: true,
-                                      //   initialRating: report.rating,
-                                      //   allowHalfRating: true,
-                                      // ),
-                                    ],
-                                  ),
+                                  // Container(
+                                  //   width: 70,
+                                  //   height: 30,
+                                  //   decoration: BoxDecoration(
+                                  //     color: Theme.of(context).colorScheme.background.withAlpha(100),
+                                  //     borderRadius: const BorderRadius.only(
+                                  //       bottomLeft: Radius.circular(20),
+                                  //     ),
+                                  //   ),
+                                  //   child: Row(
+                                  //     mainAxisAlignment: MainAxisAlignment.center,
+                                  //     children: [
+                                  //       const Icon(
+                                  //         Icons.star, color: Colors.yellow,
+                                  //         // color: Theme.of(context).colorScheme.primary,
+                                  //       ),
+                                  //       Text(
+                                  //         report.rating.toStringAsFixed(1),
+                                  //         style: Theme.of(context).textTheme.labelLarge,
+                                  //       ),
+                                  //       // RatingBar.builder(
+                                  //       //   itemBuilder: (context, index) => const Icon(Icons.star),
+                                  //       //   onRatingUpdate: (val) {},
+                                  //       //   ignoreGestures: true,
+                                  //       //   initialRating: report.rating,
+                                  //       //   allowHalfRating: true,
+                                  //       // ),
+                                  //     ],
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ],
                           ),
                         ],
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Text(
-                    report.title,
-                    style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 18),
-                    textAlign: TextAlign.left,
-                    // softWrap: false,
-                    maxLines: 2,
+                      );
+                    },
                   ),
-                ),
-                Expanded(
-                  child: Container(),
-                ),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          controller.formatter.format(report.date),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Divider(
-                  color: Theme.of(context).colorScheme.outline,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  child: FittedBox(
-                    alignment: Alignment.centerLeft,
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                     child: Row(
+                      mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         CircleAvatar(
@@ -162,18 +131,105 @@ class ReportTile extends GetView<ReportTileController> {
                         const SizedBox(
                           width: 10,
                         ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(reporter.name),
+                        Text(reporter.name),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                    child: SizedBox(
+                      height: 70,
+                      child: Text(
+                        report.title,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  // Date Time
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      children: [
+                        Text(
+                          controller.formatter.format(report.date),
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
+                        const Spacer(),
+                        Text(
+                          report.rating.toStringAsFixed(1),
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
+                        const Icon(
+                          Icons.star,
+                          color: Colors.yellow,
                         ),
                       ],
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-              ],
+
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 10),
+                  //   child: Text(
+                  //     report.title,
+                  //     style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 18),
+                  //     textAlign: TextAlign.left,
+                  //     // softWrap: false,
+                  //     maxLines: 2,
+                  //   ),
+                  // ),
+                  // Expanded(
+                  //   child: Container(),
+                  // ),
+                  // Row(
+                  //   children: [
+                  //     Padding(
+                  //       padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  //       child: Align(
+                  //         alignment: Alignment.centerLeft,
+                  //         child: Text(
+                  //           controller.formatter.format(report.date),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  // Divider(
+                  //   color: Theme.of(context).colorScheme.outline,
+                  // ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  //   child: FittedBox(
+                  //     alignment: Alignment.centerLeft,
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.start,
+                  //       children: [
+                  //         CircleAvatar(
+                  //           radius: 15,
+                  //           foregroundImage: CachedNetworkImageProvider(reporter.photoUrl),
+                  //           child: const Icon(Icons.person),
+                  //         ),
+                  //         const SizedBox(
+                  //           width: 10,
+                  //         ),
+                  //         Align(
+                  //           alignment: Alignment.centerLeft,
+                  //           child: Text(reporter.name),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
+                  // const SizedBox(
+                  //   height: 10,
+                  // ),
+                ],
+              ),
             ),
           );
         },
