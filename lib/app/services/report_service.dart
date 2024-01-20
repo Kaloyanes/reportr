@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:reportr/app/models/report_model.dart';
 import 'package:uuid/uuid.dart';
 import 'geo_service.dart';
 
@@ -31,6 +32,7 @@ class ReportService {
       "location": GeoPoint(location.latitude, location.longitude),
       "reporterId": "anon",
       "rating": 0,
+      "departmentId": "",
     };
 
     if (!isAnonymous || FirebaseAuth.instance.currentUser != null) {
