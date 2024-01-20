@@ -17,7 +17,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  await GetStorage.init("reportSettings");
+  await GetStorage.init("settings");
 
   final ImagePickerPlatform imagePickerImplementation = ImagePickerPlatform.instance;
   if (imagePickerImplementation is ImagePickerAndroid) {
@@ -38,10 +38,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
-    var settingsStorage = GetStorage("reportSettings");
-    settingsStorage.listenKey("language", (value) async {
-      await Get.updateLocale(Locale(value));
-    });
+    var settingsStorage = GetStorage("settings");
 
     return GetMaterialApp(
       title: "Application",
@@ -51,7 +48,7 @@ class App extends StatelessWidget {
       theme: Themes.light,
       darkTheme: Themes.dark,
       translations: LocalMessages(),
-      locale: Locale(settingsStorage.read("language") ?? Get.deviceLocale!.languageCode),
+      locale: Locale(settingsStorage.read("language") ?? Get.deviceLocale!.toString()),
     );
   }
 }

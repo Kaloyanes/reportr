@@ -11,6 +11,7 @@ abstract class Routes {
   static const CHATS = _Paths.CHATS;
   static const WORKER_MANAGER = _Paths.WORKER_MANAGER;
   static const MY_REPORTS = _Paths.MY_REPORTS;
+  static const SETTINGS = _Paths.SETTINGS;
 }
 
 abstract class _Paths {
@@ -23,4 +24,5 @@ abstract class _Paths {
   static const CHATS = '/chats';
   static const WORKER_MANAGER = '/worker-manager';
   static const MY_REPORTS = '/my-reports';
+  static const SETTINGS = '/settings';
 }

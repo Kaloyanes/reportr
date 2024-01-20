@@ -13,7 +13,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reportr/app/models/reporter_model.dart';
 import 'package:reportr/app/modules/chats/chat_messages/views/location_picker.dart';
-import 'package:reportr/app/modules/chats/components/photo_picker.dart';
 import 'package:reportr/app/modules/chats/models/message_model.dart';
 import 'package:reportr/app/modules/home/components/report_sheet/components/photo_picker_dialog.dart';
 import 'package:uuid/uuid.dart';
@@ -28,6 +27,11 @@ class ChatController extends GetxController {
   Reporter reporter = Get.arguments["reporter"];
   String docId = Get.arguments["docId"];
   String initials = Get.arguments["initials"];
+
+  var messages = <Message>[].obs;
+
+  final listController = ScrollController();
+  final messageController = TextEditingController();
 
   var messagesCount = 0;
 
@@ -81,11 +85,6 @@ class ChatController extends GetxController {
 
     collection.orderBy("time").snapshots().listen((event) => feed(event));
   }
-
-  var messages = <Message>[].obs;
-
-  final listController = ScrollController();
-  final messageController = TextEditingController();
 
   Future<void> sendMessage() async {
     if (messagesCount++ >= 60) {
@@ -164,7 +163,7 @@ class ChatController extends GetxController {
   }
 
   Future<void> takePicture() async {
-    var option = await showDialog<String>(
+    var option = await showDialog<int>(
       context: Get.context!,
       builder: (context) => const PhotoPickerDialog(),
     );
@@ -172,11 +171,11 @@ class ChatController extends GetxController {
     ImageSource imageSource;
 
     switch (option) {
-      case "gallery":
+      case 1:
         imageSource = ImageSource.gallery;
         break;
 
-      case "camera":
+      case 2:
         imageSource = ImageSource.camera;
         break;
 

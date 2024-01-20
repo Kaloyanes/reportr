@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:reportr/app/components/back_button.dart';
 import 'package:reportr/app/models/report_model.dart';
 import 'package:reportr/app/models/reporter_model.dart';
-import 'package:reportr/app/modules/reports/components/filter_drawer/filter_drawer.dart';
 import 'package:reportr/app/modules/reports/components/report_tile.dart';
 
 import '../controllers/reports_controller.dart';
