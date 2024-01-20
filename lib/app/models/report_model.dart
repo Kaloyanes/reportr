@@ -12,6 +12,8 @@ class Report {
   String reporterId;
   GeoPoint location;
   double rating;
+  String departmentId;
+  
   Report({
     required this.id,
     required this.title,
@@ -21,6 +23,7 @@ class Report {
     required this.reporterId,
     required this.location,
     required this.rating,
+    required this.departmentId,
   });
 
   Map<String, dynamic> toMap() {
