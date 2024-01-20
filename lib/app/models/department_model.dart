@@ -4,26 +4,22 @@ import 'dart:convert';
 class Department {
   String id;
   String type;
-  String address;
   String ownerId;
 
   Department({
     required this.id,
     required this.type,
-    required this.address,
     required this.ownerId,
   });
 
   Department copyWith({
     String? id,
     String? type,
-    String? address,
     String? ownerId,
   }) {
     return Department(
       id: id ?? this.id,
       type: type ?? this.type,
-      address: address ?? this.address,
       ownerId: ownerId ?? this.ownerId,
     );
   }
@@ -32,7 +28,6 @@ class Department {
     return <String, dynamic>{
       'id': id,
       'type': type,
-      'address': address,
       'ownerId': ownerId,
     };
   }
@@ -41,7 +36,6 @@ class Department {
     return Department(
       id: map['id'] as String,
       type: map['type'] as String,
-      address: map['address'] as String,
       ownerId: map['ownerId'] as String,
     );
   }
@@ -52,25 +46,18 @@ class Department {
 
   @override
   String toString() {
-    return 'Department(id: $id, type: $type, address: $address, ownerId: $ownerId)';
+    return 'Department(id: $id, type: $type, ownerId: $ownerId)';
   }
 
   @override
   bool operator ==(covariant Department other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.type == type &&
-      other.address == address &&
-      other.ownerId == ownerId;
+
+    return other.id == id && other.type == type && other.ownerId == ownerId;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^
-      type.hashCode ^
-      address.hashCode ^
-      ownerId.hashCode;
+    return id.hashCode ^ type.hashCode ^ ownerId.hashCode;
   }
 }

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:inner_drawer/inner_drawer.dart';
 import 'package:reportr/app/modules/home/components/report_sheet/controllers/report_sheet_controller.dart';
 import 'package:reportr/app/modules/home/components/report_sheet/views/report_sheet_view.dart';
 import 'package:reportr/app/services/geo_service.dart';
@@ -23,6 +24,8 @@ class HomeController extends GetxController {
 
   late GoogleMapController mapController;
   var scrollController = ScrollController();
+
+  final GlobalKey<InnerDrawerState> innerDrawerKey = GlobalKey<InnerDrawerState>();
 
   @override
   void onInit() {

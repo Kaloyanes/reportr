@@ -7,23 +7,22 @@ class DepartmentService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<void> createDepartment(String type, String address) async {
+  Future<void> createDepartment(String type) async {
     try {
       User? user = _auth.currentUser;
 
-      if (user != null) {
-        String ownerId = user.uid;
-        String departmentId = const Uuid().v4();
+      if (user == null) return;
 
-        Department newDepartment = Department(
-          id: departmentId,
-          type: type,
-          address: address,
-          ownerId: ownerId,
-        );
+      String ownerId = user.uid;
+      String departmentId = const Uuid().v4();
 
-        await _firestore.collection('departments').doc(departmentId).set(newDepartment.toMap());
-      }
+      Department newDepartment = Department(
+        id: departmentId,
+        type: type,
+        ownerId: ownerId,
+      );
+
+      await _firestore.collection('departments').doc(departmentId).set(newDepartment.toMap());
     } catch (e) {
       print('Error creating department: $e');
     }
@@ -43,16 +42,12 @@ class DepartmentService {
     try {
       User? user = _auth.currentUser;
 
-      if (user != null) {
-        QuerySnapshot querySnapshot = await _firestore
-            .collection('departments')
-            .where('ownerId', isEqualTo: user.uid)
-            .get();
+      if (user == null) return [];
 
-        return querySnapshot.docs.map((doc) => Department.fromMap(doc.data() as Map<String, dynamic>, doc.id)).toList();
-      }
+      QuerySnapshot querySnapshot =
+          await _firestore.collection('departments').where('ownerId', isEqualTo: user.uid).get();
 
-      return [];
+      return querySnapshot.docs.map((doc) => Department.fromMap(doc.data() as Map<String, dynamic>, doc.id)).toList();
     } catch (e) {
       print('Error getting departments: $e');
       return [];

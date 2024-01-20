@@ -46,10 +46,6 @@ class _DrawerComponentState extends State<DrawerComponent> {
               ),
             ),
           ),
-
-          // Content
-          const Divider(),
-
           StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {

@@ -18,45 +18,36 @@ class WorkerManagerView extends GetView<WorkerManagerController> {
         title: Text('workers'.tr),
         centerTitle: true,
         leading: const CustomBackButton(),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: controller.addNewDepartment,
+          )
+        ],
       ),
-      body: StreamBuilder(
-        stream: controller.employeeStream,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator.adaptive());
-          }
+      body: Obx(() {
+        var employees = controller.employees.value;
 
-          var employees = <Employee>[];
-
-          for (var element in snapshot.data!.docs) {
-            var data = element.data();
-
-            data.addAll({"id": element.id});
-
-            employees.add(Employee.fromMap(data));
-          }
-
-          if (employees.isEmpty) {
-            return Center(
-              child: Text(
-                "no_workers".tr,
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-            ).animate(delay: 500.ms).scaleXY(
-                  curve: Curves.fastLinearToSlowEaseIn,
-                  duration: 600.ms,
-                );
-          }
-
-          return ListView.builder(
-            itemCount: employees.length,
-            itemBuilder: (context, index) {
-              var employee = employees[index];
-              return WorkerTile(employee: employee, controller: controller);
-            },
+        if (controller.loading.value) {
+          return const Center(
+            child: CircularProgressIndicator.adaptive(),
           );
-        },
-      ),
+        }
+
+        if (employees.isEmpty) {
+          return Center(
+            child: Text("no_workers".tr),
+          );
+        }
+
+        return ListView.builder(
+          itemCount: employees.length,
+          itemBuilder: (context, index) {
+            var employee = employees[index];
+            return WorkerTile(employee: employee, controller: controller);
+          },
+        );
+      }),
     );
   }
 }
