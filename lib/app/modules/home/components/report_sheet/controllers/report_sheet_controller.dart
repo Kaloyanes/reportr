@@ -98,7 +98,7 @@ class ReportSheetController extends GetxController {
     String name = nameController.text.trim();
     String description = descriptionController.text.trim();
 
-    await ReportService().report(
+    await ReportService().CreateReport(
       id,
       name,
       description,
