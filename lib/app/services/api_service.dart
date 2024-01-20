@@ -1,15 +1,15 @@
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
+import 'package:reportr/app/models/report_model.dart';
 import 'package:reportr/app/services/department_service.dart';
 
 class ApiService {
   final openAI = OpenAI.instance.build(
-    token: "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",
+    token: "",
     baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 5)),
     enableLog: true,
   );
 
-  // Based on a description, choose one of the departments
-  Future<String> getDepartmentBasedOnReport(String description) async {
+  Future<String> getDepartmentBasedOnReport(Report report) async {
     var departments = await DepartmentService().getDepartmentsByOwner();
 
     if (departments.isEmpty) {
@@ -18,7 +18,7 @@ class ApiService {
 
     var response = await openAI.onCompletion(
       request: CompleteText(
-        prompt: "",
+        prompt: "Please review the provided report with name '${report.title}' and description '${report.description}', considering its description, name, and geolocation. Your task is to categorize the report into one of the predefined departments listed in [${departments.map((e) => "Name of Department: ${e.name}, Description of Department: ${e.description}")}]. If a department's name implies a specific purpose and the report originates from a location in close proximity to that department, assign the report directly to that department. However, if a department's focus is highly specialized, send the report to the designated department for that specific topic, even if the report's location is not geographically close to it.",
         model: DavinciModel(),
       ),
     );
