@@ -7,7 +7,7 @@ class DepartmentService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<void> createDepartment(String description) async {
+  Future<void> createDepartment(String name, String description) async {
     try {
       User? user = _auth.currentUser;
 
@@ -18,6 +18,7 @@ class DepartmentService {
 
       Department newDepartment = Department(
         id: departmentId,
+        name: name,
         description: description,
         ownerId: ownerId,
       );
