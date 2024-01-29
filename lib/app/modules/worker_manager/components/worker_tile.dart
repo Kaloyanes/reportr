@@ -9,10 +9,12 @@ class WorkerTile extends StatelessWidget {
     super.key,
     required this.employee,
     required this.controller,
+    required this.hasDepartments,
   });
 
   final Employee employee;
   final WorkerManagerController controller;
+  final bool hasDepartments;
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +31,35 @@ class WorkerTile extends StatelessWidget {
             case 1:
               controller.removeUser(employee);
               break;
+
+            case 2:
+              controller.assignUser(employee);
+              break;
+
+            case 3:
+              controller.removeUserFromDepartment(employee);
+              break;
           }
         },
         itemBuilder: (context) => <PopupMenuEntry<int>>[
           PopupMenuItem(
+            value: 2,
+            child: Text("assign_user".tr),
+          ),
+          if (employee.departmentId != null)
+            PopupMenuItem(
+              value: 3,
+              child: Text(
+                "remove_from_department".tr,
+                style: const TextStyle(color: Colors.red),
+              ),
+            ),
+          PopupMenuItem(
             value: 1,
-            child: Text("remove_user".tr, style: const TextStyle(color: Colors.red)),
+            child: Text(
+              "remove_user".tr,
+              style: const TextStyle(color: Colors.red),
+            ),
           ),
         ],
       ),

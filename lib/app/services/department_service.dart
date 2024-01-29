@@ -54,4 +54,14 @@ class DepartmentService {
       return [];
     }
   }
+
+  Future assignUserToDepartment(String userId, String departmentId) async {
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        'departmentId': departmentId,
+      });
+    } catch (e) {
+      print('Error assigning user to department: $e');
+    }
+  }
 }

@@ -9,6 +9,7 @@ class Employee {
   String organization;
   String photoUrl;
   String role;
+  String? departmentId;
   Employee({
     required this.id,
     required this.email,
@@ -17,6 +18,7 @@ class Employee {
     required this.organization,
     required this.photoUrl,
     required this.role,
+    this.departmentId,
   });
 
   Employee copyWith({
@@ -27,6 +29,7 @@ class Employee {
     String? organization,
     String? photoUrl,
     String? role,
+    String? departmentId,
   }) {
     return Employee(
       id: id ?? this.id,
@@ -36,6 +39,7 @@ class Employee {
       organization: organization ?? this.organization,
       photoUrl: photoUrl ?? this.photoUrl,
       role: role ?? this.role,
+      departmentId: departmentId ?? this.departmentId,
     );
   }
 
@@ -48,6 +52,7 @@ class Employee {
       'organization': organization,
       'photoUrl': photoUrl,
       'role': role,
+      'departmentId': departmentId,
     };
   }
 
@@ -60,6 +65,7 @@ class Employee {
       organization: map['organization'] as String,
       photoUrl: map['photoUrl'] as String,
       role: map['role'] as String,
+      departmentId: map['departmentId'] as String?,
     );
   }
 
@@ -69,7 +75,7 @@ class Employee {
 
   @override
   String toString() {
-    return 'Employee(id: $id, email: $email, inviteCode: $inviteCode, name: $name, organization: $organization, photoUrl: $photoUrl, role: $role)';
+    return 'Employee(id: $id, email: $email, inviteCode: $inviteCode, name: $name, organization: $organization, photoUrl: $photoUrl, role: $role, departmentId: $departmentId)';
   }
 
   @override
@@ -82,7 +88,8 @@ class Employee {
         other.name == name &&
         other.organization == organization &&
         other.photoUrl == photoUrl &&
-        other.role == role;
+        other.role == role &&
+        other.departmentId == departmentId;
   }
 
   @override
@@ -93,6 +100,7 @@ class Employee {
         name.hashCode ^
         organization.hashCode ^
         photoUrl.hashCode ^
-        role.hashCode;
+        role.hashCode ^
+        departmentId.hashCode;
   }
 }
