@@ -40,15 +40,16 @@ class HomeView extends GetView<HomeController> {
       onTapClose: true,
       colorTransitionChild: Colors.transparent,
       colorTransitionScaffold: Colors.transparent,
-      boxShadow: const [
+      velocity: 2,
+      boxShadow: [
         BoxShadow(
-          offset: Offset(0, 15),
-          color: Colors.black26,
-          blurRadius: 30,
-          spreadRadius: 10,
+          offset: const Offset(0, 0),
+          color: Theme.of(context).colorScheme.primary,
+          blurRadius: 50,
+          spreadRadius: 5,
         )
       ],
-      offset: const IDOffset.only(left: 0.5),
+      offset: const IDOffset.only(left: 0.4),
       scale: const IDOffset.horizontal(0.8), // set the offset in both directions
       proportionalChildArea: false, // default true
       borderRadius: 50, // default 0
@@ -57,118 +58,122 @@ class HomeView extends GetView<HomeController> {
       backgroundDecoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
       ),
-      scaffold: Scaffold(
-        extendBodyBehindAppBar: true,
-        key: controller.scaffKey,
-        resizeToAvoidBottomInset: false,
-        body: Stack(
-          children: [
-            FutureBuilder(
-              future: GeoService().getLocation(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Center(
-                    child: AlertDialog(
-                      icon: const Icon(
-                        Icons.warning,
-                        size: 40,
-                      ),
-                      iconColor: Colors.red,
-                      title: Text(
-                        snapshot.error as String,
-                        style: Theme.of(context).textTheme.headlineMedium,
-                      ),
+      scaffold: content(context),
+    );
+  }
+
+  Scaffold content(BuildContext context) {
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      key: controller.scaffKey,
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        children: [
+          FutureBuilder(
+            future: GeoService().getLocation(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Center(
+                  child: AlertDialog(
+                    icon: const Icon(
+                      Icons.warning,
+                      size: 40,
                     ),
-                  );
-                }
-
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-
-                return MapSwitcher(
-                  child: Obx(
-                    () => GoogleMap(
-                      myLocationEnabled: true,
-                      initialCameraPosition: CameraPosition(
-                        target: snapshot.data ?? const LatLng(50, 50),
-                        zoom: 15,
-                      ),
-                      zoomControlsEnabled: false,
-                      myLocationButtonEnabled: false,
-                      mapType: MapType.normal,
-                      compassEnabled: false,
-                      onMapCreated: (GoogleMapController mapControl) async {
-                        if (Theme.of(context).colorScheme.brightness == Brightness.dark) {
-                          var style = await rootBundle.loadString('lib/app/assets/darkMap.json');
-
-                          mapControl.setMapStyle(style);
-                        }
-                        controller.mapController = mapControl;
-                      },
-                      markers: controller.markers.toSet(),
-                      mapToolbarEnabled: false,
+                    iconColor: Colors.red,
+                    title: Text(
+                      snapshot.error as String,
+                      style: Theme.of(context).textTheme.headlineMedium,
                     ),
                   ),
                 );
-              },
-            ),
-            Align(
-              alignment: const Alignment(-0.9, -0.85),
-              child: Container(
-                width: 55,
-                height: 55,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Theme.of(context).colorScheme.primaryContainer,
-                      blurRadius: 20,
-                      spreadRadius: 3,
-                      offset: const Offset(0, 0),
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              return MapSwitcher(
+                child: Obx(
+                  () => GoogleMap(
+                    myLocationEnabled: true,
+                    initialCameraPosition: CameraPosition(
+                      target: snapshot.data ?? const LatLng(50, 50),
+                      zoom: 15,
                     ),
-                  ],
-                ),
-                clipBehavior: Clip.hardEdge,
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () => controller.innerDrawerKey.currentState!.open(),
-                    child: const Icon(
-                      Icons.menu,
-                      color: Colors.white,
-                    ),
+                    zoomControlsEnabled: false,
+                    myLocationButtonEnabled: false,
+                    mapType: MapType.normal,
+                    compassEnabled: false,
+                    onMapCreated: (GoogleMapController mapControl) async {
+                      if (Theme.of(context).colorScheme.brightness == Brightness.dark) {
+                        var style = await rootBundle.loadString('lib/app/assets/darkMap.json');
+
+                        mapControl.setMapStyle(style);
+                      }
+                      controller.mapController = mapControl;
+                    },
+                    markers: controller.markers.toSet(),
+                    mapToolbarEnabled: false,
                   ),
                 ),
-              ),
-            ),
-          ],
-        ),
-        floatingActionButton: Obx(
-          () => AnimatedSlide(
-            curve: Curves.easeOutQuint,
-            duration: const Duration(milliseconds: 600),
-            offset: controller.showControls.value ? Offset.zero : const Offset(0, 50),
+              );
+            },
+          ),
+          Align(
+            alignment: const Alignment(-0.9, -0.85),
             child: Container(
+              width: 55,
+              height: 55,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(12),
                 color: Theme.of(context).colorScheme.primaryContainer,
                 boxShadow: [
                   BoxShadow(
-                    color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5),
+                    color: Theme.of(context).colorScheme.primaryContainer,
                     blurRadius: 20,
                     spreadRadius: 3,
                     offset: const Offset(0, 0),
                   ),
                 ],
               ),
-              child: FloatingActionButton(
-                onPressed: () => controller.goToMyLocation(),
-                child: const Icon(Icons.navigation),
+              clipBehavior: Clip.hardEdge,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => controller.innerDrawerKey.currentState!.open(),
+                  child: const Icon(
+                    Icons.menu,
+                    color: Colors.white,
+                  ),
+                ),
               ),
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: Obx(
+        () => AnimatedSlide(
+          curve: Curves.easeOutQuint,
+          duration: const Duration(milliseconds: 600),
+          offset: controller.showControls.value ? Offset.zero : const Offset(0, 50),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              color: Theme.of(context).colorScheme.primaryContainer,
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5),
+                  blurRadius: 20,
+                  spreadRadius: 3,
+                  offset: const Offset(0, 0),
+                ),
+              ],
+            ),
+            child: FloatingActionButton(
+              onPressed: () => controller.goToMyLocation(),
+              child: const Icon(Icons.navigation),
             ),
           ),
         ),

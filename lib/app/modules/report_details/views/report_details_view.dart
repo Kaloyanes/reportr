@@ -1,12 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reportr/app/components/back_button.dart';
 import 'package:reportr/app/components/map_switcher.dart';
+import 'package:reportr/app/services/profile_service.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -19,13 +22,23 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
     Get.lazyPut(() => ReportDetailsController());
     return Scaffold(
       appBar: AppBar(
-        leading: CustomBackButton(),
+        leading: const CustomBackButton(),
         actions: [
-          if (!controller.sender)
+          if (controller.sender && controller.report.reporterId != FirebaseAuth.instance.currentUser!.uid)
             IconButton(
               onPressed: () => controller.createChat(),
               icon: const Icon(CupertinoIcons.chat_bubble_fill),
             ),
+          Obx(() {
+            if (controller.isOrganization.value) {
+              return IconButton(
+                onPressed: () => controller.assignToDepartment(),
+                icon: const Icon(Icons.assignment_add),
+              ).animate().scaleXY();
+            }
+
+            return const SizedBox();
+          }),
           IconButton(
             onPressed: () => controller.delete(),
             icon: const Icon(Icons.delete),
@@ -58,7 +71,7 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
                     child: Padding(
                       padding: const EdgeInsets.all(10),
                       child: Hero(
-                        createRectTween: (begin, end) => MaterialRectArcTween(begin: begin, end: end),
+                        createRectTween: (begin, end) => RectTween(begin: begin, end: end),
                         tag: Get.arguments["thumbnail"],
                         child: CachedNetworkImage(
                           imageUrl: Get.arguments["thumbnail"],
@@ -69,7 +82,7 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
                               fit: BoxFit.cover,
                             ),
                           ),
-                          fadeInDuration: 400.milliseconds,
+                          fadeInDuration: 400.ms,
                         ),
                       ),
                     ),
@@ -88,7 +101,7 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
                               fit: BoxFit.cover,
                             ),
                           ),
-                          fadeInDuration: 400.milliseconds,
+                          fadeInDuration: 400.ms,
                         ),
                       ),
                     ),
@@ -106,7 +119,7 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
                 ),
                 onDotClicked: (index) => controller.pageController.animateToPage(
                   index,
-                  duration: 600.milliseconds,
+                  duration: 600.ms,
                   curve: Curves.easeOutQuint,
                 ),
               ),
@@ -246,7 +259,7 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
                 ),
                 Obx(
                   () => AnimatedContainer(
-                    duration: 500.milliseconds,
+                    duration: 500.ms,
                     curve: Curves.easeOutCubic,
                     constraints: controller.reportRating.value > 0 &&
                             !controller.hasRated.value &&

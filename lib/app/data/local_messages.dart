@@ -78,6 +78,8 @@ class LocalMessages extends Translations {
           "settings": "Settings",
           "change_language": "Change language",
           "language": "Language",
+          "delete_forever_report": "Do you want to delete the report forever?",
+          "assign_to_department": "Assign to department",
         },
         'bg_BG': {
           "sign_in": "Вход",
@@ -154,6 +156,7 @@ class LocalMessages extends Translations {
           "settings": "Настройки",
           "change_language": "Смени езика",
           "language": "Език",
+          "delete_forever_report": "Искате ли да изтриете доклада завинаги?"
         },
         'de_DE': {
           "sign_in": "Anmelden",

@@ -63,16 +63,20 @@ class ReportTile extends GetView<ReportTileController> {
 
                       return Stack(
                         children: [
-                          Container(
-                            constraints: const BoxConstraints(
-                              maxHeight: 250,
-                            ),
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: CachedNetworkImageProvider(snapshot.data!),
+                          Hero(
+                            createRectTween: (begin, end) => RectTween(begin: begin, end: end),
+                            tag: snapshot.data ?? "sf",
+                            child: Container(
+                              constraints: const BoxConstraints(
+                                maxHeight: 250,
                               ),
-                              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: CachedNetworkImageProvider(snapshot.data!),
+                                ),
+                                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                              ),
                             ),
                           ),
                           const Row(

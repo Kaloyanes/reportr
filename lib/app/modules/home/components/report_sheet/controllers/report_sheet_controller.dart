@@ -103,7 +103,7 @@ class ReportSheetController extends GetxController {
       name,
       description,
       selectedPhotos,
-      isAnonymous: FirebaseAuth.instance.currentUser == null ? true : anonReport.value,
+      notAnon: anonReport.value,
     );
 
     ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(content: Text("report_success".tr)));

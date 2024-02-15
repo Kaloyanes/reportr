@@ -3,12 +3,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:reportr/app/models/report_model.dart';
 import 'package:reportr/app/models/reporter_model.dart';
 import 'package:reportr/app/modules/chats/views/chat_view.dart';
+import 'package:reportr/app/modules/report_details/components/error_dialog.dart';
+import 'package:reportr/app/services/department_service.dart';
+import 'package:reportr/app/services/profile_service.dart';
 
 class ReportDetailsController extends GetxController {
   final Report report = Get.arguments["report"];
@@ -18,21 +22,7 @@ class ReportDetailsController extends GetxController {
   final Reporter reporter = Get.arguments["reporter"];
   final bool sender = Get.arguments["sender"];
 
-  @override
-  void onInit() {
-    getImages(report);
-    super.onInit();
-  }
-
-  Future getImages(Report report) async {
-    var storage = FirebaseStorage.instance;
-
-    var result = await storage.ref("reports/${report.id}").listAll();
-
-    for (var pic in result.items.sublist(1)) {
-      photos.add(await pic.getDownloadURL());
-    }
-  }
+  final isOrganization = false.obs;
 
   final RxBool hasRated = false.obs;
 
@@ -42,11 +32,41 @@ class ReportDetailsController extends GetxController {
 
   final pageController = PageController();
 
-  Future delete() async {
+  @override
+  void onInit() {
+    checkIfOrganization();
+    getImages(report);
+    super.onInit();
+  }
+
+  Future<void> getImages(Report report) async {
+    var storage = FirebaseStorage.instance;
+
+    var result = await storage.ref("reports/${report.id}").listAll();
+
+    for (var pic in result.items.sublist(1)) {
+      photos.add(await pic.getDownloadURL());
+    }
+  }
+
+  Future<void> checkIfOrganization() async {
+    var userData = await ProfileService().getProfileInfo();
+
+    if (userData == null) return;
+
+    isOrganization.value = userData["role"] == "organization";
+
+    printInfo(info: "isOrganization: ${isOrganization.value}");
+  }
+
+  Future<void> delete() async {
     var confirm = await showDialog<bool>(
           context: Get.context!,
           builder: (context) => AlertDialog(
-            icon: const Icon(Icons.warning),
+            icon: const Icon(
+              Icons.warning,
+              color: Colors.red,
+            ),
             title: Text("delete_forever_report".tr),
             actions: [
               FilledButton(
@@ -68,7 +88,7 @@ class ReportDetailsController extends GetxController {
     await FirebaseFirestore.instance.collection("reports").doc(report.id).delete();
   }
 
-  updateRating() async {
+  Future<void> updateRating() async {
     hasRated.value = true;
     await FirebaseFirestore.instance.collection("reports").doc(report.id).update({
       "rating": reportRating.value,
@@ -82,50 +102,20 @@ class ReportDetailsController extends GetxController {
   }
 
   Future<void> createChat() async {
-    if (reporter.id == "anon") {
-      showDialog(
-        context: Get.context!,
-        builder: (context) => AlertDialog(
-          icon: const Icon(Icons.warning),
-          title: const Text(
-            "Не можете да пишете на анонимен",
-          ),
-          actions: [
-            FilledButton.tonal(
-              onPressed: () => Get.back(),
-              child: const Text("Oк"),
-            ),
-          ],
-        ),
-      );
-      return;
-    }
-
     var store = FirebaseFirestore.instance;
     var uid = FirebaseAuth.instance.currentUser?.uid ?? "";
 
     if (uid.isEmpty) {
       showDialog(
         context: Get.context!,
-        builder: (context) => AlertDialog(
-          icon: const Icon(Icons.warning),
-          title: Text("required_account_to_chat".tr),
-          actions: [FilledButton.tonal(onPressed: () => Get.back(), child: Text("ok".tr))],
-        ),
+        builder: (context) => ErrorDialog(message: "required_account_to_chat".tr),
       );
 
       return;
     }
 
     if (reporter.id == uid) {
-      showDialog(
-        context: Get.context!,
-        builder: (context) => AlertDialog(
-          icon: const Icon(Icons.warning),
-          title: Text("cant_type_to_yourself".tr),
-          actions: [FilledButton.tonal(onPressed: () => Get.back(), child: Text("ok".tr))],
-        ),
-      );
+      showDialog(context: Get.context!, builder: (context) => ErrorDialog(message: "cant_type_to_yourself".tr));
 
       return;
     }
@@ -203,5 +193,39 @@ class ReportDetailsController extends GetxController {
             duration: 600.ms,
           ),
     );
+  }
+
+  Future<void> assignToDepartment() async {
+    var departments = await DepartmentService().getDepartmentsByOwner();
+
+    var res = await showDialog<String?>(
+      context: Get.context!,
+      builder: (context) => AlertDialog(
+        title: Text("assign_to_department".tr),
+        content: SingleChildScrollView(
+          child: Column(
+            children: [
+              for (var department in departments)
+                ListTile(
+                  title: Text(department.name),
+                  onTap: () => Get.back(result: department.id),
+                ),
+            ],
+          ),
+        ),
+        actions: [
+          FilledButton(
+            onPressed: () => Get.back(),
+            child: Text("cancel".tr),
+          ),
+        ],
+      ),
+    );
+
+    if (res == null) return;
+
+    await FirebaseFirestore.instance.collection("reports").doc(report.id).update({
+      "department": res,
+    });
   }
 }

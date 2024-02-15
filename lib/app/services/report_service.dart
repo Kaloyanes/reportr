@@ -4,6 +4,7 @@ import 'dart:core';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -15,8 +16,9 @@ class ReportService {
     String name,
     String description,
     List<XFile> photos, {
-    bool isAnonymous = false,
+    bool notAnon = false,
   }) async {
+    printInfo(info: "$notAnon");
     final uuid = const Uuid().v4();
     LatLng location = await GeoService().getLocation();
     User? user = FirebaseAuth.instance.currentUser;
@@ -34,7 +36,7 @@ class ReportService {
       "departmentId": "",
     };
 
-    if (!isAnonymous || FirebaseAuth.instance.currentUser != null) {
+    if (!notAnon && FirebaseAuth.instance.currentUser != null) {
       reportData["reporterId"] = user!.uid;
     }
 

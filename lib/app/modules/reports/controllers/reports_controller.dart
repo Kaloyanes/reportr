@@ -17,16 +17,16 @@ class ReportsContoller extends GetxController {
     super.onInit();
   }
 
-  Future setStream() async {
-    var data = await ProfileService().getProfileInfo();
+  Future<void> setStream() async {
+    var userData = await ProfileService().getProfileInfo();
 
-    if (data == null) {
+    if (userData == null) {
       throw ArgumentError(
         "no_rights_or_havent_joined_org",
       );
     }
 
-    if (data["organization"].toString().trim().isEmpty) {
+    if (userData["organization"].toString().trim().isEmpty) {
       showDialog(
         context: Get.context!,
         builder: (context) => AlertDialog(
@@ -48,14 +48,17 @@ class ReportsContoller extends GetxController {
       return;
     }
 
-    stream.value = FirebaseFirestore.instance
-        .collection("reports")
-        .where(
+    var sd = FirebaseFirestore.instance.collection("reports").where(
           "organization",
-          isEqualTo: data["role"] == "organization" ? FirebaseAuth.instance.currentUser!.uid : data["organization"],
-        )
-        .orderBy(settingsBox.read("order") ?? "date", descending: true)
-        .snapshots();
+          isEqualTo:
+              userData["role"] == "organization" ? FirebaseAuth.instance.currentUser!.uid : userData["organization"],
+        );
+
+    if (userData['role'] == "employee") {
+      sd = sd.where("department", isEqualTo: userData["department"]);
+    }
+
+    stream.value = sd.orderBy(settingsBox.read("order") ?? "date", descending: true).snapshots();
   }
 
   Future refreshList() async {
