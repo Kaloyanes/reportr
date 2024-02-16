@@ -3,10 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:reportr/app/models/department_model.dart';
 import 'package:reportr/app/models/report_model.dart';
 import 'package:reportr/app/models/reporter_model.dart';
 import 'package:reportr/app/modules/chats/views/chat_view.dart';
@@ -32,6 +34,8 @@ class ReportDetailsController extends GetxController {
 
   final pageController = PageController();
 
+  final departments = <Department>[].obs;
+
   @override
   void onInit() {
     checkIfOrganization();
@@ -50,11 +54,14 @@ class ReportDetailsController extends GetxController {
   }
 
   Future<void> checkIfOrganization() async {
+    printInfo(info: report.departmentId);
     var userData = await ProfileService().getProfileInfo();
 
     if (userData == null) return;
 
     isOrganization.value = userData["role"] == "organization";
+
+    departments.value = await DepartmentService().getDepartmentsByOwner();
 
     printInfo(info: "isOrganization: ${isOrganization.value}");
   }
@@ -196,9 +203,7 @@ class ReportDetailsController extends GetxController {
   }
 
   Future<void> assignToDepartment() async {
-    var departments = await DepartmentService().getDepartmentsByOwner();
-
-    var res = await showDialog<String?>(
+    var selectedDepartment = await showDialog<Department?>(
       context: Get.context!,
       builder: (context) => AlertDialog(
         title: Text("assign_to_department".tr),
@@ -208,7 +213,7 @@ class ReportDetailsController extends GetxController {
               for (var department in departments)
                 ListTile(
                   title: Text(department.name),
-                  onTap: () => Get.back(result: department.id),
+                  onTap: () => Get.back(result: department),
                 ),
             ],
           ),
@@ -222,10 +227,19 @@ class ReportDetailsController extends GetxController {
       ),
     );
 
-    if (res == null) return;
+    HapticFeedback.selectionClick();
+
+    if (selectedDepartment == null) return;
 
     await FirebaseFirestore.instance.collection("reports").doc(report.id).update({
-      "department": res,
+      "department": selectedDepartment.id,
     });
+
+    ScaffoldMessenger.of(Get.context!).clearSnackBars();
+    ScaffoldMessenger.of(Get.context!).showSnackBar(
+      SnackBar(
+        content: Text("assigned_to_department".trParams({"department": selectedDepartment.name})),
+      ),
+    );
   }
 }

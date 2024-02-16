@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import 'package:get/get.dart';
 import 'package:reportr/app/components/back_button.dart';
@@ -28,11 +29,11 @@ class ReportsView extends GetView<ReportsContoller> {
             itemBuilder: (context) => [
               PopupMenuItem(
                 child: Text("most_recent".tr),
-                onTap: () => controller.sort("date"),
+                onTap: () => controller.setStream(order: "date"),
               ),
               PopupMenuItem(
                 child: Text("top_priority".tr),
-                onTap: () => controller.sort("rating"),
+                onTap: () => controller.setStream(order: "rating"),
               ),
             ],
             icon: const Icon(Icons.sort),
@@ -52,6 +53,19 @@ class ReportsView extends GetView<ReportsContoller> {
               }
 
               var docs = snapshot.data!.docs;
+
+              if ((docs as List).isEmpty) {
+                return Center(
+                  child: Text(
+                    "no_reports".tr,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                ).animate().scaleXY(
+                      begin: 0.5,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeOutQuint,
+                    );
+              }
 
               return RefreshIndicator(
                 onRefresh: () => controller.refreshList(),

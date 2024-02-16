@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:reportr/app/modules/report_details/components/error_dialog.dart';
 import 'package:reportr/app/services/profile_service.dart';
 
 class ReportsContoller extends GetxController {
@@ -17,7 +18,8 @@ class ReportsContoller extends GetxController {
     super.onInit();
   }
 
-  Future<void> setStream() async {
+  Future<void> setStream({String? order}) async {
+    order ??= settingsBox.read("order") ?? "date";
     var userData = await ProfileService().getProfileInfo();
 
     if (userData == null) {
@@ -27,67 +29,28 @@ class ReportsContoller extends GetxController {
     }
 
     if (userData["organization"].toString().trim().isEmpty) {
-      showDialog(
-        context: Get.context!,
-        builder: (context) => AlertDialog(
-          icon: const Icon(Icons.warning),
-          title: Text("no_organization".tr),
-          actionsAlignment: MainAxisAlignment.center,
-          actions: [
-            FilledButton(
-              onPressed: () {
-                Get.back();
-                Get.back();
-              },
-              child: Text("ok".tr),
-            )
-          ],
-        ),
-      );
+      showDialog(context: Get.context!, builder: (context) => ErrorDialog(message: "no_organization".tr));
 
       return;
     }
 
-    var sd = FirebaseFirestore.instance.collection("reports").where(
+    var query = FirebaseFirestore.instance.collection("reports").where(
           "organization",
           isEqualTo:
               userData["role"] == "organization" ? FirebaseAuth.instance.currentUser!.uid : userData["organization"],
         );
 
     if (userData['role'] == "employee") {
-      sd = sd.where("department", isEqualTo: userData["department"]);
+      query = query.where("departmentId", isEqualTo: userData["departmentId"]);
     }
 
-    stream.value = sd.orderBy(settingsBox.read("order") ?? "date", descending: true).snapshots();
-  }
-
-  Future refreshList() async {
-    var temp = stream.value;
-
-    stream.value = const Stream.empty();
-
-    stream.value = temp;
-  }
-
-  Future sort(String order) async {
-    var data = await ProfileService().getProfileInfo();
-
-    if (data == null) {
-      throw ArgumentError(
-        "no_rights_or_havent_joined_org".tr,
-      );
-    }
-
-    var strea = FirebaseFirestore.instance.collection("reports").where(
-          "organization",
-          isEqualTo: data["role"] == "organization" ? FirebaseAuth.instance.currentUser!.uid : data["organization"],
-        );
-
-    var ordered = strea.orderBy(order, descending: true);
-
-    if (order == "rating") ordered = ordered.orderBy("date", descending: true);
-
-    stream.value = ordered.snapshots();
+    stream.value = query.orderBy(order, descending: true).snapshots();
     await settingsBox.write("order", order);
+  }
+
+  Future<void> refreshList() async {
+    var temp = stream.value;
+    stream.value = const Stream.empty();
+    stream.value = temp;
   }
 }

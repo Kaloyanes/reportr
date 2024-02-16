@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:get/get.dart';
+
 class Reporter {
   String id;
   String name;
@@ -57,5 +59,5 @@ class Reporter {
   @override
   int get hashCode => id.hashCode ^ name.hashCode ^ photoUrl.hashCode;
 
-  factory Reporter.anon() => Reporter(id: "anon", name: "Анонимен", photoUrl: "");
+  factory Reporter.anon() => Reporter(id: "anon", name: "anonymous".tr, photoUrl: "");
 }
