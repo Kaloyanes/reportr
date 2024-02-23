@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inner_drawer/inner_drawer.dart';
 import 'package:reportr/app/components/map_switcher.dart';
 import 'package:reportr/app/modules/home/components/drawer/drawer_component.dart';
-import 'package:reportr/app/modules/home/components/report_sheet/views/report_sheet_view.dart';
 import 'package:reportr/app/services/geo_service.dart';
 
 import '../controllers/home_controller.dart';
@@ -50,7 +48,8 @@ class HomeView extends GetView<HomeController> {
         )
       ],
       offset: const IDOffset.only(left: 0.4),
-      scale: const IDOffset.horizontal(0.8), // set the offset in both directions
+      scale:
+          const IDOffset.horizontal(0.8), // set the offset in both directions
       proportionalChildArea: false, // default true
       borderRadius: 50, // default 0
       leftAnimationType: InnerDrawerAnimation.static,
@@ -107,8 +106,10 @@ class HomeView extends GetView<HomeController> {
                     mapType: MapType.normal,
                     compassEnabled: false,
                     onMapCreated: (GoogleMapController mapControl) async {
-                      if (Theme.of(context).colorScheme.brightness == Brightness.dark) {
-                        var style = await rootBundle.loadString('lib/app/assets/darkMap.json');
+                      if (Theme.of(context).colorScheme.brightness ==
+                          Brightness.dark) {
+                        var style = await rootBundle
+                            .loadString('lib/app/assets/darkMap.json');
 
                         mapControl.setMapStyle(style);
                       }
@@ -142,7 +143,7 @@ class HomeView extends GetView<HomeController> {
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () => controller.innerDrawerKey.currentState!.open(),
+                  onTap: () => controller.openDrawer(),
                   child: const Icon(
                     Icons.menu,
                     color: Colors.white,
@@ -157,14 +158,18 @@ class HomeView extends GetView<HomeController> {
         () => AnimatedSlide(
           curve: Curves.easeOutQuint,
           duration: const Duration(milliseconds: 600),
-          offset: controller.showControls.value ? Offset.zero : const Offset(0, 50),
+          offset:
+              controller.showControls.value ? Offset.zero : const Offset(0, 50),
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
               color: Theme.of(context).colorScheme.primaryContainer,
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .primaryContainer
+                      .withOpacity(0.5),
                   blurRadius: 20,
                   spreadRadius: 3,
                   offset: const Offset(0, 0),

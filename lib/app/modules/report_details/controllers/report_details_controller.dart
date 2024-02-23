@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -92,12 +91,18 @@ class ReportDetailsController extends GetxController {
     if (!confirm) return;
 
     Get.back();
-    await FirebaseFirestore.instance.collection("reports").doc(report.id).delete();
+    await FirebaseFirestore.instance
+        .collection("reports")
+        .doc(report.id)
+        .delete();
   }
 
   Future<void> updateRating() async {
     hasRated.value = true;
-    await FirebaseFirestore.instance.collection("reports").doc(report.id).update({
+    await FirebaseFirestore.instance
+        .collection("reports")
+        .doc(report.id)
+        .update({
       "rating": reportRating.value,
     });
 
@@ -115,22 +120,27 @@ class ReportDetailsController extends GetxController {
     if (uid.isEmpty) {
       showDialog(
         context: Get.context!,
-        builder: (context) => ErrorDialog(message: "required_account_to_chat".tr),
+        builder: (context) =>
+            ErrorDialog(message: "required_account_to_chat".tr),
       );
 
       return;
     }
 
     if (reporter.id == uid) {
-      showDialog(context: Get.context!, builder: (context) => ErrorDialog(message: "cant_type_to_yourself".tr));
+      showDialog(
+          context: Get.context!,
+          builder: (context) =>
+              ErrorDialog(message: "cant_type_to_yourself".tr));
 
       return;
     }
 
     var chatDocId = {"$uid.${reporter.id}", "${reporter.id}.$uid"};
     var collection = await store.collection("chats").get();
-    var doc = collection.docs
-        .firstWhereOrNull((element) => element.id == chatDocId.elementAt(0) || element.id == chatDocId.elementAt(1));
+    var doc = collection.docs.firstWhereOrNull((element) =>
+        element.id == chatDocId.elementAt(0) ||
+        element.id == chatDocId.elementAt(1));
 
     if (doc != null && doc.exists) {
       Get.to(() => const ChatView(), arguments: {
@@ -207,16 +217,30 @@ class ReportDetailsController extends GetxController {
       context: Get.context!,
       builder: (context) => AlertDialog(
         title: Text("assign_to_department".tr),
-        content: SingleChildScrollView(
-          child: Column(
-            children: [
-              for (var department in departments)
-                ListTile(
-                  title: Text(department.name),
-                  onTap: () => Get.back(result: department),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              width: 700,
+              height: 300,
+              child: ListView.separated(
+                itemBuilder: (context, index) => ListTile(
+                  title: Text(departments[index].name),
+                  onTap: () => Get.back(result: departments[index]),
                 ),
-            ],
-          ),
+                separatorBuilder: (context, index) => const Divider(),
+                itemCount: departments.length,
+
+                // children: [
+                //   for (var department in departments)
+                //     ListTile(
+                //       title: Text(department.name),
+                //       onTap: () => Get.back(result: department),
+                //     ),
+                // ],
+              ),
+            ),
+          ],
         ),
         actions: [
           FilledButton(
@@ -231,14 +255,18 @@ class ReportDetailsController extends GetxController {
 
     if (selectedDepartment == null) return;
 
-    await FirebaseFirestore.instance.collection("reports").doc(report.id).update({
+    await FirebaseFirestore.instance
+        .collection("reports")
+        .doc(report.id)
+        .update({
       "department": selectedDepartment.id,
     });
 
     ScaffoldMessenger.of(Get.context!).clearSnackBars();
     ScaffoldMessenger.of(Get.context!).showSnackBar(
       SnackBar(
-        content: Text("assigned_to_department".trParams({"department": selectedDepartment.name})),
+        content: Text("assigned_to_department"
+            .trParams({"department": selectedDepartment.name})),
       ),
     );
   }

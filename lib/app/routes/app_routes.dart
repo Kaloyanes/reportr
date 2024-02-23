@@ -12,6 +12,7 @@ abstract class Routes {
   static const WORKER_MANAGER = _Paths.WORKER_MANAGER;
   static const MY_REPORTS = _Paths.MY_REPORTS;
   static const SETTINGS = _Paths.SETTINGS;
+  static const WELCOME = _Paths.WELCOME;
 }
 
 abstract class _Paths {
@@ -25,4 +26,5 @@ abstract class _Paths {
   static const WORKER_MANAGER = '/worker-manager';
   static const MY_REPORTS = '/my-reports';
   static const SETTINGS = '/settings';
+  static const WELCOME = '/welcome';
 }

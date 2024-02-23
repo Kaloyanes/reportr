@@ -4,12 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reportr/app/components/back_button.dart';
 import 'package:reportr/app/components/map_switcher.dart';
-import 'package:reportr/app/services/profile_service.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -24,7 +22,9 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
       appBar: AppBar(
         leading: const CustomBackButton(),
         actions: [
-          if (controller.sender && controller.report.reporterId != FirebaseAuth.instance.currentUser!.uid)
+          if (controller.sender &&
+              controller.report.reporterId !=
+                  FirebaseAuth.instance.currentUser!.uid)
             IconButton(
               onPressed: () => controller.createChat(),
               icon: const Icon(CupertinoIcons.chat_bubble_fill),
@@ -34,7 +34,10 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
               return IconButton(
                 onPressed: () => controller.assignToDepartment(),
                 icon: const Icon(Icons.assignment_add),
-              ).animate().scaleXY();
+              ).animate().scaleXY(
+                    curve: Curves.easeOutExpo,
+                    duration: 500.ms,
+                  );
             }
 
             return const SizedBox();
@@ -67,11 +70,13 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
                 controller: controller.pageController,
                 children: [
                   GestureDetector(
-                    onTap: () => controller.showPicture(Get.arguments["thumbnail"]),
+                    onTap: () =>
+                        controller.showPicture(Get.arguments["thumbnail"]),
                     child: Padding(
                       padding: const EdgeInsets.all(10),
                       child: Hero(
-                        createRectTween: (begin, end) => RectTween(begin: begin, end: end),
+                        createRectTween: (begin, end) =>
+                            RectTween(begin: begin, end: end),
                         tag: Get.arguments["thumbnail"],
                         child: CachedNetworkImage(
                           imageUrl: Get.arguments["thumbnail"],
@@ -115,9 +120,11 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
                 controller: controller.pageController, // PageController
                 count: controller.photos.length,
                 effect: WormEffect(
-                  activeDotColor: Theme.of(context).colorScheme.primaryContainer,
+                  activeDotColor:
+                      Theme.of(context).colorScheme.primaryContainer,
                 ),
-                onDotClicked: (index) => controller.pageController.animateToPage(
+                onDotClicked: (index) =>
+                    controller.pageController.animateToPage(
                   index,
                   duration: 600.ms,
                   curve: Curves.easeOutQuint,
@@ -143,7 +150,8 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
                             children: [
                               CircleAvatar(
                                 radius: 15,
-                                foregroundImage: CachedNetworkImageProvider(controller.reporter.photoUrl),
+                                foregroundImage: CachedNetworkImageProvider(
+                                    controller.reporter.photoUrl),
                                 child: const Icon(Icons.person),
                               ),
                               const SizedBox(
@@ -185,7 +193,8 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(top: 10, bottom: 7),
-                        child: Text("description".tr, style: Theme.of(context).textTheme.headlineSmall),
+                        child: Text("description".tr,
+                            style: Theme.of(context).textTheme.headlineSmall),
                       ),
                       const Divider(height: 5),
                       Padding(
@@ -213,7 +222,9 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
                                 "geo:${controller.report.location.latitude},${controller.report.location.longitude}?q=${controller.report.location.latitude},${controller.report.location.longitude}(Report place)"),
                             mapType: MapType.hybrid,
                             initialCameraPosition: CameraPosition(
-                              target: LatLng(controller.report.location.latitude, controller.report.location.longitude),
+                              target: LatLng(
+                                  controller.report.location.latitude,
+                                  controller.report.location.longitude),
                               zoom: 18,
                             ),
                             mapToolbarEnabled: false,
@@ -263,10 +274,13 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
                     curve: Curves.easeOutCubic,
                     constraints: controller.reportRating.value > 0 &&
                             !controller.hasRated.value &&
-                            controller.reportRating.value != controller.report.rating
+                            controller.reportRating.value !=
+                                controller.report.rating
                         ? BoxConstraints.expand(height: 70, width: Get.width)
                         : const BoxConstraints.expand(height: 0, width: 0),
-                    child: ElevatedButton(onPressed: () => controller.updateRating(), child: Text("rate".tr)),
+                    child: ElevatedButton(
+                        onPressed: () => controller.updateRating(),
+                        child: Text("rate".tr)),
                   ),
                 ),
               ],
