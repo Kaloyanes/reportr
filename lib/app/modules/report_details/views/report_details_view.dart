@@ -15,6 +15,7 @@ import '../controllers/report_details_controller.dart';
 
 class ReportDetailsView extends GetView<ReportDetailsController> {
   const ReportDetailsView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     Get.lazyPut(() => ReportDetailsController());
@@ -188,6 +189,33 @@ class ReportDetailsView extends GetView<ReportDetailsController> {
                     ],
                   ),
                 ),
+                Obx(() {
+                  if (controller.departments.value == null) {
+                    return const SizedBox();
+                  }
+
+                  var department =
+                      controller.departments.value.firstWhereOrNull(
+                    (element) => element.id == controller.departmentId.value,
+                  );
+
+                  if (department == null) {
+                    return const SizedBox();
+                  }
+
+                  return Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Text(
+                        "report_assigned_to_department".trParams(
+                          {"department": department.name},
+                        ),
+                        style: Theme.of(context).textTheme.titleLarge,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  );
+                }),
                 Card(
                   child: Column(
                     children: [

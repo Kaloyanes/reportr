@@ -5,8 +5,10 @@ import '../controllers/welcome_controller.dart';
 
 class WelcomeView extends GetView<WelcomeController> {
   const WelcomeView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    Get.put(WelcomeController());
     return Scaffold(
       body: Center(
         child: Column(

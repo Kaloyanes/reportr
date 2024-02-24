@@ -1,19 +1,15 @@
-import 'dart:developer';
-
 import 'package:auto_size_text_field/auto_size_text_field.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
 import 'package:reportr/app/models/department_model.dart';
 import 'package:reportr/app/models/employee_model.dart';
 import 'package:reportr/app/services/department_service.dart';
-import 'package:uuid/uuid.dart';
 
-class WorkerManagerController extends GetxController with GetSingleTickerProviderStateMixin {
-  //TODO: Implement WorkerManagerController
-
+class WorkerManagerController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   RxList<Employee> employees = <Employee>[].obs;
   final RxBool loading = true.obs;
   final employeeStream = FirebaseFirestore.instance
@@ -105,14 +101,14 @@ class WorkerManagerController extends GetxController with GetSingleTickerProvide
     return initials;
   }
 
-  Future removeUser(Employee employee) async {
+  Future<void> removeUser(Employee employee) async {
     await FirebaseFirestore.instance
         .collection("users")
         .doc(employee.id)
         .update({"organization": "", "inviteCode": ""});
   }
 
-  Future addNewDepartment() async {
+  Future<void> addNewDepartment() async {
     var nameController = TextEditingController();
     var descriptionController = TextEditingController();
 
@@ -127,7 +123,8 @@ class WorkerManagerController extends GetxController with GetSingleTickerProvide
         color: Colors.transparent,
         child: Column(
           children: [
-            Text("create_department".tr, style: Theme.of(context).textTheme.titleLarge),
+            Text("create_department".tr,
+                style: Theme.of(context).textTheme.titleLarge),
             const Divider(height: 50),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -197,14 +194,103 @@ class WorkerManagerController extends GetxController with GetSingleTickerProvide
       ),
     );
 
-    if (nameController.text.trim().isEmpty || descriptionController.text.trim().isEmpty) {
+    if (nameController.text.trim().isEmpty ||
+        descriptionController.text.trim().isEmpty) {
       return;
     }
 
-    await DepartmentService().createDepartment(nameController.text.trim(), descriptionController.text.trim());
+    await DepartmentService().createDepartment(
+        nameController.text.trim(), descriptionController.text.trim());
     ScaffoldMessenger.of(Get.context!).showSnackBar(
       SnackBar(
         content: Text("department_created".tr),
+      ),
+    );
+  }
+
+  Future<void> removeDepartment() async {
+    if (departments.isEmpty) {
+      ScaffoldMessenger.of(Get.context!).showSnackBar(
+        SnackBar(
+          content: Text("no_departments".tr),
+        ),
+      );
+
+      return;
+    }
+
+    var selectedDepartment = await showDialog<Department?>(
+      useSafeArea: true,
+      context: Get.context!,
+      builder: (context) => AlertDialog(
+        title: Text("remove_department".tr,
+            style: Theme.of(context).textTheme.titleLarge),
+        content: SizedBox(
+          width: 700,
+          height: 500,
+          child: ListView.separated(
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(departments[index].name),
+                onTap: () => Get.back(result: departments[index]),
+              );
+            },
+            separatorBuilder: (context, index) => const Divider(),
+            itemCount: departments.length,
+          ),
+        ),
+        actions: [
+          FilledButton(
+            onPressed: () => Get.back(),
+            child: Text("cancel".tr),
+          ),
+        ],
+      ),
+    );
+    HapticFeedback.selectionClick();
+
+    if (selectedDepartment == null) return;
+
+    // confirm dialog
+    var confirm = await showDialog<bool>(
+      useSafeArea: true,
+      context: Get.context!,
+      builder: (context) => AlertDialog(
+        icon: const Icon(Icons.warning, color: Colors.red),
+        title: Text("remove_department".tr,
+            style: Theme.of(context).textTheme.titleLarge),
+        content: Text(
+          "remove_department_confirm".trParams(
+            {
+              "department": selectedDepartment.name,
+            },
+          ),
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back(result: false);
+            },
+            child: Text("cancel".tr),
+          ),
+          FilledButton(
+            onPressed: () {
+              Get.back(result: true);
+            },
+            child: Text("confirm".tr),
+          ),
+        ],
+      ),
+    );
+
+    HapticFeedback.selectionClick();
+    if (confirm == null || !confirm) return;
+
+    await DepartmentService().deleteDepartment(selectedDepartment.id);
+    ScaffoldMessenger.of(Get.context!).showSnackBar(
+      SnackBar(
+        content: Text("department_removed".tr),
       ),
     );
   }
@@ -222,33 +308,34 @@ class WorkerManagerController extends GetxController with GetSingleTickerProvide
 
     bool hasChanged = false;
 
-    var selectedDepartment = departments.firstWhereOrNull((element) => element.id == employee.departmentId);
-    departments.sort((a, b) => a.name.compareTo(b.name));
-
-    var resume = await showDialog<bool>(
+    var selectedDepartment = await showDialog<Department?>(
       useSafeArea: true,
       context: Get.context!,
       builder: (context) => AlertDialog(
-        title: Text("assign_user".tr, style: Theme.of(context).textTheme.titleLarge),
-        content: Form(
-          child: DropdownButtonFormField(
-            decoration: InputDecoration(
-              labelText: "choose_department".tr,
-            ),
-            value: selectedDepartment,
-            items: departments.map((e) => DropdownMenuItem(value: e, child: Text(e.name))).toList(),
-            onChanged: (value) {
-              hasChanged = selectedDepartment?.id != value?.id;
-              selectedDepartment = value;
-            },
-            validator: (value) {
-              if (value == null) {
-                return "fill_field".tr;
-              }
+        title: Text("assign_user".tr,
+            style: Theme.of(context).textTheme.titleLarge),
+        content: ListView.separated(
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              return ListTile(
+                title: Text("no_department".tr),
+                onTap: () {
+                  hasChanged = true;
+                  Get.back(result: null);
+                },
+              );
+            }
 
-              return null;
-            },
-          ),
+            return ListTile(
+              title: Text(departments[index - 1].name),
+              onTap: () {
+                hasChanged = true;
+                Get.back(result: departments[index - 1]);
+              },
+            );
+          },
+          separatorBuilder: (context, index) => const Divider(),
+          itemCount: departments.length + 1,
         ),
         actions: [
           TextButton(
@@ -267,8 +354,6 @@ class WorkerManagerController extends GetxController with GetSingleTickerProvide
       ),
     );
 
-    if (resume == null || !resume) return;
-
     if (selectedDepartment == null || !hasChanged) {
       return;
     }
@@ -278,10 +363,14 @@ class WorkerManagerController extends GetxController with GetSingleTickerProvide
         content: Text("user_assigned".tr),
       ),
     );
-    await DepartmentService().assignUserToDepartment(employee.id, selectedDepartment!.id);
+    await DepartmentService()
+        .assignUserToDepartment(employee.id, selectedDepartment!.id);
   }
 
-  Future removeUserFromDepartment(Employee employee) async {
-    await FirebaseFirestore.instance.collection("users").doc(employee.id).update({"departmentId": ""});
+  Future<void> removeUserFromDepartment(Employee employee) async {
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(employee.id)
+        .update({"departmentId": ""});
   }
 }

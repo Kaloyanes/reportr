@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-
 import 'package:get/get.dart';
 import 'package:reportr/app/components/back_button.dart';
 import 'package:reportr/app/models/department_model.dart';
-import 'package:reportr/app/models/employee_model.dart';
 import 'package:reportr/app/modules/worker_manager/components/worker_tile.dart';
-
-import '../controllers/worker_manager_controller.dart';
+import 'package:reportr/app/modules/worker_manager/controllers/worker_manager_controller.dart';
 
 class WorkerManagerView extends GetView<WorkerManagerController> {
   const WorkerManagerView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     Get.lazyPut(() => WorkerManagerController());
@@ -24,7 +21,11 @@ class WorkerManagerView extends GetView<WorkerManagerController> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: controller.addNewDepartment,
-          )
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: controller.removeDepartment,
+          ),
         ],
       ),
       body: Padding(
@@ -49,13 +50,18 @@ class WorkerManagerView extends GetView<WorkerManagerController> {
             itemBuilder: (context, index) {
               var employee = employees[index];
               Department? department;
-              if (controller.departments.isNotEmpty && (employee.departmentId != null || employee.departmentId != "")) {
-                department = controller.departments.firstWhereOrNull((element) => element.id == employee.departmentId);
+              if (controller.departments.isNotEmpty &&
+                  (employee.departmentId != null ||
+                      employee.departmentId != "")) {
+                department = controller.departments.firstWhereOrNull(
+                    (element) => element.id == employee.departmentId);
               }
 
               return Column(
                 children: [
-                  if (index == 0 || employee.departmentId != employees[index - 1].departmentId)
+                  if (index == 0 ||
+                      employee.departmentId !=
+                          employees[index - 1].departmentId)
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [

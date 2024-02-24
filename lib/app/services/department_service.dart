@@ -23,13 +23,42 @@ class DepartmentService {
         ownerId: ownerId,
       );
 
-      await _firestore.collection('departments').doc(departmentId).set(newDepartment.toMap());
+      await _firestore
+          .collection('departments')
+          .doc(departmentId)
+          .set(newDepartment.toMap());
     } catch (e) {
       print('Error creating department: $e');
     }
   }
 
-  Future<void> assignReportToDepartment(String reportId, String departmentId) async {
+  Future<void> deleteDepartment(String departmentId) async {
+    try {
+      await _firestore.collection('departments').doc(departmentId).delete();
+    } catch (e) {
+      print('Error deleting department: $e');
+    }
+
+    // every worker that has the same departmentId as the deleted department will be assigned to the default department
+    try {
+      await _firestore
+          .collection('users')
+          .where('departmentId', isEqualTo: departmentId)
+          .get()
+          .then((querySnapshot) {
+        for (var doc in querySnapshot.docs) {
+          doc.reference.update({
+            'departmentId': '',
+          });
+        }
+      });
+    } catch (e) {
+      print('Error reassigning workers to default department: $e');
+    }
+  }
+
+  Future<void> assignReportToDepartment(
+      String reportId, String departmentId) async {
     try {
       await _firestore.collection('reports').doc(reportId).update({
         'departmentId': departmentId,
@@ -45,10 +74,15 @@ class DepartmentService {
 
       if (user == null) return [];
 
-      QuerySnapshot querySnapshot =
-          await _firestore.collection('departments').where('ownerId', isEqualTo: user.uid).get();
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('departments')
+          .where('ownerId', isEqualTo: user.uid)
+          .get();
 
-      return querySnapshot.docs.map((doc) => Department.fromMap(doc.data() as Map<String, dynamic>, doc.id)).toList();
+      return querySnapshot.docs
+          .map((doc) =>
+              Department.fromMap(doc.data() as Map<String, dynamic>, doc.id))
+          .toList();
     } catch (e) {
       print('Error getting departments: $e');
       return [];

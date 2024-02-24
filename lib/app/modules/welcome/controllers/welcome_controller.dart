@@ -8,16 +8,23 @@ class WelcomeController extends GetxController {
   @override
   void onInit() {
     checkIfUserHasSeenWelcome();
+
     super.onInit();
   }
 
-  void checkIfUserHasSeenWelcome() {
-    if (settingsStorage.read<bool>("has_seen_welcome") ?? false) {
+  Future<void> checkIfUserHasSeenWelcome() async {
+    var init = await settingsStorage.initStorage;
+
+    if (settingsStorage.read("has_seen_welcome") == null && !init) {
+      await settingsStorage.write("has_seen_welcome", false);
+    }
+
+    if (settingsStorage.read<bool>("has_seen_welcome")!) {
       Get.offNamed("/home");
     }
   }
 
-  Future goToHome() async {
+  Future<void> goToHome() async {
     await settingsStorage.write("has_seen_welcome", true);
     await HapticFeedback.mediumImpact();
     Get.toNamed('/home');

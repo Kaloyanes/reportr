@@ -12,6 +12,7 @@ import 'package:reportr/app/models/report_model.dart';
 import 'package:reportr/app/models/reporter_model.dart';
 import 'package:reportr/app/modules/chats/views/chat_view.dart';
 import 'package:reportr/app/modules/report_details/components/error_dialog.dart';
+import 'package:reportr/app/services/ai_service.dart';
 import 'package:reportr/app/services/department_service.dart';
 import 'package:reportr/app/services/profile_service.dart';
 
@@ -35,10 +36,15 @@ class ReportDetailsController extends GetxController {
 
   final departments = <Department>[].obs;
 
+  final Rx<Department?> department = null.obs;
+  final Rx<String> departmentId = "".obs;
+
   @override
   void onInit() {
     checkIfOrganization();
     getImages(report);
+    getDepartments();
+
     super.onInit();
   }
 
@@ -60,9 +66,20 @@ class ReportDetailsController extends GetxController {
 
     isOrganization.value = userData["role"] == "organization";
 
-    departments.value = await DepartmentService().getDepartmentsByOwner();
-
     printInfo(info: "isOrganization: ${isOrganization.value}");
+  }
+
+  Future<void> getDepartments() async {
+    departments.value = await DepartmentService().getDepartmentsByOwner();
+    departmentId.value = report.departmentId;
+    printInfo(
+        info:
+            "departments: ${departments.map((element) => "${element.name} ${element.id}")}");
+    printInfo(info: "report DepartmentId: ${report.departmentId}");
+
+    printInfo(info: "Assigned department");
+
+    printInfo(info: "report Department: ${department.value}");
   }
 
   Future<void> delete() async {
@@ -222,22 +239,62 @@ class ReportDetailsController extends GetxController {
           children: [
             SizedBox(
               width: 700,
-              height: 300,
+              height: 500,
               child: ListView.separated(
-                itemBuilder: (context, index) => ListTile(
-                  title: Text(departments[index].name),
-                  onTap: () => Get.back(result: departments[index]),
-                ),
-                separatorBuilder: (context, index) => const Divider(),
-                itemCount: departments.length,
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return ListTile(
+                      title: Text("ai_department".tr),
+                      onTap: () async {
+                        try {
+                          var department =
+                              AiService().getDepartmentBasedOnReport(report);
+                          showDialog<void>(
+                            context: context,
+                            barrierDismissible: false,
+                            // false = user must tap button, true = tap outside dialog
+                            builder: (BuildContext dialogContext) {
+                              return const AlertDialog(
+                                content: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            },
+                          );
 
-                // children: [
-                //   for (var department in departments)
-                //     ListTile(
-                //       title: Text(department.name),
-                //       onTap: () => Get.back(result: department),
-                //     ),
-                // ],
+                          department.then((value) {
+                            Get.back(result: value);
+                            Get.back(result: value);
+                          });
+                        } catch (e) {
+                          showDialog<void>(
+                            context: context,
+                            builder: (BuildContext dialogContext) {
+                              return AlertDialog(
+                                title: Text("error".tr),
+                                content: Text(e.toString()),
+                                actions: [
+                                  FilledButton(
+                                    onPressed: () => Get.back(),
+                                    child: Text("ok".tr),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                          Get.back(result: null);
+                        }
+                      },
+                    );
+                  }
+
+                  return ListTile(
+                    title: Text(departments[index - 1].name),
+                    onTap: () => Get.back(result: departments[index - 1]),
+                  );
+                },
+                separatorBuilder: (context, index) => const Divider(),
+                itemCount: departments.length + 1,
               ),
             ),
           ],
@@ -255,12 +312,10 @@ class ReportDetailsController extends GetxController {
 
     if (selectedDepartment == null) return;
 
-    await FirebaseFirestore.instance
-        .collection("reports")
-        .doc(report.id)
-        .update({
-      "department": selectedDepartment.id,
-    });
+    await DepartmentService()
+        .assignReportToDepartment(report.id, selectedDepartment.id);
+
+    departmentId.value = selectedDepartment.id;
 
     ScaffoldMessenger.of(Get.context!).clearSnackBars();
     ScaffoldMessenger.of(Get.context!).showSnackBar(

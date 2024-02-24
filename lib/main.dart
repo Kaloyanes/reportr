@@ -40,7 +40,7 @@ class App extends StatelessWidget {
     var settingsStorage = GetStorage("settings");
 
     return GetMaterialApp(
-      title: "Application",
+      title: "ReportR",
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
       debugShowCheckedModeBanner: false,
