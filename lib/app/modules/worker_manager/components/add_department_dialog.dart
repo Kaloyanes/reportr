@@ -1,5 +1,6 @@
 import 'package:auto_size_text_field/auto_size_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 
 class AddDepartmentDialog extends StatelessWidget {
@@ -22,6 +23,8 @@ class AddDepartmentDialog extends StatelessWidget {
             shrinkWrap: true,
             children: [
               TextFormField(
+                autofocus: true,
+                textInputAction: TextInputAction.next,
                 controller: nameController,
                 decoration: InputDecoration(
                   labelText: "name".tr,
@@ -74,6 +77,7 @@ class AddDepartmentDialog extends StatelessWidget {
           child: Text("create_department".tr),
         ),
       ],
-    );
+    ).animate().scaleXY(
+        curve: Curves.easeInOutCubicEmphasized, duration: 500.ms, begin: 0.5);
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 
 class ConfirmDialog extends StatelessWidget {
@@ -38,6 +39,7 @@ class ConfirmDialog extends StatelessWidget {
           child: Text("confirm".tr),
         ),
       ],
-    );
+    ).animate().scaleXY(
+        curve: Curves.easeInOutCubicEmphasized, duration: 500.ms, begin: 0.5);
   }
 }

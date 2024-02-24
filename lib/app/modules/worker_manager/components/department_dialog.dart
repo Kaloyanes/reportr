@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:reportr/app/models/department_model.dart';
 
@@ -33,6 +34,7 @@ class DepartmentDialog extends StatelessWidget {
           child: Text("cancel".tr),
         ),
       ],
-    );
+    ).animate().scaleXY(
+        curve: Curves.easeInOutCubicEmphasized, duration: 500.ms, begin: 0.5);
   }
 }
