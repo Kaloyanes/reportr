@@ -102,6 +102,11 @@ class LocalMessages extends Translations {
           "department_removed": "Department @department removed",
           "department_created": "Department @department created",
           "no_reports": "No reports",
+          "remove_user_from_department_question":
+              "Are you sure you want to remove @employee from @department?",
+          "joined_organization": "Joined organization",
+          "remove_user_from_organization":
+              "Are you sure you want to remove @employee from the organization?"
         },
         'bg_BG': {
           "sign_in": "Влезте",

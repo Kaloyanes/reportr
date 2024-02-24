@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:reportr/app/models/department_model.dart';
 import 'package:reportr/app/models/employee_model.dart';
 import 'package:reportr/app/modules/worker_manager/components/add_department_dialog.dart';
+import 'package:reportr/app/modules/worker_manager/components/confirm_dialog.dart';
 import 'package:reportr/app/modules/worker_manager/components/department_dialog.dart';
 import 'package:reportr/app/services/department_service.dart';
 
@@ -103,10 +104,24 @@ class WorkerManagerController extends GetxController
   }
 
   Future<void> removeUser(Employee employee) async {
+    var confirm = await showDialog<bool?>(
+      context: Get.context!,
+      builder: (context) => ConfirmDialog(
+        title: "remove_user_from_organization".trParams({
+          "employee": employee.name,
+        }),
+      ),
+    );
+
+    HapticFeedback.selectionClick();
+    if (confirm == null || !confirm) {
+      return;
+    }
+
     await FirebaseFirestore.instance
         .collection("users")
         .doc(employee.id)
-        .update({"organization": "", "inviteCode": ""});
+        .update({"organization": "", "inviteCode": "", "departmentId": ""});
   }
 
   Future<void> addNewDepartment() async {
@@ -161,36 +176,13 @@ class WorkerManagerController extends GetxController
 
     // confirm dialog
     var confirm = await showDialog<bool>(
-      useSafeArea: true,
-      context: Get.context!,
-      builder: (context) => AlertDialog(
-        icon: const Icon(Icons.warning, color: Colors.red),
-        title: Text("remove_department".tr,
-            style: Theme.of(context).textTheme.titleLarge),
-        content: Text(
-          "remove_department_confirm".trParams(
-            {
-              "department": selectedDepartment.name,
-            },
-          ),
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Get.back(result: false);
-            },
-            child: Text("cancel".tr),
-          ),
-          FilledButton(
-            onPressed: () {
-              Get.back(result: true);
-            },
-            child: Text("confirm".tr),
-          ),
-        ],
-      ),
-    );
+        useSafeArea: true,
+        context: Get.context!,
+        builder: (context) => ConfirmDialog(
+              title: "remove_department".tr,
+              message: "remove_department_confirm"
+                  .trParams({"department": selectedDepartment.name}),
+            ));
 
     HapticFeedback.selectionClick();
     if (confirm == null || !confirm) return;
@@ -236,6 +228,27 @@ class WorkerManagerController extends GetxController
   }
 
   Future<void> removeUserFromDepartment(Employee employee) async {
+    var department = departments
+        .firstWhereOrNull((element) => element.id == employee.departmentId);
+    printInfo(info: "employee: ${employee.departmentId}");
+    printInfo(
+        info:
+            "${departments.map((element) => "${element.name}: (${element.id})")}");
+    var confirm = await showDialog<bool?>(
+      context: Get.context!,
+      builder: (context) => ConfirmDialog(
+        title: "remove_user_from_department_question".trParams({
+          "department": department!.name,
+          "employee": employee.name,
+        }),
+      ),
+    );
+
+    HapticFeedback.selectionClick();
+    if (confirm == null || !confirm) {
+      return;
+    }
+
     await FirebaseFirestore.instance
         .collection("users")
         .doc(employee.id)
