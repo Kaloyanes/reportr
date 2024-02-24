@@ -7,11 +7,11 @@ class DepartmentService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<void> createDepartment(String name, String description) async {
+  Future<Department?> createDepartment(String name, String description) async {
     try {
       User? user = _auth.currentUser;
 
-      if (user == null) return;
+      if (user == null) return null;
 
       String ownerId = user.uid;
       String departmentId = const Uuid().v4();
@@ -27,6 +27,8 @@ class DepartmentService {
           .collection('departments')
           .doc(departmentId)
           .set(newDepartment.toMap());
+
+      return newDepartment;
     } catch (e) {
       print('Error creating department: $e');
     }

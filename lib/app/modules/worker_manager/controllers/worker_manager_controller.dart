@@ -1,4 +1,3 @@
-import 'package:auto_size_text_field/auto_size_text_field.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:reportr/app/models/department_model.dart';
 import 'package:reportr/app/models/employee_model.dart';
+import 'package:reportr/app/modules/worker_manager/components/add_department_dialog.dart';
+import 'package:reportr/app/modules/worker_manager/components/department_dialog.dart';
 import 'package:reportr/app/services/department_service.dart';
 
 class WorkerManagerController extends GetxController
@@ -112,85 +113,11 @@ class WorkerManagerController extends GetxController
     var nameController = TextEditingController();
     var descriptionController = TextEditingController();
 
-    await showModalBottomSheet(
-      useSafeArea: true,
+    await showDialog(
       context: Get.context!,
-      enableDrag: true,
-      showDragHandle: true,
-      scrollControlDisabledMaxHeightRatio: 0.85,
-      transitionAnimationController: _animationController,
-      builder: (context) => Container(
-        color: Colors.transparent,
-        child: Column(
-          children: [
-            Text("create_department".tr,
-                style: Theme.of(context).textTheme.titleLarge),
-            const Divider(height: 50),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Form(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextFormField(
-                      controller: nameController,
-                      decoration: InputDecoration(
-                        labelText: "name".tr,
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "fill_field".tr;
-                        }
-
-                        return null;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    AutoSizeTextField(
-                      keyboardType: TextInputType.multiline,
-                      controller: descriptionController,
-                      textInputAction: TextInputAction.newline,
-                      maxLines: null,
-                      // minFontSize: 20,
-                      presetFontSizes: const [
-                        18,
-                        16,
-                        14,
-                        12,
-                        10,
-                        8,
-                      ],
-                      decoration: InputDecoration(
-                        hintStyle: TextStyle(
-                          color: Colors.grey.shade400,
-                        ),
-                        labelText: "description".tr,
-                        // contentPadding: const EdgeInsets.symmetric(horizontal: 5),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(child: Container()),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                TextButton(
-                  onPressed: () => Get.back(),
-                  child: Text("cancel".tr),
-                ),
-                FilledButton(
-                  onPressed: () => Get.back(),
-                  child: Text("create_department".tr),
-                ),
-              ],
-            ),
-            SizedBox(height: MediaQuery.of(context).padding.bottom + 5),
-          ],
-        ),
+      builder: (context) => AddDepartmentDialog(
+        nameController: nameController,
+        descriptionController: descriptionController,
       ),
     );
 
@@ -203,7 +130,9 @@ class WorkerManagerController extends GetxController
         nameController.text.trim(), descriptionController.text.trim());
     ScaffoldMessenger.of(Get.context!).showSnackBar(
       SnackBar(
-        content: Text("department_created".tr),
+        content: Text("department_created".trParams({
+          "department": nameController.text.trim(),
+        })),
       ),
     );
   }
@@ -222,31 +151,10 @@ class WorkerManagerController extends GetxController
     var selectedDepartment = await showDialog<Department?>(
       useSafeArea: true,
       context: Get.context!,
-      builder: (context) => AlertDialog(
-        title: Text("remove_department".tr,
-            style: Theme.of(context).textTheme.titleLarge),
-        content: SizedBox(
-          width: 700,
-          height: 500,
-          child: ListView.separated(
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(departments[index].name),
-                onTap: () => Get.back(result: departments[index]),
-              );
-            },
-            separatorBuilder: (context, index) => const Divider(),
-            itemCount: departments.length,
-          ),
-        ),
-        actions: [
-          FilledButton(
-            onPressed: () => Get.back(),
-            child: Text("cancel".tr),
-          ),
-        ],
-      ),
+      builder: (context) => DepartmentDialog(
+          title: "remove_department".tr, departments: departments),
     );
+
     HapticFeedback.selectionClick();
 
     if (selectedDepartment == null) return;
@@ -290,7 +198,9 @@ class WorkerManagerController extends GetxController
     await DepartmentService().deleteDepartment(selectedDepartment.id);
     ScaffoldMessenger.of(Get.context!).showSnackBar(
       SnackBar(
-        content: Text("department_removed".tr),
+        content: Text("department_removed".trParams({
+          "department": selectedDepartment.name,
+        })),
       ),
     );
   }
@@ -306,55 +216,13 @@ class WorkerManagerController extends GetxController
       return;
     }
 
-    bool hasChanged = false;
-
     var selectedDepartment = await showDialog<Department?>(
-      useSafeArea: true,
-      context: Get.context!,
-      builder: (context) => AlertDialog(
-        title: Text("assign_user".tr,
-            style: Theme.of(context).textTheme.titleLarge),
-        content: ListView.separated(
-          itemBuilder: (context, index) {
-            if (index == 0) {
-              return ListTile(
-                title: Text("no_department".tr),
-                onTap: () {
-                  hasChanged = true;
-                  Get.back(result: null);
-                },
-              );
-            }
+        useSafeArea: true,
+        context: Get.context!,
+        builder: (context) => DepartmentDialog(
+            title: "assign_user".tr, departments: departments));
 
-            return ListTile(
-              title: Text(departments[index - 1].name),
-              onTap: () {
-                hasChanged = true;
-                Get.back(result: departments[index - 1]);
-              },
-            );
-          },
-          separatorBuilder: (context, index) => const Divider(),
-          itemCount: departments.length + 1,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Get.back(result: false);
-            },
-            child: Text("cancel".tr),
-          ),
-          FilledButton(
-            onPressed: () async {
-              Get.back(result: true);
-            },
-            child: Text("assign_user".tr),
-          ),
-        ],
-      ),
-    );
-
-    if (selectedDepartment == null || !hasChanged) {
+    if (selectedDepartment == null) {
       return;
     }
 

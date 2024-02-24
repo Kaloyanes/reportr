@@ -82,7 +82,7 @@ class Themes {
       ),
       dialogTheme: DialogTheme(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
+          borderRadius: BorderRadius.circular(25),
         ),
       ),
     );
