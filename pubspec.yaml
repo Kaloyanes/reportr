@@ -39,6 +39,7 @@ dependencies:
   open_file: ^3.3.2
   inner_drawer: ^1.0.0+1
   chat_gpt_sdk: ^2.2.8
+  tutorial_coach_mark: ^1.2.11
 
 dev_dependencies:
   flutter_lints: ^2.0.0
