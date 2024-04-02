@@ -10,12 +10,12 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import "package:path/path.dart" as p;
 import 'package:reportr/app/modules/profile/components/fields/employee_fields.dart';
 import 'package:reportr/app/modules/profile/components/fields/organization_fields.dart';
 import 'package:reportr/app/modules/profile/views/image_crop_view.dart';
 import 'package:reportr/app/modules/sign_up/views/location_picker_view.dart';
 import 'package:reportr/app/routes/app_pages.dart';
-import "package:path/path.dart" as p;
 import 'package:reportr/app/services/profile_service.dart';
 
 class ProfileController extends GetxController {
@@ -65,7 +65,9 @@ class ProfileController extends GetxController {
             child: Text("yes".tr),
           ),
         ],
-      ).animate().scaleXY(duration: 600.ms, curve: Curves.fastLinearToSlowEaseIn),
+      )
+          .animate()
+          .scaleXY(duration: 600.ms, curve: Curves.fastLinearToSlowEaseIn),
     );
   }
 
@@ -112,7 +114,8 @@ class ProfileController extends GetxController {
       return;
     }
 
-    _capture(imageSource == "camera" ? ImageSource.camera : ImageSource.gallery);
+    _capture(
+        imageSource == "camera" ? ImageSource.camera : ImageSource.gallery);
   }
 
   Future<void> _capture(ImageSource source) async {
@@ -157,7 +160,10 @@ class ProfileController extends GetxController {
 
       task.whenComplete(() async {
         var url = await ref.getDownloadURL();
-        await FirebaseFirestore.instance.collection("users").doc(auth.currentUser?.uid).update({"photoUrl": url});
+        await FirebaseFirestore.instance
+            .collection("users")
+            .doc(auth.currentUser?.uid)
+            .update({"photoUrl": url});
       });
     } on FirebaseException catch (e) {
       if (e.code == "object-not-found") return;
@@ -225,7 +231,10 @@ class ProfileController extends GetxController {
   final locationLatLng = const LatLng(0, 0).obs;
 
   Future<void> getInfo() async {
-    var doc = await FirebaseFirestore.instance.collection("users").doc(auth.currentUser!.uid).get();
+    var doc = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(auth.currentUser!.uid)
+        .get();
 
     var data = doc.data();
 
@@ -233,17 +242,20 @@ class ProfileController extends GetxController {
     emailController.text = data["email"];
     role.value = data["role"];
     locationLatLng.value = data["role"] == "organization"
-        ? LatLng((data["locationCord"] as GeoPoint).latitude, (data["locationCord"] as GeoPoint).longitude)
+        ? LatLng((data["locationCord"] as GeoPoint).latitude,
+            (data["locationCord"] as GeoPoint).longitude)
         : const LatLng(0, 0);
 
     inviteController.text = role.value != "reporter" ? data["inviteCode"] : "";
     if (role.value == "organization") {
       organizationColor.value = Color(data["organizationColor"]);
-      roleChild.value = Container(child: OrganizationFields(controller: Get.find<ProfileController>()));
+      roleChild.value = Container(
+          child: OrganizationFields(controller: Get.find<ProfileController>()));
     }
 
     if (role.value == "employee") {
-      roleChild.value = Container(child: EmployeeFields(controller: Get.find<ProfileController>()));
+      roleChild.value = Container(
+          child: EmployeeFields(controller: Get.find<ProfileController>()));
     }
 
     setListeners();
@@ -260,19 +272,23 @@ class ProfileController extends GetxController {
   }
 
   Future<void> saveInfo() async {
-    var doc = FirebaseFirestore.instance.collection("users").doc(auth.currentUser!.uid);
+    var doc = FirebaseFirestore.instance
+        .collection("users")
+        .doc(auth.currentUser!.uid);
 
     var data = <String, dynamic>{
       "name": nameController.text.trim(),
     };
 
     data.addAllIf(role.value == "organization", {
-      "locationCord": GeoPoint(locationLatLng.value.latitude, locationLatLng.value.longitude),
+      "locationCord": GeoPoint(
+          locationLatLng.value.latitude, locationLatLng.value.longitude),
       "organizationColor": organizationColor.value.value,
       "inviteCode": inviteController.text.trim(),
     });
 
-    data.addIf(role.value == "employee", "inviteCode", inviteController.text.trim());
+    data.addIf(
+        role.value == "employee", "inviteCode", inviteController.text.trim());
 
     var email = emailController.text.trim();
     if (email != auth.currentUser!.email) {
@@ -330,7 +346,10 @@ class ProfileController extends GetxController {
 
     for (var chat in chats.docs) {
       if (chat.id.contains(uid)) {
-        await FirebaseFirestore.instance.collection("chats").doc(chat.id).delete();
+        await FirebaseFirestore.instance
+            .collection("chats")
+            .doc(chat.id)
+            .delete();
       }
     }
     await FirebaseAuth.instance.currentUser!.delete();
@@ -355,7 +374,8 @@ class ProfileController extends GetxController {
     final Color newColor = await showColorPickerDialog(
       Get.context!,
       organizationColor.value,
-      title: Text('Цвят на организацията', style: Theme.of(Get.context!).textTheme.titleLarge),
+      title: Text('Цвят на организацията',
+          style: Theme.of(Get.context!).textTheme.titleLarge),
       width: 50,
       height: 40,
       spacing: 0,
@@ -384,7 +404,8 @@ class ProfileController extends GetxController {
   }
 
   Future changeOrganization() async {
-    var result = await ProfileService.checkIfValidCode(inviteController.text.trim());
+    var result =
+        await ProfileService.checkIfValidCode(inviteController.text.trim());
 
     if (!result["successful"]) {
       showDialog(
@@ -406,13 +427,16 @@ class ProfileController extends GetxController {
     inviteCodeChanged.value = false;
 
     var org = result["id"];
-    FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).update({
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update({
       "organization": org,
       "inviteCode": inviteController.text,
     });
     ScaffoldMessenger.of(Get.context!).showSnackBar(
-      const SnackBar(
-        content: Text("Организацията е запазена"),
+      SnackBar(
+        content: Text("joined_organization".tr),
       ),
     );
   }
@@ -445,7 +469,10 @@ class ProfileController extends GetxController {
       return;
     }
 
-    FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).update({
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update({
       "organization": "",
       "inviteCode": "",
     });

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:ui' as ui;
+import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -12,6 +13,7 @@ import 'package:inner_drawer/inner_drawer.dart';
 import 'package:reportr/app/modules/home/components/report_sheet/controllers/report_sheet_controller.dart';
 import 'package:reportr/app/modules/home/components/report_sheet/views/report_sheet_view.dart';
 import 'package:reportr/app/services/geo_service.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class HomeController extends GetxController {
   final scaffKey = GlobalKey<ScaffoldState>();
@@ -27,9 +29,82 @@ class HomeController extends GetxController {
   final GlobalKey<InnerDrawerState> innerDrawerKey =
       GlobalKey<InnerDrawerState>();
 
+  final GlobalKey fabKey = GlobalKey();
+  final GlobalKey drawerKey = GlobalKey();
+
+  late TutorialCoachMark tutorial;
+
+  List<TargetFocus> createTargets() {
+    return [
+      TargetFocus(
+          identify: "drawerKey",
+          keyTarget: drawerKey,
+          alignSkip: Alignment.topCenter,
+          shape: ShapeLightFocus.Circle,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              builder: (context, controller) => Text(
+                "Use this button to open the drawer to all functions",
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            )
+          ]),
+      TargetFocus(
+        identify: "floatingButton",
+        keyTarget: fabKey,
+        alignSkip: Alignment.topCenter,
+        shape: ShapeLightFocus.Circle,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) => Text(
+              "Use this button to go to your location",
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+          )
+        ],
+      ),
+    ];
+  }
+
+  void createShowcase() {
+    tutorial = TutorialCoachMark(
+      targets: createTargets(),
+      colorShadow: Colors.black,
+      paddingFocus: 15,
+      focusAnimationDuration: Duration(milliseconds: 500),
+      unFocusAnimationDuration: Duration(milliseconds: 500),
+      pulseAnimationDuration: Duration(milliseconds: 500),
+      showSkipInLastTarget: true,
+      imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+      initialFocus: 0,
+      useSafeArea: true,
+      hideSkip: true,
+      onFinish: () {
+        print("finish");
+      },
+      onClickTargetWithTapPosition: (target, tapDetails) {
+        print("target: $target");
+        print(
+            "clicked at position local: ${tapDetails.localPosition} - global: ${tapDetails.globalPosition}");
+      },
+      onClickTarget: (target) {
+        print(target);
+      },
+    );
+  }
+
+  void startShowcase(BuildContext context) {
+    tutorial.show(context: context);
+  }
+
   @override
   void onInit() {
     getLocations();
+
+    createShowcase();
+
     super.onInit();
   }
 

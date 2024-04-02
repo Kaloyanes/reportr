@@ -6,10 +6,14 @@ import 'package:reportr/app/services/department_service.dart';
 
 class AiService {
   final openAI = OpenAI.instance.build(
-    token: "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",
+    token: const String.fromEnvironment("open-ai-key", defaultValue: ""),
     baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 5)),
     enableLog: true,
   );
+
+  AiService() {
+    printInfo(info: String.fromEnvironment("open-ai-key", defaultValue: ""));
+  }
 
   Future<Department> getDepartmentBasedOnReport(Report report) async {
     var departments = await DepartmentService().getDepartmentsByOwner();

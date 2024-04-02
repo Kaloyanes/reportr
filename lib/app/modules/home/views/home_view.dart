@@ -48,10 +48,9 @@ class HomeView extends GetView<HomeController> {
         )
       ],
       offset: const IDOffset.only(left: 0.4),
-      scale:
-          const IDOffset.horizontal(0.8), // set the offset in both directions
-      proportionalChildArea: false, // default true
-      borderRadius: 50, // default 0
+      scale: const IDOffset.horizontal(0.8),
+      proportionalChildArea: false,
+      borderRadius: 50,
       leftAnimationType: InnerDrawerAnimation.static,
       swipe: false,
       backgroundDecoration: BoxDecoration(
@@ -93,6 +92,10 @@ class HomeView extends GetView<HomeController> {
                 );
               }
 
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                controller.startShowcase(context);
+              });
+
               return MapSwitcher(
                 child: Obx(
                   () => GoogleMap(
@@ -125,6 +128,7 @@ class HomeView extends GetView<HomeController> {
           Align(
             alignment: const Alignment(-0.9, -0.85),
             child: Container(
+              key: controller.drawerKey,
               width: 55,
               height: 55,
               decoration: BoxDecoration(
@@ -161,6 +165,7 @@ class HomeView extends GetView<HomeController> {
           offset:
               controller.showControls.value ? Offset.zero : const Offset(0, 50),
           child: Container(
+            key: controller.fabKey,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
               color: Theme.of(context).colorScheme.primaryContainer,

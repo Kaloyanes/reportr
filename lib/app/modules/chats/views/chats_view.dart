@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -22,14 +21,19 @@ class ChatsView extends GetView<ChatsController> {
         leading: const CustomBackButton(),
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection("chats").orderBy("lastMessage", descending: true).snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection("chats")
+            .orderBy("lastMessage", descending: true)
+            .snapshots(),
         builder: (context, snapshot) {
-          if (snapshot.data == null || snapshot.connectionState == ConnectionState.waiting) {
+          if (snapshot.data == null ||
+              snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
 
           var user = snapshot.data!.docs.where(
-            (element) => element.id.contains(FirebaseAuth.instance.currentUser!.uid),
+            (element) =>
+                element.id.contains(FirebaseAuth.instance.currentUser!.uid),
           );
 
           if (user.isEmpty) {
@@ -52,13 +56,22 @@ class ChatsView extends GetView<ChatsController> {
                     var doc = user.elementAt(i);
 
                     var ids = doc.id.split(".");
-                    var otherPersonids = ids[0] == FirebaseAuth.instance.currentUser!.uid ? ids[1] : ids[0];
+                    var otherPersonids =
+                        ids[0] == FirebaseAuth.instance.currentUser!.uid
+                            ? ids[1]
+                            : ids[0];
 
                     return FutureBuilder(
-                      future: FirebaseFirestore.instance.collection('users').doc(otherPersonids).get(),
+                      future: FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(otherPersonids)
+                          .get(),
                       builder: (context, snapshot) {
-                        if (snapshot.data == null || snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator());
+                        if (snapshot.data == null ||
+                            snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
                         }
 
                         var personData = snapshot.data!.data() ?? {};
@@ -70,15 +83,21 @@ class ChatsView extends GetView<ChatsController> {
                         personData.addAll({"uid": otherPersonids});
                         String initials = "";
 
-                        personData["name"].toString().trim().split(' ').forEach((element) {
+                        personData["name"]
+                            .toString()
+                            .trim()
+                            .split(' ')
+                            .forEach((element) {
                           initials += element[0];
                         });
 
-                        var reporter = Reporter.fromMap(personData, snapshot.data!.id);
+                        var reporter =
+                            Reporter.fromMap(personData, snapshot.data!.id);
 
                         return ListTile(
                           leading: CircleAvatar(
-                            foregroundImage: CachedNetworkImageProvider(reporter.photoUrl),
+                            foregroundImage:
+                                CachedNetworkImageProvider(reporter.photoUrl),
                             child: Text(initials),
                           ),
                           title: Text(
@@ -93,7 +112,6 @@ class ChatsView extends GetView<ChatsController> {
                                 "docId": doc.id,
                                 "initials": initials,
                               },
-                              preventDuplicates: true,
                             );
                           },
                         );
