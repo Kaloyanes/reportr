@@ -13,7 +13,6 @@ import 'package:inner_drawer/inner_drawer.dart';
 import 'package:reportr/app/modules/home/components/report_sheet/controllers/report_sheet_controller.dart';
 import 'package:reportr/app/modules/home/components/report_sheet/views/report_sheet_view.dart';
 import 'package:reportr/app/services/geo_service.dart';
-import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class HomeController extends GetxController {
   final scaffKey = GlobalKey<ScaffoldState>();
@@ -26,84 +25,14 @@ class HomeController extends GetxController {
   late GoogleMapController mapController;
   var scrollController = ScrollController();
 
-  final GlobalKey<InnerDrawerState> innerDrawerKey =
-      GlobalKey<InnerDrawerState>();
+  final GlobalKey<InnerDrawerState> innerDrawerKey = GlobalKey<InnerDrawerState>();
 
   final GlobalKey fabKey = GlobalKey();
   final GlobalKey drawerKey = GlobalKey();
 
-  late TutorialCoachMark tutorial;
-
-  List<TargetFocus> createTargets() {
-    return [
-      TargetFocus(
-          identify: "drawerKey",
-          keyTarget: drawerKey,
-          alignSkip: Alignment.topCenter,
-          shape: ShapeLightFocus.Circle,
-          contents: [
-            TargetContent(
-              align: ContentAlign.bottom,
-              builder: (context, controller) => Text(
-                "Use this button to open the drawer to all functions",
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            )
-          ]),
-      TargetFocus(
-        identify: "floatingButton",
-        keyTarget: fabKey,
-        alignSkip: Alignment.topCenter,
-        shape: ShapeLightFocus.Circle,
-        contents: [
-          TargetContent(
-            align: ContentAlign.top,
-            builder: (context, controller) => Text(
-              "Use this button to go to your location",
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          )
-        ],
-      ),
-    ];
-  }
-
-  void createShowcase() {
-    tutorial = TutorialCoachMark(
-      targets: createTargets(),
-      colorShadow: Colors.black,
-      paddingFocus: 15,
-      focusAnimationDuration: Duration(milliseconds: 500),
-      unFocusAnimationDuration: Duration(milliseconds: 500),
-      pulseAnimationDuration: Duration(milliseconds: 500),
-      showSkipInLastTarget: true,
-      imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-      initialFocus: 0,
-      useSafeArea: true,
-      hideSkip: true,
-      onFinish: () {
-        print("finish");
-      },
-      onClickTargetWithTapPosition: (target, tapDetails) {
-        print("target: $target");
-        print(
-            "clicked at position local: ${tapDetails.localPosition} - global: ${tapDetails.globalPosition}");
-      },
-      onClickTarget: (target) {
-        print(target);
-      },
-    );
-  }
-
-  void startShowcase(BuildContext context) {
-    tutorial.show(context: context);
-  }
-
   @override
   void onInit() {
     getLocations();
-
-    createShowcase();
 
     super.onInit();
   }
@@ -134,11 +63,11 @@ class HomeController extends GetxController {
       var location = doc["locationCord"] as GeoPoint;
       var color = Theme.of(Get.context!).colorScheme.primaryContainer;
 
-      if (doc.containsKey("organizationColor"))
+      if (doc.containsKey("organizationColor")) {
         color = Color(doc["organizationColor"]);
+      }
 
-      var photo =
-          await FirebaseStorage.instance.refFromURL(doc["photoUrl"]).getData();
+      var photo = await FirebaseStorage.instance.refFromURL(doc["photoUrl"]).getData();
 
       if (photo == null) continue;
 
@@ -175,8 +104,7 @@ class HomeController extends GetxController {
     );
   }
 
-  Future<BitmapDescriptor> convertImageFileToCustomBitmapDescriptor(
-      Uint8List imageUint8List,
+  Future<BitmapDescriptor> convertImageFileToCustomBitmapDescriptor(Uint8List imageUint8List,
       {int size = 200,
       bool addBorder = false,
       Color borderColor = Colors.white,
@@ -194,22 +122,17 @@ class HomeController extends GetxController {
 
     //make canvas clip path to prevent image drawing over the circle
     final Path clipPath = Path();
+    clipPath.addRRect(
+        RRect.fromRectAndRadius(Rect.fromLTWH(0, 0, size.toDouble(), size.toDouble()), const Radius.circular(100)));
     clipPath.addRRect(RRect.fromRectAndRadius(
-        Rect.fromLTWH(0, 0, size.toDouble(), size.toDouble()),
-        const Radius.circular(100)));
-    clipPath.addRRect(RRect.fromRectAndRadius(
-        Rect.fromLTWH(0, size * 8 / 10, size.toDouble(), size * 3 / 10),
-        const Radius.circular(100)));
+        Rect.fromLTWH(0, size * 8 / 10, size.toDouble(), size * 3 / 10), const Radius.circular(100)));
     canvas.clipPath(clipPath);
 
     //paintImage
     final ui.Codec codec = await ui.instantiateImageCodec(imageUint8List);
     final ui.FrameInfo imageFI = await codec.getNextFrame();
 
-    paintImage(
-        canvas: canvas,
-        rect: Rect.fromLTWH(0, 0, size.toDouble(), size.toDouble()),
-        image: imageFI.image);
+    paintImage(canvas: canvas, rect: Rect.fromLTWH(0, 0, size.toDouble(), size.toDouble()), image: imageFI.image);
 
     if (addBorder) {
       //draw Border
@@ -225,8 +148,7 @@ class HomeController extends GetxController {
       ..style = PaintingStyle.fill;
     canvas.drawRRect(
         RRect.fromRectAndRadius(
-            Rect.fromLTWH(0, size * 8 / 10, size.toDouble(), size * 3 / 10),
-            const Radius.circular(100)),
+            Rect.fromLTWH(0, size * 8 / 10, size.toDouble(), size * 3 / 10), const Radius.circular(100)),
         paint);
 
     //draw Title
@@ -238,15 +160,10 @@ class HomeController extends GetxController {
           color: titleColor,
         ));
     textPainter.layout();
-    textPainter.paint(
-        canvas,
-        Offset(radius - textPainter.width / 2,
-            size * 9.5 / 10 - textPainter.height / 2));
+    textPainter.paint(canvas, Offset(radius - textPainter.width / 2, size * 9.5 / 10 - textPainter.height / 2));
 
     //convert canvas as PNG bytes
-    final image = await pictureRecorder
-        .endRecording()
-        .toImage(size, (size * 1.1).toInt());
+    final image = await pictureRecorder.endRecording().toImage(size, (size * 1.1).toInt());
     final data = await image.toByteData(format: ui.ImageByteFormat.png);
 
     //convert PNG bytes as BitmapDescriptor

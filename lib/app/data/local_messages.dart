@@ -13,8 +13,7 @@ class LocalMessages extends Translations {
           "sign_up": "Sign Up",
           "fill_field": "Please fill this field",
           "forgot_password": "Forgot password",
-          "forgot_password_description":
-              "Enter your email to reset your password",
+          "forgot_password_description": "Enter your email to reset your password",
           "cancel": "Cancel",
           "submit": "Submit",
           "success_login": "You have successfully logged in",
@@ -43,8 +42,7 @@ class LocalMessages extends Translations {
           "generate_new_code": "Generate new code",
           "organization_code_for_invite": "Organization code for invite",
           "leave_organization": "Leave organization",
-          "leave_organization_question":
-              "Are you sure you want to leave this organization?",
+          "leave_organization_question": "Are you sure you want to leave this organization?",
           "place_new_organization": "Join new organization",
           "yes": "Yes",
           "no": "No",
@@ -88,8 +86,7 @@ class LocalMessages extends Translations {
           "welcome": "Welcome to ReportR",
           "create_department": "Create department",
           "remove_department": "Remove department",
-          "remove_department_confirm":
-              "Do you want to remove the department @department?",
+          "remove_department_confirm": "Do you want to remove the department @department?",
           "no_department": "No department",
           "assign_user": "Assign user",
           "remove_from_department": "Remove from department",
@@ -97,16 +94,14 @@ class LocalMessages extends Translations {
           "choose_department": "Choose department",
           "user_assigned": "User assigned",
           "ai_department": "AI Department",
-          "report_assigned_to_department":
-              "Report assigned to department @department",
+          "report_assigned_to_department": "Report assigned to department @department",
           "department_removed": "Department @department removed",
           "department_created": "Department @department created",
           "no_reports": "No reports",
-          "remove_user_from_department_question":
-              "Are you sure you want to remove @employee from @department?",
+          "remove_user_from_department_question": "Are you sure you want to remove @employee from @department?",
           "joined_organization": "Joined organization",
-          "remove_user_from_organization":
-              "Are you sure you want to remove @employee from the organization?"
+          "remove_user_from_organization": "Are you sure you want to remove @employee from the organization?",
+          "no_departments": "No departments",
         },
         'bg_BG': {
           "sign_in": "Вход",
@@ -118,8 +113,7 @@ class LocalMessages extends Translations {
           "sign_up": "Регистрация",
           "fill_field": "Моля, попълнете това поле",
           "forgot_password": "Забравена парола",
-          "forgot_password_description":
-              "Въведете вашия имейл, за да нулирате паролата си",
+          "forgot_password_description": "Въведете вашия имейл, за да нулирате паролата си",
           "cancel": "Отказ",
           "submit": "Изпрати",
           "success_login": "Успешно влязохте в системата",
@@ -148,8 +142,7 @@ class LocalMessages extends Translations {
           "generate_new_code": "Генерирай нов код",
           "organization_code_for_invite": "Код на организацията за покана",
           "leave_organization": "Напусни организацията",
-          "leave_organization_question":
-              "Сигурни ли сте, че искате да напуснете тази организация?",
+          "leave_organization_question": "Сигурни ли сте, че искате да напуснете тази организация?",
           "place_new_organization": "Присъедини се към нова организация",
           "yes": "Да",
           "no": "Не",
@@ -193,8 +186,7 @@ class LocalMessages extends Translations {
           "welcome": "Добре дошли в ReportR",
           "create_department": "Създай отдел",
           "remove_department": "Премахни отдел",
-          "remove_department_confirm":
-              "Искате ли да премахнете отдел @department?",
+          "remove_department_confirm": "Искате ли да премахнете отдел @department?",
           "no_department": "Без отдел",
           "assign_user": "Назначете потребител",
           "remove_from_department": "Премахнете от отдел",
@@ -202,16 +194,14 @@ class LocalMessages extends Translations {
           "choose_department": "Изберете отдел",
           "user_assigned": "Назначен потребител",
           "ai_department": "Отдел по изкуствен интелект",
-          "report_assigned_to_department":
-              "Докладът е назначен на отдел @department",
+          "report_assigned_to_department": "Докладът е назначен на отдел @department",
           "department_removed": "Отдел @department е премахнат",
           "department_created": "Създаден е отдел @department",
           "no_reports": "Няма доклади",
-          "remove_user_from_department_question":
-              "Сигурни ли сте, че искате да премахнете @employee от @department?",
+          "remove_user_from_department_question": "Сигурни ли сте, че искате да премахнете @employee от @department?",
           "joined_organization": "Присъединен към организация",
-          "remove_user_from_organization":
-              "Сигурни ли сте, че искате да премахнете @employee от организацията?"
+          "remove_user_from_organization": "Сигурни ли сте, че искате да премахнете @employee от организацията?",
+          "no_departments": "Няма отдели",
         },
         'de_DE': {
           "sign_in": "Anmelden",
@@ -223,8 +213,7 @@ class LocalMessages extends Translations {
           "sign_up": "Registrieren",
           "fill_field": "Bitte füllen Sie dieses Feld aus",
           "forgot_password": "Passwort vergessen",
-          "forgot_password_description":
-              "Geben Sie Ihre E-Mail ein, um Ihr Passwort zurückzusetzen",
+          "forgot_password_description": "Geben Sie Ihre E-Mail ein, um Ihr Passwort zurückzusetzen",
           "cancel": "Abbrechen",
           "submit": "Absenden",
           "success_login": "Sie haben sich erfolgreich angemeldet",
@@ -239,8 +228,7 @@ class LocalMessages extends Translations {
           "code": "Code",
           "create": "Anmelden",
           "organization_location": "Standort der Organisation",
-          "choose_color_for_organization":
-              "Wählen Sie eine Farbe für die Organisation",
+          "choose_color_for_organization": "Wählen Sie eine Farbe für die Organisation",
           "organization_name": "Name der Organisation",
           "reports": "Berichte",
           "my_reports": "Meine Berichte",
@@ -254,8 +242,7 @@ class LocalMessages extends Translations {
           "generate_new_code": "Neuen Code generieren",
           "organization_code_for_invite": "Einladungscode der Organisation",
           "leave_organization": "Organisation verlassen",
-          "leave_organization_question":
-              "Sind Sie sicher, dass Sie diese Organisation verlassen möchten?",
+          "leave_organization_question": "Sind Sie sicher, dass Sie diese Organisation verlassen möchten?",
           "place_new_organization": "Neuer Organisation beitreten",
           "yes": "Ja",
           "no": "Nein",
@@ -299,8 +286,7 @@ class LocalMessages extends Translations {
           "welcome": "Willkommen bei ReportR",
           "create_department": "Abteilung erstellen",
           "remove_department": "Abteilung entfernen",
-          "remove_department_confirm":
-              "Möchten Sie die Abteilung @department wirklich entfernen?",
+          "remove_department_confirm": "Möchten Sie die Abteilung @department wirklich entfernen?",
           "no_department": "Keine Abteilung",
           "assign_user": "Benutzer zuweisen",
           "remove_from_department": "Aus Abteilung entfernen",
@@ -308,8 +294,7 @@ class LocalMessages extends Translations {
           "choose_department": "Abteilung wählen",
           "user_assigned": "Benutzer zugewiesen",
           "ai_department": "KI-Abteilung",
-          "report_assigned_to_department":
-              "Bericht der Abteilung @department zugewiesen",
+          "report_assigned_to_department": "Bericht der Abteilung @department zugewiesen",
           "department_removed": "Abteilung @department entfernt",
           "department_created": "Abteilung @department erstellt",
           "no_reports": "Keine Berichte",
@@ -317,7 +302,8 @@ class LocalMessages extends Translations {
               "Sind Sie sicher, dass Sie @employee aus @department entfernen möchten?",
           "joined_organization": "Organisation beigetreten",
           "remove_user_from_organization":
-              "Sind Sie sicher, dass Sie @employee aus der Organisation entfernen möchten?"
+              "Sind Sie sicher, dass Sie @employee aus der Organisation entfernen möchten?",
+          "no_departments": "Keine Abteilungen",
         },
         'ru_RU': {
           "sign_in": "Войти",
@@ -329,15 +315,12 @@ class LocalMessages extends Translations {
           "sign_up": "Регистрация",
           "fill_field": "Пожалуйста, заполните это поле",
           "forgot_password": "Забыли пароль",
-          "forgot_password_description":
-              "Введите вашу электронную почту для сброса пароля",
+          "forgot_password_description": "Введите вашу электронную почту для сброса пароля",
           "cancel": "Отмена",
           "submit": "Отправить",
           "success_login": "Вы успешно вошли в систему",
-          "invalid_email":
-              "Пожалуйста, введите действительный адрес электронной почты",
-          "email_already_in_use":
-              "Этот адрес электронной почты уже используется",
+          "invalid_email": "Пожалуйста, введите действительный адрес электронной почты",
+          "email_already_in_use": "Этот адрес электронной почты уже используется",
           "weak_password": "Пароль должен быть не менее 6 символов",
           "name": "Имя",
           "type_account": "Тип аккаунта",
@@ -361,8 +344,7 @@ class LocalMessages extends Translations {
           "generate_new_code": "Сгенерировать новый код",
           "organization_code_for_invite": "Код организации для приглашения",
           "leave_organization": "Покинуть организацию",
-          "leave_organization_question":
-              "Вы уверены, что хотите покинуть эту организацию?",
+          "leave_organization_question": "Вы уверены, что хотите покинуть эту организацию?",
           "place_new_organization": "Вступить в новую организацию",
           "yes": "Да",
           "no": "Нет",
@@ -406,8 +388,7 @@ class LocalMessages extends Translations {
           "welcome": "Добро пожаловать в ReportR",
           "create_department": "Создать отдел",
           "remove_department": "Удалить отдел",
-          "remove_department_confirm":
-              "Вы действительно хотите удалить отдел @department?",
+          "remove_department_confirm": "Вы действительно хотите удалить отдел @department?",
           "no_department": "Нет отдела",
           "assign_user": "Назначить пользователя",
           "remove_from_department": "Удалить из отдела",
@@ -419,11 +400,10 @@ class LocalMessages extends Translations {
           "department_removed": "Отдел @department удален",
           "department_created": "Отдел @department создан",
           "no_reports": "Нет отчетов",
-          "remove_user_from_department_question":
-              "Вы уверены, что хотите удалить @employee из отдела @department?",
+          "remove_user_from_department_question": "Вы уверены, что хотите удалить @employee из отдела @department?",
           "joined_organization": "Присоединился к организации",
-          "remove_user_from_organization":
-              "Вы уверены, что хотите удалить @employee из организации?"
+          "remove_user_from_organization": "Вы уверены, что хотите удалить @employee из организации?",
+          "no_departments": "Нет отделов",
         },
       };
 }

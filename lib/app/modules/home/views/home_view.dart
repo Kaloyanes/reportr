@@ -7,7 +7,7 @@ import 'package:reportr/app/components/map_switcher.dart';
 import 'package:reportr/app/modules/home/components/drawer/drawer_component.dart';
 import 'package:reportr/app/services/geo_service.dart';
 
-import '../controllers/home_controller.dart';
+import 'home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
@@ -92,10 +92,6 @@ class HomeView extends GetView<HomeController> {
                 );
               }
 
-              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                controller.startShowcase(context);
-              });
-
               return MapSwitcher(
                 child: Obx(
                   () => GoogleMap(
@@ -109,10 +105,8 @@ class HomeView extends GetView<HomeController> {
                     mapType: MapType.normal,
                     compassEnabled: false,
                     onMapCreated: (GoogleMapController mapControl) async {
-                      if (Theme.of(context).colorScheme.brightness ==
-                          Brightness.dark) {
-                        var style = await rootBundle
-                            .loadString('lib/app/assets/darkMap.json');
+                      if (Theme.of(context).colorScheme.brightness == Brightness.dark) {
+                        var style = await rootBundle.loadString('lib/app/assets/darkMap.json');
 
                         mapControl.setMapStyle(style);
                       }
@@ -162,8 +156,7 @@ class HomeView extends GetView<HomeController> {
         () => AnimatedSlide(
           curve: Curves.easeOutQuint,
           duration: const Duration(milliseconds: 600),
-          offset:
-              controller.showControls.value ? Offset.zero : const Offset(0, 50),
+          offset: controller.showControls.value ? Offset.zero : const Offset(0, 50),
           child: Container(
             key: controller.fabKey,
             decoration: BoxDecoration(
@@ -171,10 +164,7 @@ class HomeView extends GetView<HomeController> {
               color: Theme.of(context).colorScheme.primaryContainer,
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .primaryContainer
-                      .withOpacity(0.5),
+                  color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5),
                   blurRadius: 20,
                   spreadRadius: 3,
                   offset: const Offset(0, 0),
